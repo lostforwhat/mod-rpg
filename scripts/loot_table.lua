@@ -339,6 +339,12 @@ monstor_loot = {
         --{chance = 0.02, item = "shadow_rook", aggro = true},--暗影战车
         --{chance = 0.02, item = "shadow_knight", aggro = true},--暗影骑士
         --{chance = 0.02, item = "shadow_bishop", aggro = true},--暗影主教 
+        {chance = 0.1, item = "bat", aggro = true},--蝙蝠
+        {chance = 0.14, item = "monkey", aggro = true},--猴子
+        {chance = 0.08, item = "slurtle", aggro = true},--蜗牛1
+        {chance = 0.08, item = "snurtle", aggro = true},--蜗牛2
+        {chance = 0.01, item = "slurtlehole", aggro = true},--蜗牛巢穴
+        {chance = 0.1, item = "slurper", aggro = true},--缀食者
     },
 
 big_boss_loot = {
@@ -353,18 +359,6 @@ big_boss_loot = {
         --{chance = 0.01, item = "stalker_atrium", aggro = true},--远古影织者
         --{chance = 0.01, item = "stalker", aggro = true},--复活的骨架
         --{chance = 0.03, item = "stalker_forest", aggro = true},--森林守护者
-    },
-
-cave_loot = {
-        {chance = 0.1, item = "bat", aggro = true},--蝙蝠
-        {chance = 0.14, item = "monkey", aggro = true},--猴子
-        {chance = 0.08, item = "slurtle", aggro = true},--蜗牛1
-        {chance = 0.08, item = "snurtle", aggro = true},--蜗牛2
-        {chance = 0.01, item = "slurtlehole", aggro = true},--蜗牛巢穴
-        {chance = 0.1, item = "slurper", aggro = true},--缀食者
-    },
-
-cave_boss_loot = {
         {chance = 0.01, item = "stalker", aggro = true},--复活的骨架
         {chance = 0.01, item = "minotaur", aggro = true},--远古守护者
         {chance = 0.01, item = "toadstool", aggro = true},--蘑菇蛤
