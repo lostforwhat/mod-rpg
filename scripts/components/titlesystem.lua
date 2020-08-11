@@ -1132,6 +1132,7 @@ function ChangeRGB(inst, r,g,b,t)
 	g = g or math.random()
 	b = b or math.random()
 	t = t or math.random()
+	if inst == nil or inst.components.colourtweener == nil then return end
 	inst.components.colourtweener:StartTween({r,g,b,t}, 0)
 	if inst._title ~= nil then
 		if inst._title.components.colourtweener == nil then

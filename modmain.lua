@@ -18,7 +18,6 @@ table.insert(PrefabFiles, "potion_achiv")
 table.insert(PrefabFiles, "potions")
 table.insert(PrefabFiles, "deadbone")
 table.insert(PrefabFiles, "wes_clone")
+table.insert(PrefabFiles, "achiv_clear")
 
 table.insert(PrefabFiles, "titles_fx")
-
-table.insert(PrefabFiles, "achiv_clear")

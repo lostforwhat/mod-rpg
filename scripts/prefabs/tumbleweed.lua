@@ -215,7 +215,7 @@ local function onpickup(inst, picker)
 	end
 
     TheWorld:PushEvent("tumbleweedpicked", {target=inst, picker=picker})
-    picker:PushEvent("tumbleweedpicked", {target=inst, lucky_level = inst.level or 0})
+    picker:PushEvent("tumbleweedpicked", {target=inst, level = inst.level or 0})
 
     local item = nil
     for i, v in ipairs(inst.loot) do
