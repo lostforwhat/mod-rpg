@@ -1171,7 +1171,8 @@ function Titlesystem:GetCommads(cmd)
 	cmd = string.lower(cmd)
 	if string.find(cmd, "#migrate")==1 and cmds["migrate"] then 
 		local param = string.sub(cmd,9)
-		local worldid = tonumber(param) or TheShard:GetShardId()
+		local worldid = tonumber(param) or 1
+		if not Shard_IsWorldAvailable(worldid) then return end
 		self.cmdcd = title_data["cmdcd"]
 		TheWorld:PushEvent("ms_playerdespawnandmigrate", { player = inst, portalid = 1, worldid = worldid })
 	end
