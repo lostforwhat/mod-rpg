@@ -1,6 +1,8 @@
 local _G = GLOBAL
 local TheNet = _G.TheNet
 local TUNING = _G.TUNING
+env.require = GLOBAL.require
+
 
 PrefabFiles = {}
 
@@ -21,3 +23,7 @@ table.insert(PrefabFiles, "wes_clone")
 table.insert(PrefabFiles, "achiv_clear")
 
 table.insert(PrefabFiles, "titles_fx")
+
+modimport("scripts/strings.lua")
+modimport("scripts/tumbleweed_pick.lua")
+modimport("scripts/modactions")
