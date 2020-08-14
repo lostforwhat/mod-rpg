@@ -632,3 +632,13 @@ AddPrefabPostInit(
         end
     end
 )
+
+--api
+GLOBAL.AddLoot = function(loot_tb, loot_type)
+    if not loot_table[loot_type] then
+        loot_type = "new_loot"
+    end
+    if loot_tb and loot_tb.item and loot_tb.chance then
+        table.insert(loot_table[loot_type], loot_tb)
+    end
+end
