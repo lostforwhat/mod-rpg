@@ -3,6 +3,8 @@ local TheNet = _G.TheNet
 local TUNING = _G.TUNING
 env.require = GLOBAL.require
 
+local PlayerStatus = require('widgets/playerstatus')
+
 
 PrefabFiles = {}
 
@@ -27,3 +29,12 @@ table.insert(PrefabFiles, "titles_fx")
 modimport("scripts/strings.lua")
 modimport("scripts/tumbleweed_pick.lua")
 modimport("scripts/modactions")
+
+local function AddPlayerStatus(self)
+	self.player_status = self.top_root:AddChild(PlayerStatus(self.owner))
+	self.player_status:SetHAnchor(0)
+    self.player_status:SetVAnchor(0)
+    self.player_status:MoveToFront()
+end
+
+AddClassPostConstruct("widgets/controls", AddPlayerStatus)
