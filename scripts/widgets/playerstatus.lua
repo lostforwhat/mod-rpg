@@ -3,6 +3,7 @@ local PlayerInfo = require "widgets/playerinfo"
 local TaskInfo = require "widgets/taskinfo"
 local TitleInfo = require "widgets/titleinfo"
 local ShopInfo = require "widgets/shopinfo"
+local Email = require "widgets/email"
 
 
 
@@ -22,7 +23,8 @@ local PlayerStatus = Class(Widget, function(self, owner)
     self.shop_info = self:AddChild(ShopInfo(owner))
     self.shop_info:SetPosition(120, -40, 0)
 
-    
+    self.email = self:AddChild(Email(owner))
+    self.email:SetPosition(0, -80, 0)
 end)
 
 

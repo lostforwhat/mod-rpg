@@ -30,6 +30,17 @@ modimport("scripts/strings.lua")
 modimport("scripts/tumbleweed_pick.lua")
 modimport("scripts/modactions")
 
+Assets = {
+	Asset("ATLAS", "images/hud/email.xml"),
+    Asset("IMAGE", "images/hud/email.tex"),
+}
+
+--角色初始化
+AddPlayerPostInit(function(inst) 
+
+end)
+
+--添加modUI
 local function AddPlayerStatus(self)
 	self.player_status = self.top_root:AddChild(PlayerStatus(self.owner))
 	self.player_status:SetHAnchor(0)

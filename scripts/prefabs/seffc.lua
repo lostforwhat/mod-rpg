@@ -50,7 +50,6 @@ local function fn()
     inst.AnimState:SetBank("seffc")
     inst.AnimState:SetBuild("seffc")
     inst.AnimState:PlayAnimation("anim")
-    --inst.AnimState:SetBloomEffectHandle("shaders/anim.ksh")
 
     inst.entity:SetPristine()
 
