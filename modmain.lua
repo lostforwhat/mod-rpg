@@ -40,6 +40,17 @@ AddPlayerPostInit(function(inst)
 
 end)
 
+--修改combat，注入暴击吸血致死等属性
+AddComponentPostInit("combat", function(self)
+	local self.OldGetAttacked = self.GetAttacked
+	function self:GetAttacked(attacker, damage, weapon, stimuli)
+		--注入改写伤害
+		
+
+		return self:OldGetAttacked(attacker, damage, weapon, stimuli)
+	end
+end)
+
 --添加modUI
 local function AddPlayerStatus(self)
 	self.player_status = self.top_root:AddChild(PlayerStatus(self.owner))
