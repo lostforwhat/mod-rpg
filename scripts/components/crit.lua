@@ -2,24 +2,6 @@ local MIN_CHANCE = 0
 local MAX_CHANCE = 100
 local MAX_HIT = 4
 
-local function IsValidVictim(victim)
-    return victim ~= nil
-        and not ((victim:HasTag("prey") and not victim:HasTag("hostile")) or
-                victim:HasTag("veggie") or
-                victim:HasTag("structure") or
-                victim:HasTag("wall") or
-                victim:HasTag("balloon") or
-                victim:HasTag("groundspike") or
-                victim:HasTag("smashable") or
-                victim:HasTag("companion"))
-        and victim.components.health ~= nil
-        and victim.components.combat ~= nil
-end
-
-local function Onhitother(inst, data)
-	inst.components.crit:Onhitother(inst, data)
-end
-
 local function onchance(self, chance)
 
 end
@@ -36,7 +18,6 @@ local Crit = Class(function(self, inst)
     --self.next_must_crit = false
     --self.extra_source_map = nil
     --self.luck_crit = false
-    self:Init()
 end,
 nil,
 {
@@ -94,55 +75,30 @@ function Crit:RemoveExtraChance(source)
 	end
 end
 
-function Crit:Onhitother(inst, data)
-	if data.target and 
-		not self.criting and
-		not inst.components.health:IsDead() and 
-		IsValidVictim(data.target) and 
-		data.damage>0 then
-
-		local damage = data.damage or 0
-        local target = data.target
-        local stimuli = data.stimuli
-		local max_hit = math.random(self.min_hit, self.max_hit)
-        local hit = math.random(self.min_hit, max_hit)
-
-		if self.force_crit or self.next_must_crit then
-			self:ApplyCrit(target, damage*hit, hit)
-			self.next_must_crit = false
-			return
-		end
-		if self.luck_crit and inst.components.luck and inst.components.luck:GetLuck() > title_data["title10"]["luck"] then
-			if hit < 2 then hit = 2 end
-			self:ApplyCrit(target, damage*hit, hit)
-			inst.components.luck:DoDelta(-hit)
-			return
-		end
-		if self.chance > 0 and math.random(1,100) <= self.chance*(1+self.extra_chance) then	
-			self:ApplyCrit(target, damage*hit, hit)
-		end
-	end
+function Crit:GetExtra()
+	return self.extra_chance or 0
 end
 
-function Crit:Init()
-	self.inst:ListenForEvent("onhitother", Onhitother)
+function Crit:GetFinalChance()
+	return self.chance + self.extra_chance
 end
 
-function Crit:ApplyCrit(target, damage, hit)
-	self.criting = true
-	target.components.combat:GetAttacked(self.inst, damage)
-	local snap = SpawnPrefab("impact")
-    snap.Transform:SetScale(3, 3, 3)
-    snap.Transform:SetPosition(target.Transform:GetWorldPosition())
-    if target.SoundEmitter ~= nil then
-        target.SoundEmitter:PlaySound("dontstarve/common/whip_large", nil, 0.3)
-    end
-	self.inst:PushEvent("crithit", {target=target,damage=damage,hit=hit})
-	self.inst:DoTaskInTime(.2, function() self.criting = false end)
+function Crit:Effect()
+	local effect = self.next_must_crit or self.force_crit or self.luck_crit or (math.random(100) < self:GetFinalChance())
+	if self.next_must_crit then self.next_must_crit=false end
+	return effect
+end
+
+function Crit:SetMaxHit(hit)
+	self.max_hit = hit
+end
+
+function Crit:GetMaxHit()
+	return self.max_hit or MAX_HIT
 end
 
 function Crit:OnRemoveFromEntity()
-    self.inst:RemoveEventCallback("onhitother", Onhitother)
+    
 end
 
 return Crit
