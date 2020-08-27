@@ -93,8 +93,21 @@ function Crit:SetMaxHit(hit)
 	self.max_hit = hit
 end
 
+function Crit:SetMinHit(hit)
+	self.min_hit = hit
+end
+
 function Crit:GetMaxHit()
 	return self.max_hit or MAX_HIT
+end
+
+function Crit:GetMinHit()
+	return self.min_hit < self.max_hit and self.min_hit or 1
+end
+
+function Crit:GetRandomHit()
+	local max_hit = math.random(self.min_hit, self.max_hit)
+	return math.random(self.min_hit, max_hit) or self.min_hit
 end
 
 function Crit:OnRemoveFromEntity()

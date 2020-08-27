@@ -27,7 +27,7 @@ end
 
 function AttackFrozen:Effect(target)
     local effect = self.force_frozen or self.next_force_frozen or math.random(100) < self:GetFinalChance()
-    if effect and target.components.freezable ~= nil then
+    if effect and target and target.components.freezable ~= nil then
         target.components.freezable:AddColdness(self.coldness, self.freezetime)
         if self.next_force_frozen then self.next_force_frozen = false end
     end

@@ -37,17 +37,93 @@ Assets = {
 
 --角色初始化
 AddPlayerPostInit(function(inst) 
+	inst:AddComponent("attackdeath")
+	inst:AddComponent("attackbroken")
+	inst:AddComponent("attackback")
+	inst:AddComponent("attackfrozen")
+	inst:AddComponent("lifesteal")
+	inst:AddComponent("crit")
+	inst:AddComponent("level")
+	inst:AddComponent("luck")
+
+	if not GLOBAL.TheNet:GetIsClient() then
+        inst.components.attackdeath:SetChance(0)
+        inst.components.attackbroken:SetChance(0)
+        inst.components.attackfrozen:SetChance(0)
+    end
 
 end)
+
+local function IsValidVictim(victim)
+    return victim ~= nil
+        and not ((victim:HasTag("prey") and not victim:HasTag("hostile")) or
+                victim:HasTag("veggie") or victim:HasTag("structure") or
+                victim:HasTag("wall") or victim:HasTag("balloon") or
+                victim:HasTag("groundspike") or victim:HasTag("smashable") or
+                victim:HasTag("companion") or victim:HasTag("visible"))
+        and victim.components.health ~= nil
+        and victim.components.combat ~= nil
+        and victim.components.freezable ~= nil
+end
 
 --修改combat，注入暴击吸血致死等属性
 AddComponentPostInit("combat", function(self)
 	local self.OldGetAttacked = self.GetAttacked
 	function self:GetAttacked(attacker, damage, weapon, stimuli)
 		--注入改写伤害
-		
+		local extra_damage = 0
+		local target = self.inst
 
-		return self:OldGetAttacked(attacker, damage, weapon, stimuli)
+		if IsValidVictim(target) and not target.components.health:IsInvincible() then
+			--致死优先级最高, 出现致死后后面其他逻辑可忽略
+			if attacker.components.attackdeath ~= nil then
+				local base = 1
+				local maxhp = target.components.health.maxhealth or 4000
+				if maxhp > 4000 or target:HasTag("epic") then
+					base = math.min(4000/maxhp, 1)
+				end
+				if attacker.components.attackdeath:Effect(base) then
+					local absorb = target.components.health and target.components.health.absorb or 0
+					if absorb < 1 then
+		            	damage = maxhp * (1- math.clamp(absorb, 0, 1)) + 1 --修改伤害为致死
+		            	return self:OldGetAttacked(attacker, damage + extra_damage, weapon, stimuli)
+		            end
+				end
+			else
+				--弱点攻击为附加伤害不参与暴击
+				if attacker.components.attackbroken ~= nil then
+					if attacker.components.attackbroken:Effect() then
+						extra_damage = attacker.components.attackbroken:GetBrokenPercent() * (target.components.health.currenthealth or 0)
+					end
+				end
+				--暴击只增加基础伤害
+				if attacker.components.crit ~= nil then
+					if attacker.components.crit:Effect() then
+						damage = damage * (attacker.components.crit:GetRandomHit() + 1)
+					end
+				end
+				--附加伤害
+
+			end
+		end
+
+		local blocked = self:OldGetAttacked(attacker, damage + extra_damage, weapon, stimuli)
+		
+		if not blocked then
+			--注入吸血和攻击特效
+			if attacker.components.attackfrozen ~= nil then
+				attacker.components.attackfrozen:Effect(target)
+			end
+			if attacker.components.lifesteal ~= nil then
+				attacker.components.lifesteal:Effect(damage) --吸血只享受基础攻击和暴击收益
+			end
+			--反伤
+			if target.components.attackback ~= nil then
+				target.components.attackback:Effect(damage)
+			end
+		end
+
+		return blocked
 	end
 end)
 

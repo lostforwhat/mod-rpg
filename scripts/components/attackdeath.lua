@@ -19,6 +19,12 @@ nil,
     chance = onchance,
 })
 
+function AttackDeath:SetChance(chance)
+    if chance <= MAX_CHANCE and chance >= MIN_CHANCE then
+        self.chance = chance
+    end
+end
+
 function AttackDeath:SetExtra(extra)
     if extra <= MAX_CHANCE and extra >= MIN_CHANCE then
         self.extra_chance = extra
