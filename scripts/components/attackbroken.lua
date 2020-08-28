@@ -1,5 +1,5 @@
 local MIN_CHANCE = 0
-local MAX_CHANCE = 100
+local MAX_CHANCE = 1
 local DEFAULT_CHANCE = 5
 
 local function onchance(self, chance)
@@ -41,7 +41,7 @@ end
 
 --每次攻击执行这个函数，若返回true，则执行触发代码
 function AttackBroken:Effect()
-    local effect = self.next_force_broken or self.force_broken or (math.random(100)<self:GetFinalChance())
+    local effect = self.next_force_broken or self.force_broken or (math.random()<self:GetFinalChance())
     if self.next_force_broken then self.next_force_broken = false end
     return effect
 end

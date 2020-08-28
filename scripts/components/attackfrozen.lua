@@ -1,6 +1,6 @@
 local MIN_CHANCE = 0
-local MAX_CHANCE = 100
-local DEFAULT_CHANCE = 20
+local MAX_CHANCE = 1
+local DEFAULT_CHANCE = 0.2
 
 local function onchance(self, chance)
 
@@ -26,7 +26,7 @@ function AttackFrozen:GetFinalChance()
 end
 
 function AttackFrozen:Effect(target)
-    local effect = self.force_frozen or self.next_force_frozen or math.random(100) < self:GetFinalChance()
+    local effect = self.force_frozen or self.next_force_frozen or math.random() < self:GetFinalChance()
     if effect and target and target.components.freezable ~= nil then
         target.components.freezable:AddColdness(self.coldness, self.freezetime)
         if self.next_force_frozen then self.next_force_frozen = false end

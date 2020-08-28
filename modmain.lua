@@ -45,6 +45,55 @@ AddPlayerPostInit(function(inst)
 	inst:AddComponent("crit")
 	inst:AddComponent("level")
 	inst:AddComponent("luck")
+	inst:AddComponent("extradamage")
+	--inst:AddComponent("revenge")
+
+	local prefab = inst.prefab
+	if prefab == "wilson" then
+
+	end
+	if prefab == "wendy" then
+		inst:AddComponent("revenge")
+	end
+	if prefab == "willow" then
+
+	end
+	if prefab == "wathgrithr" then
+
+	end
+	if prefab == "wolfgang" then
+
+	end
+	if prefab == "wortox" then
+
+	end
+	if prefab == "wx78" then
+
+	end
+	if prefab == "winona" then
+
+	end
+	if prefab == "wickerbottom" then
+
+	end
+	if prefab == "wes" then
+
+	end
+	if prefab == "woodie" then
+
+	end
+	if prefab == "wormwood" then
+
+	end
+	if prefab == "wurt" then
+
+	end
+	if prefab == "walter" then
+
+	end
+	if prefab == "waxwell" then
+
+	end
 
 	if not GLOBAL.TheNet:GetIsClient() then
         inst.components.attackdeath:SetChance(0)
@@ -93,8 +142,13 @@ AddComponentPostInit("combat", function(self)
 				--弱点攻击为附加伤害不参与暴击
 				if attacker.components.attackbroken ~= nil then
 					if attacker.components.attackbroken:Effect() then
-						extra_damage = attacker.components.attackbroken:GetBrokenPercent() * (target.components.health.currenthealth or 0)
+						extra_damage = extra_damage + attacker.components.attackbroken:GetBrokenPercent() * (target.components.health.currenthealth or 0)
 					end
+				end
+				--复仇为附加伤害
+				if attacker.components.revenge ~= nil then
+					local damageup = attacker.components.revenge:GetDamageUp(target) or 0
+					extra_damage = extra_damage + damage * damageup
 				end
 				--暴击只增加基础伤害
 				if attacker.components.crit ~= nil then
@@ -103,7 +157,9 @@ AddComponentPostInit("combat", function(self)
 					end
 				end
 				--附加伤害
-
+				if attacker.components.extradamage ~= nil then
+					extra_damage = extra_damage + attacker.components.extradamage:GetDamage(target)
+				end
 			end
 		end
 
@@ -120,6 +176,10 @@ AddComponentPostInit("combat", function(self)
 			--反伤
 			if target.components.attackback ~= nil then
 				target.components.attackback:Effect(damage)
+			end
+			--复仇
+			if target.components.revenge ~= nil then
+				target.components.revenge:Onattcked(attacker)
 			end
 		end
 

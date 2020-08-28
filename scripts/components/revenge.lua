@@ -1,77 +1,52 @@
-local function IsValidVictim(victim)
-    return victim ~= nil
-        and not ((victim:HasTag("prey") and not victim:HasTag("hostile")) or
-                victim:HasTag("veggie") or
-                victim:HasTag("structure") or
-                victim:HasTag("wall") or
-                victim:HasTag("balloon") or
-                victim:HasTag("groundspike") or
-                victim:HasTag("smashable") or
-                victim:HasTag("companion"))
-        and victim.components.health ~= nil
-        and victim.components.combat ~= nil
-end
-
-local function Onhitother(inst, data)
-    inst.components.revenge:Onhitother(inst, data)
-end
-
-local function Onattcked(inst, data)
-    inst.components.revenge:Onattcked(inst, data)
-end
+local MAX_DAMAGE = 2
 
 local Revenge = Class(function(self, inst) 
     self.inst = inst
-    self.damge_percent = 0.05
+    self.damage_percent = 0
+    self.max_damage = MAX_DAMAGE
     self.revenge_data = {}
-    self:Init()
+    self.last_attacker = nil
 end,
 nil,
 {
     
 })
 
-function Revenge:Onhitother(inst, data)
-    if data.target and 
-        not self.attacking and
-        not inst.components.health:IsDead() and 
-        IsValidVictim(data.target) and 
-        data.damage>0 then
-
-        local damage = data.damage or 0
-        local target = data.target
-        local stimuli = data.stimuli
-        if stimuli ~= nil then return end
-        
-        if self.revenge_data[target] and self.revenge_data[target] > 0 then
-            self.attacking = true
-            target.components.combat:GetAttacked(inst, damage*self.revenge_data[target]*self.damge_percent, nil, "revenge")
-            self.inst:DoTaskInTime(.2, function() self.attacking = false end)
-        end
-        
-    end
+function Revenge:SetPercent(percent)
+    self.damage_percent = percent
 end
 
-function Revenge:Onattcked(inst, data)
-    local damage = data.damage
-    local attacker = data.attacker 
-    if damage > 0 and attacker ~= nil then
+function Revenge:GetDamageUp(attacker)
+    if attacker ~= nil then
+        local hit = self.revenge_data[attacker] or 0
+        return math.min(hit * self.damage_percent, self.max_damage)
+    end
+    return 0
+end
+
+function Revenge:Onattcked(attacker)
+    if attacker ~= nil and self.damage_percent > 0 then
         if self.revenge_data[attacker] == nil then
             self.revenge_data[attacker] = 1
         else
             self.revenge_data[attacker] = self.revenge_data[attacker] + 1
         end
+        self.last_attacker = attacker
+        self:Check()
     end
 end
 
-function Revenge:Init()
-    self.inst:ListenForEvent("onhitother", Onhitother)
-    self.inst:ListenForEvent("attacked", Onattcked)
+function Revenge:Check()
+    for k,v in pairs(self.revenge_data) do
+        if k == nil or not k:IsValid() or k == self.last_attacker or not k:IsNear(self.inst, 30) then
+            self.revenge_data[k] = nil
+        end
+    end
 end
 
+
 function Revenge:OnRemoveFromEntity()
-    self.inst:RemoveEventCallback("onhitother", Onhitother)
-    self.inst:RemoveEventCallback("attacked", Onattcked)
+    
 end
 
 function Revenge:OnSave()

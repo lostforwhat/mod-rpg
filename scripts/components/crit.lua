@@ -1,5 +1,5 @@
 local MIN_CHANCE = 0
-local MAX_CHANCE = 100
+local MAX_CHANCE = 1
 local MAX_HIT = 4
 
 local function onchance(self, chance)
@@ -84,7 +84,7 @@ function Crit:GetFinalChance()
 end
 
 function Crit:Effect()
-	local effect = self.next_must_crit or self.force_crit or self.luck_crit or (math.random(100) < self:GetFinalChance())
+	local effect = self.next_must_crit or self.force_crit or self.luck_crit or (math.random() < self:GetFinalChance())
 	if self.next_must_crit then self.next_must_crit=false end
 	return effect
 end

@@ -1,6 +1,6 @@
 local MIN_CHANCE = 0
-local MAX_CHANCE = 100
-local DEFAULT_CHANCE = 1
+local MAX_CHANCE = 1
+local DEFAULT_CHANCE = 0.01
 
 local function onchance(self, chance)
 
@@ -37,7 +37,7 @@ end
 
 function AttackDeath:Effect(base) --base为触发基数，外部计算后传入，0-1之间，1为标准基数
     base = base or 1
-    local effect = self.next_force_death or self.force_death or (math.radom(100)<self:GetChance() and (math.radom()<base))
+    local effect = self.next_force_death or self.force_death or (math.radom()<self:GetChance() and (math.radom()<base))
     if self.next_force_death then self.next_force_death = false end
     return effect
 end

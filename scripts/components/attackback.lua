@@ -52,7 +52,7 @@ function AttackBack:Effect(damage)
         inst._cdtask = inst:DoTaskInTime(.3, OnCooldown)
 
         local back_prefab = SpawnPrefab("bramblefx_armor")
-        back_prefab.damage = damage * 0.01 * self.percent + self.common
+        back_prefab.damage = damage * self.percent + self.common
         back_prefab:SetFXOwner(self.inst)
         return true
     end
