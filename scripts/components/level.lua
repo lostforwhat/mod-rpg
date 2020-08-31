@@ -1,14 +1,14 @@
 local MAX_LEVEL = 200
 
-local function onlevel(self, level)
+local function OnLevel(self, level)
 
 end
 
-local function onxp(self, xp)
+local function OnXp(self, xp)
 
 end
 
-local function ontotalxp(self, totalxp)
+local function OnTotalxp(self, totalxp)
 
 end
 
@@ -21,9 +21,9 @@ local Level = Class(function(self, inst)
 end,
 nil,
 {
-    level = onlevel,
-	xp = onxp,
-	totalxp = ontotalxp
+    level = OnLevel,
+	xp = OnXp,
+	totalxp = OnTotalxp
 })
 
 

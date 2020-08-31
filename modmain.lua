@@ -103,6 +103,11 @@ AddPlayerPostInit(function(inst)
 
 end)
 
+--abigail添加复仇属性
+AddPrefabPostInit("abigail", function(inst) 
+	inst:AddComponent("revenge")
+end)
+
 local function IsValidVictim(victim)
     return victim ~= nil
         and not ((victim:HasTag("prey") and not victim:HasTag("hostile")) or
