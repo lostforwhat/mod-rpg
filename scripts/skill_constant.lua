@@ -65,5 +65,32 @@ skill_constant = {
 		name="冰冻",
 		cost=20,
 		max_level=5
+	},
+	{
+		id="damageup",
+		name="力量",
+		cost=10,
+		max_level=20
+	},
+	{
+		id="miss",
+		name="闪避",
+		cost=20,
+		max_level=10
+	},
+
+	--生活技能
+	{
+		id="fishmaster",
+		name="垂钓大师",
+		cost=40
+	},
+	{
+		id="chopmaster",
+		name="一刀伐木",
+		cost=40
+	},
+	{
+		
 	}
 }
