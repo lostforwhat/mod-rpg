@@ -518,7 +518,7 @@ local function OnLoad(inst, data)
     if data ~= nil and data.burnt then
         onburnt(inst)
     end
-    if data ~= nil and data.level then
+    if data ~= nil and data.level ~= nil then
         local level = data.level
         if inst.components.colourtweener == nil then
             inst:AddComponent("colourtweener")
