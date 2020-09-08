@@ -111,6 +111,11 @@ local function fn()
 
 	inst:AddTag("bush")
 	inst:AddTag("plant")
+
+	inst.MiniMapEntity:SetIcon("coffeebush.tex")
+	inst.AnimState:SetBank("coffeebush")
+	inst.AnimState:SetBuild("coffeebush")
+	inst.AnimState:PlayAnimation("berriesmost", false)
 	
 	MakeObstaclePhysics(inst, .1)
 
@@ -156,11 +161,6 @@ local function fn()
 	inst:ListenForEvent("onwenthome", shake)
 	MakeSnowCovered(inst, .01)
 	MakeNoGrowInWinter(inst)
-
-	inst.MiniMapEntity:SetIcon("coffeebush.png")
-	inst.AnimState:SetBank("coffeebush")
-	inst.AnimState:SetBuild("coffeebush")
-	inst.AnimState:PlayAnimation("berriesmost", false)
 
 	inst.components.workable:SetOnFinishCallback(digupcoffeebush)
 	inst.components.inspectable.nameoverride = "coffeebush"
