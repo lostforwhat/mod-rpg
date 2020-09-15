@@ -1,7 +1,6 @@
 local assets =
 {
-    Asset("ANIM", "anim/meat.zip"),
-    Asset("ANIM", "anim/meat_monster.zip")
+    Asset("ANIM", "anim/coffee.zip")
 }
 
 local prefabs =
@@ -19,8 +18,8 @@ local function fn()
 
     MakeInventoryPhysics(inst)
 
-    inst.AnimState:SetBank(name)
-    inst.AnimState:SetBuild(name)
+    inst.AnimState:SetBank("coffeebean")
+    inst.AnimState:SetBuild("coffeebean")
     inst.AnimState:PlayAnimation("idle")
 
     --cookable (from cookable component) added to pristine state for optimization
@@ -85,8 +84,8 @@ local function fn_cooked()
 
     MakeInventoryPhysics(inst)
 
-    inst.AnimState:SetBank(name)
-    inst.AnimState:SetBuild(name)
+    inst.AnimState:SetBank("coffeebean")
+    inst.AnimState:SetBuild("coffeebean")
     inst.AnimState:PlayAnimation("cooked")
 
 
@@ -135,7 +134,11 @@ local function fn_cooked()
 end
 
 local function EatCoffeeFn(inst, eater)
-
+    if eater.components.debuffable ~= nil and eater.components.debuffable:IsEnabled() and
+        not (eater.components.health ~= nil and eater.components.health:IsDead()) and
+        not eater:HasTag("playerghost") then
+        eater.components.debuffable:AddDebuff("speedup", "speedup")
+    end
 end
 
 local function fn_prepared()
@@ -167,7 +170,7 @@ local function fn_prepared()
     inst:AddComponent("edible")
     inst.components.edible.healthvalue = 3
     inst.components.edible.hungervalue = 10
-    inst.components.edible.foodtype = FOODTYPE.GENERIC
+    inst.components.edible.foodtype = FOODTYPE.GOODIES
     inst.components.edible.secondaryfoodtype = nil
     inst.components.edible.sanityvalue = -5
     inst.components.edible.temperaturedelta = 0
@@ -177,25 +180,16 @@ local function fn_prepared()
     inst.components.edible:SetOnEatenFn(EatCoffeeFn)
 
     inst:AddComponent("inspectable")
-    inst.wet_prefix = data.wet_prefix
 
     inst:AddComponent("inventoryitem")
-
-    if spicename ~= nil then
-        inst.components.inventoryitem:ChangeImageName(spicename.."_over")
-    elseif data.basename ~= nil then
-        inst.components.inventoryitem:ChangeImageName(data.basename)
-    end
 
     inst:AddComponent("stackable")
     inst.components.stackable.maxsize = TUNING.STACK_SIZE_SMALLITEM
 
-    if data.perishtime ~= nil and data.perishtime > 0 then
-        inst:AddComponent("perishable")
-        inst.components.perishable:SetPerishTime(data.perishtime)
-        inst.components.perishable:StartPerishing()
-        inst.components.perishable.onperishreplacement = "spoiled_food"
-    end
+    inst:AddComponent("perishable")
+    inst.components.perishable:SetPerishTime(TUNING.PERISH_MED)
+    inst.components.perishable:StartPerishing()
+    inst.components.perishable.onperishreplacement = "spoiled_food"
 
     MakeSmallBurnable(inst)
     MakeSmallPropagator(inst)
@@ -213,4 +207,5 @@ local function fn_prepared()
 end
 
 return Prefab("coffeebean", fn, assets, prefabs),
-    Prefab("coffeebean_cooked", fn_cooked, assets, prefabs)
+    Prefab("coffeebean_cooked", fn_cooked, assets, prefabs),
+    Prefab("coffee", fn_prepared, assets, prefabs)

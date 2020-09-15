@@ -1,6 +1,8 @@
 local _G = GLOBAL
 local TheNet = _G.TheNet
 local TUNING = _G.TUNING
+local AddIngredientValues = _G.AddIngredientValues
+local AddCookerRecipe = _G.AddCookerRecipe
 env.require = GLOBAL.require
 
 local PlayerStatus = require('widgets/playerstatus')
@@ -26,9 +28,35 @@ table.insert(PrefabFiles, "achiv_clear")
 
 table.insert(PrefabFiles, "titles_fx")
 
+table.insert(PrefabFiles, "coffee")
+table.insert(PrefabFiles, "coffeebush")
+--buff
+table.insert(PrefabFiles, "new_buffs")
+--新装备
+
+
+
+--引入mod文件
 modimport("scripts/strings.lua")
 modimport("scripts/tumbleweed_pick.lua")
 modimport("scripts/modactions")
+
+--添加烹饪配方
+AddIngredientValues({"coffeebean"}, {fruit=.5}, true)
+AddIngredientValues({"coffeebean_cooked"}, {fruit=.5, coffeebean=1}, true)
+local coffeeRecipe = {
+		test = function(cooker, names, tags) return tags.coffeebean >= 4 or (tags.coffeebean>=3 and tags.dairy) end,
+		priority = 30,
+		foodtype = FOODTYPE.GOODIES,
+		cooktime = 1,
+        potlevel = "high",
+        floater = {"med", nil, 0.65},
+        name = "coffee",
+        weight = 1
+	}
+AddCookerRecipe("cookpot", coffeeRecipe)
+AddCookerRecipe("portablecookpot", coffeeRecipe)
+
 
 Assets = {
 	Asset("ATLAS", "images/hud/email.xml"),

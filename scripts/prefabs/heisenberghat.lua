@@ -24,10 +24,6 @@ local function onequip(inst, owner, symbol_override)
 end
 
 local function onunequip(inst, owner)
-    local skin_build = inst:GetSkinBuild()
-    if skin_build ~= nil then
-        owner:PushEvent("unequipskinneditem", inst:GetSkinName())
-    end
 
     owner.AnimState:ClearOverrideSymbol("swap_hat")
     owner.AnimState:Hide("HAT")
@@ -45,7 +41,7 @@ local function onunequip(inst, owner)
     end
 end
 
-local function simple(custom_init)
+local function simple()
     local inst = CreateEntity()
 
     inst.entity:AddTransform()
@@ -59,10 +55,6 @@ local function simple(custom_init)
     inst.AnimState:PlayAnimation("anim")
 
     inst:AddTag("hat")
-
-    if custom_init ~= nil then
-        custom_init(inst)
-    end
 
     MakeInventoryFloatable(inst)
 
@@ -89,8 +81,8 @@ local function simple(custom_init)
 end
 
 
-local function football()
-    local inst = simple(football_custom_init)
+local function fn()
+    local inst = simple()
 
     if not TheWorld.ismastersim then
         return inst
