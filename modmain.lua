@@ -87,7 +87,7 @@ AddPlayerPostInit(function(inst)
 
 	end
 	if prefab == "wathgrithr" then
-
+		inst:AddComponent("fighting")
 	end
 	if prefab == "wolfgang" then
 
@@ -134,6 +134,7 @@ end)
 --abigail添加复仇属性
 AddPrefabPostInit("abigail", function(inst) 
 	inst:AddComponent("revenge")
+	inst:AddComponent("clone")
 end)
 
 local function IsValidVictim(victim)
