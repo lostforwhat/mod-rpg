@@ -4,7 +4,7 @@ local function OnCooldown(inst)
     inst._cdtask = nil
 end
 
-local function onchance(self, chance)
+local function onpercent(self, percent)
 
 end
 

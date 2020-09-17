@@ -1,6 +1,12 @@
 local assets =
 {
-    Asset("ANIM", "anim/coffee.zip")
+    Asset("ANIM", "anim/coffee.zip"),
+    Asset("IMAGE", "images/coffee.tex"),
+    Asset("ATLAS", "images/coffee.xml"),
+    Asset("IMAGE", "images/coffeebean.tex"),
+    Asset("ATLAS", "images/coffeebean.xml"),
+    Asset("IMAGE", "images/coffeebean_cooked.tex"),
+    Asset("ATLAS", "images/coffeebean_cooked.xml"),
 }
 
 local prefabs =
@@ -51,6 +57,7 @@ local function fn()
 
     inst:AddComponent("inspectable")
     inst:AddComponent("inventoryitem")
+    inst.components.inventoryitem.atlasname = "images/coffeebean.xml"
 
     MakeSmallBurnable(inst)
     MakeSmallPropagator(inst)
@@ -64,7 +71,7 @@ local function fn()
     ------------------------------------------------  
 
     inst:AddComponent("cookable")
-    inst.components.cookable.product = name.."_cooked"
+    inst.components.cookable.product = "coffeebean_cooked"
 
     if TheNet:GetServerGameMode() == "quagmire" then
         event_server_data("quagmire", "prefabs/veggies").master_postinit(inst)
@@ -114,6 +121,7 @@ local function fn_cooked()
 
     inst:AddComponent("inspectable")
     inst:AddComponent("inventoryitem")
+    inst.components.inventoryitem.atlasname = "images/coffeebean_cooked.xml"
 
     MakeSmallBurnable(inst)
     MakeSmallPropagator(inst)
@@ -137,7 +145,7 @@ local function EatCoffeeFn(inst, eater)
     if eater.components.debuffable ~= nil and eater.components.debuffable:IsEnabled() and
         not (eater.components.health ~= nil and eater.components.health:IsDead()) and
         not eater:HasTag("playerghost") then
-        eater.components.debuffable:AddDebuff("speedup", "speedup")
+        eater.components.debuffable:AddDebuff("buff_speedup", "buff_speedup")
     end
 end
 
@@ -152,7 +160,7 @@ local function fn_prepared()
 
     inst.AnimState:SetBuild("coffee")
     inst.AnimState:SetBank("coffee")
-    
+    inst.Transform:SetScale(1.6, 1.6, 1)
 
     inst.AnimState:PlayAnimation("idle")
     --inst.AnimState:OverrideSymbol("swap_food", data.overridebuild or "cook_pot_food", data.basename or data.name)
@@ -182,6 +190,7 @@ local function fn_prepared()
     inst:AddComponent("inspectable")
 
     inst:AddComponent("inventoryitem")
+    inst.components.inventoryitem.atlasname = "images/coffee.xml"
 
     inst:AddComponent("stackable")
     inst.components.stackable.maxsize = TUNING.STACK_SIZE_SMALLITEM

@@ -1,8 +1,9 @@
 local _G = GLOBAL
 local TheNet = _G.TheNet
 local TUNING = _G.TUNING
-local AddIngredientValues = _G.AddIngredientValues
-local AddCookerRecipe = _G.AddCookerRecipe
+--local AddIngredientValues = _G.AddIngredientValues
+--local AddCookerRecipe = _G.AddCookerRecipe
+local FOODTYPE = _G.FOODTYPE
 env.require = GLOBAL.require
 
 local PlayerStatus = require('widgets/playerstatus')
@@ -126,7 +127,7 @@ AddPlayerPostInit(function(inst)
 	if not GLOBAL.TheNet:GetIsClient() then
         inst.components.attackdeath:SetChance(0)
         inst.components.attackbroken:SetChance(0)
-        inst.components.attackfrozen:SetChance(0)
+        inst.components.attackfrozen.chance=0
     end
 
 end)
@@ -151,13 +152,13 @@ end
 
 --修改combat，注入暴击吸血致死等属性
 AddComponentPostInit("combat", function(self)
-	local self.OldGetAttacked = self.GetAttacked
+	self.OldGetAttacked = self.GetAttacked
 	function self:GetAttacked(attacker, damage, weapon, stimuli)
 		--注入改写伤害
 		local extra_damage = 0
 		local target = self.inst
 
-		if IsValidVictim(target) and not target.components.health:IsInvincible() then
+		if attacker and IsValidVictim(target) and not target.components.health:IsInvincible() then
 			--致死优先级最高, 出现致死后后面其他逻辑可忽略
 			if attacker.components.attackdeath ~= nil then
 				local base = 1
@@ -222,6 +223,7 @@ AddComponentPostInit("combat", function(self)
 end)
 
 --添加modUI
+--[[
 local function AddPlayerStatus(self)
 	self.player_status = self.top_root:AddChild(PlayerStatus(self.owner))
 	self.player_status:SetHAnchor(0)
@@ -229,4 +231,4 @@ local function AddPlayerStatus(self)
     self.player_status:MoveToFront()
 end
 
-AddClassPostConstruct("widgets/controls", AddPlayerStatus)
+AddClassPostConstruct("widgets/controls", AddPlayerStatus)]]

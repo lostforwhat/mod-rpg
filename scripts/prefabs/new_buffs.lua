@@ -16,13 +16,13 @@ end
 
 local function speed_attach(inst, target)
     if target.components.locomotor ~= nil then
-        inst.components.locomotor:SetExternalSpeedMultiplier(inst, inst.prefab.."speedup", 1.25)
+        target.components.locomotor:SetExternalSpeedMultiplier(inst, inst.prefab.."speedup", 1.4)
     end
 end
 
 local function speed_detach(inst, target)
     if target.components.locomotor ~= nil then
-        inst.components.locomotor:RemoveExternalSpeedMultiplier(inst, inst.prefab.."speedup")
+        target.components.locomotor:RemoveExternalSpeedMultiplier(inst, inst.prefab.."speedup")
     end
 end
 
@@ -104,5 +104,5 @@ local function MakeBuff(name, onattachedfn, onextendedfn, ondetachedfn, duration
     return Prefab("buff_"..name, fn, nil, prefabs)
 end
 
-return MakeBuff("super_attack", attack_attach, nil, attack_detach, TNUING.BUFF_ATTACK_DURATION, 1),
-    MakeBuff("speedup", speed_attach, nil, speed_detach, TNUING.BUFF_ATTACK_DURATION, 1)
+return MakeBuff("super_attack", attack_attach, nil, attack_detach, TUNING.BUFF_ATTACK_DURATION, 1),
+    MakeBuff("speedup", speed_attach, nil, speed_detach, TUNING.BUFF_ATTACK_DURATION, 1)

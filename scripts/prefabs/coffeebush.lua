@@ -1,15 +1,51 @@
 local assets =
 {
-	Asset("ANIM", "anim/coffeebush.zip")
+	Asset("ANIM", "anim/coffeebush.zip"),
+    Asset("IMAGE", "images/dug_coffeebush.tex"),
+    Asset("ATLAS", "images/dug_coffeebush.xml"),
 }
 
 local prefabs =
 {
-	"coffeebeans",
+	"coffeebean",
 	"dug_coffeebush",
 	--"peacock",
 	"twigs",
 }
+
+local function ontransplantfn(inst)
+	inst.components.pickable:MakeBarren()
+end
+
+local function pickanim(inst)
+	if inst.components.pickable then
+		if inst.components.pickable:CanBePicked() then
+			local percent = 0
+			if inst.components.pickable then
+				percent = inst.components.pickable.cycles_left / inst.components.pickable.max_cycles
+			end
+			if percent >= .9 then
+				return "berriesmost"
+			elseif percent >= .33 then
+				return "berriesmore"
+			else
+				return "berries"
+			end
+		else
+			if inst.components.pickable:IsBarren() then
+				return "idle_dead"
+			else
+				return "idle"
+			end
+		end
+	end
+
+	return "idle"
+end
+
+local function makefullfn(inst)
+	inst.AnimState:PlayAnimation(pickanim(inst))
+end
 
 local function ontransplantfn(inst)
 	inst.components.pickable:MakeBarren()
@@ -65,6 +101,13 @@ local function onpickedfn(inst, picker)
 	 end
 end
 
+local function ongustpickfn(inst)
+	if inst.components.pickable and inst.components.pickable:CanBePicked() then
+		inst.components.pickable:MakeEmpty()
+		inst.components.lootdropper:SpawnLootPrefab(inst.components.pickable.product)
+	end
+end
+
 local function getregentimefn(inst)
 	if inst.components.pickable then
 		local num_cycles_passed = math.min(inst.components.pickable.max_cycles - inst.components.pickable.cycles_left, 0)
@@ -84,7 +127,7 @@ local function digupcoffeebush(inst, chopper)
 		else
 			
 			if inst.components.pickable and inst.components.pickable:CanBePicked() then
-				inst.components.lootdropper:SpawnLootPrefab("coffeebeans")
+				inst.components.lootdropper:SpawnLootPrefab("coffeebean")
 			end
 		
 			inst.components.lootdropper:SpawnLootPrefab("dug_"..inst.prefab)
@@ -101,6 +144,15 @@ local function onload(inst, data)
 	end
 end
 
+local function shake(inst)
+	if inst.components.pickable and inst.components.pickable:CanBePicked() then
+		inst.AnimState:PlayAnimation("shake")
+	else
+		inst.AnimState:PlayAnimation("shake_empty")
+	end
+	inst.AnimState:PushAnimation(pickanim(inst), false)
+end
+
 local function fn()
 	local inst = CreateEntity()
 
@@ -111,11 +163,12 @@ local function fn()
 
 	inst:AddTag("bush")
 	inst:AddTag("plant")
+	inst:AddTag("witherable")
 
-	inst.MiniMapEntity:SetIcon("coffeebush.tex")
+	inst.MiniMapEntity:SetIcon("coffeebush.png")
 	inst.AnimState:SetBank("coffeebush")
 	inst.AnimState:SetBuild("coffeebush")
-	inst.AnimState:PlayAnimation("berriesmost", false)
+	inst.AnimState:PlayAnimation("idle", true)
 	
 	MakeObstaclePhysics(inst, .1)
 
@@ -140,38 +193,109 @@ local function fn()
 	inst.components.pickable.cycles_left = inst.components.pickable.max_cycles
 	inst.spawnsperd = true
 	local variance = math.random() * 4 - 2
-	inst.makewitherabletask = inst:DoTaskInTime(TUNING.WITHER_BUFFER_TIME + variance, function(inst) inst.components.pickable:MakeWitherable() end)
-
+	--inst.makewitherabletask = inst:DoTaskInTime(TUNING.WITHER_BUFFER_TIME + variance, function(inst) inst.components.pickable:MakeWitherable() end)
+	inst:AddComponent("witherable")
 
 	inst:AddComponent("lootdropper")
 	inst:AddComponent("workable")
 	inst.components.workable:SetWorkAction(ACTIONS.DIG)
-	inst.components.workable:SetOnFinishCallback(digupberrybush)
 	inst.components.workable:SetWorkLeft(1)
 
 	inst:AddComponent("inspectable")
 	inst.components.inspectable.nameoverride = "berrybush"
 
-	inst:AddComponent("blowinwindgust")
-	inst.components.blowinwindgust:SetWindSpeedThreshold(TUNING.BERRYBUSH_WINDBLOWN_SPEED)
-	inst.components.blowinwindgust:SetDestroyChance(TUNING.BERRYBUSH_WINDBLOWN_FALL_CHANCE)
-	inst.components.blowinwindgust:SetDestroyFn(ongustpickfn)
-	inst.components.blowinwindgust:Start()
+	-- inst:AddComponent("blowinwindgust")
+	-- inst.components.blowinwindgust:SetWindSpeedThreshold(TUNING.BERRYBUSH_WINDBLOWN_SPEED)
+	-- inst.components.blowinwindgust:SetDestroyChance(TUNING.BERRYBUSH_WINDBLOWN_FALL_CHANCE)
+	-- inst.components.blowinwindgust:SetDestroyFn(ongustpickfn)
+	-- inst.components.blowinwindgust:Start()
 
 	inst:ListenForEvent("onwenthome", shake)
 	MakeSnowCovered(inst, .01)
 	MakeNoGrowInWinter(inst)
+	--master_postinit(inst)
 
 	inst.components.workable:SetOnFinishCallback(digupcoffeebush)
 	inst.components.inspectable.nameoverride = "coffeebush"
 
-	inst.components.pickable:SetUp("coffeebeans", TUNING.BERRY_REGROW_TIME)
-	inst.components.pickable:SetReverseSeasons(true)
+	inst.components.pickable:SetUp("coffeebean", TUNING.BERRY_REGROW_TIME)
+	--inst.components.pickable:SetReverseSeasons(true)
 	inst.spawnsperd = false 
 	inst:AddTag("fire_proof")
 
 	inst.OnLoad = onload
 
+	return inst
+
 end
 
-reuturn Prefab("coffeebush", fn, assets, prefabs)
+local function ondeploy(inst, pt, deployer)
+    local tree = SpawnPrefab("coffeebush")
+    if tree ~= nil then
+        tree.Transform:SetPosition(pt:Get())
+        inst.components.stackable:Get():Remove()
+        if tree.components.pickable ~= nil then
+            tree.components.pickable:OnTransplant()
+        end
+        if deployer ~= nil and deployer.SoundEmitter ~= nil then
+            --V2C: WHY?!! because many of the plantables don't
+            --     have SoundEmitter, and we don't want to add
+            --     one just for this sound!
+            deployer.SoundEmitter:PlaySound("dontstarve/common/plant")
+        end
+    end
+end
+
+local function dug_fn()
+    local inst = CreateEntity()
+
+    inst.entity:AddTransform()
+    inst.entity:AddAnimState()
+    --inst.entity:AddSoundEmitter()
+    inst.entity:AddNetwork()
+
+    MakeInventoryPhysics(inst)
+
+    inst:AddTag("deployedplant")
+
+    inst.AnimState:SetBank("coffeebush")
+    inst.AnimState:SetBuild("coffeebush")
+    inst.AnimState:PlayAnimation("dropped")
+
+    MakeInventoryFloatable(inst)
+
+
+    inst.entity:SetPristine()
+
+    if not TheWorld.ismastersim then
+        return inst
+    end
+
+    inst:AddComponent("stackable")
+    inst.components.stackable.maxsize = TUNING.STACK_SIZE_LARGEITEM
+
+    inst:AddComponent("inspectable")
+    inst.components.inspectable.nameoverride = "dug_coffeebush"
+    inst:AddComponent("inventoryitem")
+    inst.components.inventoryitem.atlasname = "images/dug_coffeebush.xml"
+
+    inst:AddComponent("fuel")
+    inst.components.fuel.fuelvalue = TUNING.LARGE_FUEL
+
+    MakeMediumBurnable(inst, TUNING.LARGE_BURNTIME)
+    MakeSmallPropagator(inst)
+
+    MakeHauntableLaunchAndIgnite(inst)
+
+    inst:AddComponent("deployable")
+    --inst.components.deployable:SetDeployMode(DEPLOYMODE.ANYWHERE)
+    inst.components.deployable.ondeploy = ondeploy
+    inst.components.deployable:SetDeployMode(DEPLOYMODE.PLANT)
+
+    ---------------------
+    return inst
+end
+
+return Prefab("coffeebush", fn, assets, prefabs),
+	Prefab("dug_coffeebush", dug_fn, assets, prefabs),
+	MakePlacer("dug_coffeebush_placer", "coffeebush", "coffeebush", "idle")

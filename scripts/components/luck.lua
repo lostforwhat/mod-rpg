@@ -2,7 +2,7 @@ local MAX_LUCK = 100
 local MIN_LUCK = 0
 
 local function onluck(self, luck)
-	self.inst.currentluck:set(luck)
+	
 end
 
 local function onstate(self, state)

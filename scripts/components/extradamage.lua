@@ -8,6 +8,10 @@ local function OnSpecail(self, special)
 
 end
 
+local function OnMemorykilldata(self, memorykilldata)
+
+end
+
 
 local ExtraDamage = Class(function(self, inst) 
     self.inst = inst
