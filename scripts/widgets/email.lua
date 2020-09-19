@@ -1,4 +1,6 @@
 local Widget = require "widgets/widget"
+local ImageButton = require "widgets/imagebutton"
+local Text = require "widgets/text"
 
 
 local Email = Class(Widget, function(self, owner)

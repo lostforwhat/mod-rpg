@@ -1,6 +1,7 @@
 local assets =
 {
     Asset("ANIM", "anim/coffee.zip"),
+    Asset("ANIM", "anim/coffeebean.zip"),
     Asset("IMAGE", "images/coffee.tex"),
     Asset("ATLAS", "images/coffee.xml"),
     Asset("IMAGE", "images/coffeebean.tex"),

@@ -8,6 +8,11 @@ env.require = GLOBAL.require
 
 local PlayerStatus = require('widgets/playerstatus')
 
+Assets = {
+	Asset("ANIM", "anim/coffee.zip"),
+	Asset("ATLAS", "images/hud/email.xml"),
+    Asset("IMAGE", "images/hud/email.tex"),
+}
 
 PrefabFiles = {}
 
@@ -46,23 +51,19 @@ modimport("scripts/modactions")
 AddIngredientValues({"coffeebean"}, {fruit=.5}, true)
 AddIngredientValues({"coffeebean_cooked"}, {fruit=.5, coffeebean=1}, true)
 local coffeeRecipe = {
-		test = function(cooker, names, tags) return tags.coffeebean >= 4 or (tags.coffeebean>=3 and tags.dairy) end,
+		test = function(cooker, names, tags) return tags.coffeebean and (tags.coffeebean >= 4 or (tags.coffeebean>=3 and tags.dairy)) end,
 		priority = 30,
 		foodtype = FOODTYPE.GOODIES,
 		cooktime = 1,
-        potlevel = "high",
-        floater = {"med", nil, 0.65},
+        --potlevel = "high",
+        --floater = {"med", nil, 0.65},
         name = "coffee",
-        weight = 1
+        weight = 1,
+        overridebuild = "coffee"
 	}
 AddCookerRecipe("cookpot", coffeeRecipe)
 AddCookerRecipe("portablecookpot", coffeeRecipe)
 
-
-Assets = {
-	Asset("ATLAS", "images/hud/email.xml"),
-    Asset("IMAGE", "images/hud/email.tex"),
-}
 
 --角色初始化
 AddPlayerPostInit(function(inst) 
@@ -136,6 +137,17 @@ end)
 AddPrefabPostInit("abigail", function(inst) 
 	inst:AddComponent("revenge")
 	inst:AddComponent("clone")
+end)
+
+--给灰烬添加肥料属性
+AddPrefabPostInit("ash", function(inst) 
+	if _G.TheWorld.ismastersim then
+		inst:AddComponent("fertilizer")
+	    inst.components.fertilizer.fertilizervalue = TUNING.POOP_FERTILIZE
+	    inst.components.fertilizer.soil_cycles = TUNING.POOP_SOILCYCLES
+	    inst.components.fertilizer.withered_cycles = TUNING.POOP_WITHEREDCYCLES
+	    inst.components.fertilizer.volcanic = true
+	end
 end)
 
 local function IsValidVictim(victim)
@@ -223,12 +235,11 @@ AddComponentPostInit("combat", function(self)
 end)
 
 --添加modUI
---[[
 local function AddPlayerStatus(self)
 	self.player_status = self.top_root:AddChild(PlayerStatus(self.owner))
-	self.player_status:SetHAnchor(0)
-    self.player_status:SetVAnchor(0)
+	self.player_status:SetHAnchor(_G.ANCHOR_LEFT)
+    self.player_status:SetVAnchor(_G.ANCHOR_TOP)
     self.player_status:MoveToFront()
 end
 
-AddClassPostConstruct("widgets/controls", AddPlayerStatus)]]
+AddClassPostConstruct("widgets/controls", AddPlayerStatus)

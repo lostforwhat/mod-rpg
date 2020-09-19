@@ -37,7 +37,7 @@ end
 
 function AttackDeath:Effect(base) --base为触发基数，外部计算后传入，0-1之间，1为标准基数
     base = base or 1
-    local effect = self.next_force_death or self.force_death or (math.radom()<self:GetChance() and (math.radom()<base))
+    local effect = self.next_force_death or self.force_death or (math.random()<self:GetChance() and (math.random()<base))
     if self.next_force_death then self.next_force_death = false end
     return effect
 end
