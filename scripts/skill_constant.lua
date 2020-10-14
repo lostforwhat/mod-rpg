@@ -82,7 +82,7 @@ skill_constant = {
 	--生活技能
 	{
 		id="fishmaster",
-		name="垂钓大师",
+		name="快速垂钓",
 		cost=40
 	},
 	{

@@ -28,7 +28,7 @@ function Email:DoRecievedEmail()
 end
 
 function Email:OnShow()
-
+    self:Show()
 end
 
 
