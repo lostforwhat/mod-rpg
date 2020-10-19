@@ -87,9 +87,32 @@ task_data = {
 		name="饱荒",
 		desc="吃食物1888次",
 		need=1888,
-		reward=1
+		reward=4
 	},
-
+	eat_type20 = {
+		name="尝鲜",
+		desc="吃20种不同的食物",
+		need=20,
+		reward=2
+	},
+	eat_type40 = {
+		name="佳肴",
+		desc="吃40种不同的食物",
+		need=40,
+		reward=4
+	},
+	eat_special_10 = {
+		name="特殊料理",
+		desc="吃10次特殊料理的食物",
+		need=10,
+		reward=3
+	},
+	eat_prefared200 = {
+		name="挑食",
+		desc="吃200次烹饪锅食物",
+		need=200,
+		reward=5
+	}
 	--击杀部分
 
 	--种植收割部分
