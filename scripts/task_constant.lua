@@ -13,31 +13,31 @@ task_data = {
 		desc="采集一次风滚草",
 		reward=1
 	},
-	pick_tumbleweed88 = {
+	pick_tumbleweed_88 = {
 		name="渐入佳境",
 		desc="采集风滚草88次",
 		need=88,
 		reward=1
 	},
-	pick_tumbleweed288 = {
+	pick_tumbleweed_288 = {
 		name="初窥门径",
 		desc="采集风滚草288次",
 		need=288,
 		reward=2
 	},
-	pick_tumbleweed888 = {
+	pick_tumbleweed_888 = {
 		name="习以为常",
 		desc="采集风滚草888次",
 		need=888,
 		reward=3
 	},
-	pick_tumbleweed2888 = {
+	pick_tumbleweed_2888 = {
 		name="摸宝专家",
 		desc="采集风滚草2888次",
 		need=2888,
 		reward=5
 	},
-	pick_tumbleweed6666 = {
+	pick_tumbleweed_6666 = {
 		name="忠实草迷",
 		desc="采集风滚草6666次",
 		need=6666,
@@ -77,25 +77,25 @@ task_data = {
 	},
 
 	--食物部分
-	eat100 = {
+	eat_100 = {
 		name="吃饱",
 		desc="吃食物100次",
 		need=100,
 		reward=1
 	},
-	eat1888 = {
+	eat_1888 = {
 		name="饱荒",
 		desc="吃食物1888次",
 		need=1888,
 		reward=4
 	},
-	eat_type20 = {
+	eat_type_20 = {
 		name="尝鲜",
 		desc="吃20种不同的食物",
 		need=20,
 		reward=2
 	},
-	eat_type40 = {
+	eat_type_40 = {
 		name="佳肴",
 		desc="吃40种不同的食物",
 		need=40,
@@ -107,17 +107,73 @@ task_data = {
 		need=10,
 		reward=3
 	},
-	eat_prefared200 = {
+	eat_prefared_200 = {
 		name="挑食",
 		desc="吃200次烹饪锅食物",
 		need=200,
 		reward=5
 	}
-	--击杀部分
+	eat_hot_10 = {
+		name="热食",
+		desc="吃10次热食",
+		need=10,
+		reward=2
+	},
 
-	--种植收割部分
+	--击杀部分
+	kill_100 = {
+		name="弱肉强食",
+		desc="击杀100只怪物",
+		need=100,
+		reward=1
+	},
+	kill_1000 = {
+		name="狩猎",
+		desc="击杀1000只怪物",
+		need=1000,
+		reward=3
+	},
+	kill_spider_100 = {
+		name="清理蜘蛛",
+		desc="击杀100只蜘蛛",
+		need=100,
+		reward=2
+	},
+	kill_hound_100 = {
+		name="清理猎犬",
+		desc="击杀100只猎犬",
+		need=100,
+		reward=2
+	},
+	kill_bee_100 = {
+		name="清理蜜蜂",
+		desc="击杀100只蜜蜂",
+		need=100,
+		reward=2
+	},
+	kill_mosquito_100 = {
+		name="清理蚊子",
+		desc="击杀100只蚊子",
+		need=100,
+		reward=2
+	},
+	kill_frog_100 = {
+		name="清理青蛙",
+		desc="击杀100只青蛙",
+		need=100,
+		reward=2
+	},
+	
 
 	--伤害部分
 
+
+	--种植收割部分
+
+
+	--制作部分
+
+
+	--交友与互动
 	
 }
