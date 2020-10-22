@@ -12,6 +12,8 @@ Assets = {
 	Asset("ANIM", "anim/coffee.zip"),
 	Asset("ATLAS", "images/hud/email.xml"),
     Asset("IMAGE", "images/hud/email.tex"),
+    Asset("ATLAS", "images/hud/levelbadge.xml"),
+    Asset("IMAGE", "images/hud/levelbadge.tex"),
 }
 
 PrefabFiles = {}

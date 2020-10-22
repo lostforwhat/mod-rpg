@@ -16,7 +16,7 @@ end
 
 local function speed_attach(inst, target)
     if target.components.locomotor ~= nil then
-        target.components.locomotor:SetExternalSpeedMultiplier(inst, inst.prefab.."speedup", 1.4)
+        target.components.locomotor:SetExternalSpeedMultiplier(inst, inst.prefab.."speedup", 1.8)
     end
 end
 

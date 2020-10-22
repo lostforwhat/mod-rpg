@@ -161,7 +161,6 @@ local function fn_prepared()
 
     inst.AnimState:SetBuild("coffee")
     inst.AnimState:SetBank("coffee")
-    inst.Transform:SetScale(1.6, 1.6, 1)
 
     inst.AnimState:PlayAnimation("idle")
     --inst.AnimState:OverrideSymbol("swap_food", data.overridebuild or "cook_pot_food", data.basename or data.name)

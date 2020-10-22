@@ -13,11 +13,11 @@ local Email = Class(Widget, function(self, owner)
 
     self.text = self:AddChild(Text(TALKINGFONT, 28))
     self.text:SetPosition(0, -85, 0)
-   	self:OnShow()
+   	--self:OnShow()
 
     self.inst:ListenForEvent("continuefrompause", function()
         if self.shown then
-            self:OnShow()
+            --self:OnShow()
         end
     end, TheWorld)
     
