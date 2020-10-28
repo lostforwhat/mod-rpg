@@ -9,7 +9,7 @@ local TaskInfo = Class(Widget, function(self, owner)
 
     self.button = self:AddChild(ImageButton("images/hud/levelbadge.xml", "levelbadge.tex"))
     self.button:SetHoverText("任务",{ size = 9, offset_x = 40, offset_y = -45, colour = {1,1,1,1}})
-    --self.button:SetOnClick(function() self:ShowInfo() end)
+    self.button:SetOnClick(function() self:ShowInfo() end)
 
     self.text = self:AddChild(Text(TALKINGFONT, 28))
     self.text:SetPosition(0, -85, 0)
@@ -18,6 +18,10 @@ local TaskInfo = Class(Widget, function(self, owner)
     
 end)
 
-
+function TaskInfo:ShowInfo()
+	if self.owner and self.owner.HUD then
+		self.owner.HUD:ShowTaskScreen(self.inst)
+	end
+end
 
 return TaskInfo

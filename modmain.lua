@@ -7,6 +7,7 @@ local FOODTYPE = _G.FOODTYPE
 env.require = GLOBAL.require
 
 local PlayerStatus = require('widgets/playerstatus')
+local TaskScreen = require('screens/taskscreen')
 
 Assets = {
 	Asset("ANIM", "anim/coffee.zip"),
@@ -245,3 +246,19 @@ local function AddPlayerStatus(self)
 end
 
 AddClassPostConstruct("widgets/controls", AddPlayerStatus)
+
+AddClassPostConstruct("screens/playerhud", function(self, anim, owner)
+    self.ShowTaskScreen = function(_)
+        
+        self.taskscreen = TaskScreen(self.owner)
+        self:OpenScreenUnderPause(self.taskscreen)
+        return self.taskscreen
+    end
+
+    self.CloseTaskScreen = function(_)
+        if self.taskscreen then
+            self.taskscreen:Close()
+            self.taskscreen = nil
+        end
+    end
+end)
