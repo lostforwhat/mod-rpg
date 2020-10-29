@@ -2,6 +2,9 @@ local _G = GLOBAL
 env.ACTIONS = GLOBAL.ACTIONS
 env.ActionHandler = GLOBAL.ActionHandler
 
+--[[
+添加新动作
+]]
 --祈祷动作
 AddAction("PRAY",_G.STRINGS.TUM.PRAY,function(act)
     if act.doer ~= nil and act.invobject ~= nil and act.invobject.components.prayable ~= nil then
@@ -32,3 +35,31 @@ end)
 
 AddStategraphActionHandler("wilson",ActionHandler(ACTIONS.CALL, "play_horn"))
 AddStategraphActionHandler("wilson_client",ActionHandler(ACTIONS.CALL,"play_horn"))
+
+
+
+--[[
+以下代码修改原action，添加mod需要的逻辑，注册event等
+并非新增action
+]]
+
+--修改give逻辑
+local GIVE = ACTIONS.GIVE
+local old_give_fn = GIVE.fn
+GIVE.fn = function(act, ...)
+
+    --[[
+    local trader = nil
+    if act.target and act.target.components then
+        trader = act.target.components.trader
+    end
+    ]]
+
+    local result = old_give_fn(act)
+    if act.doer and result and act.target and act.invobject and act.invobject.onlytask == nil then
+        act.doer:PushEvent("givesomething", {item=act.invobject, target=act.target})
+        act.invobject.onlytask = act.invobject:DoTaskInTime(0.35, function()  act.invobject.onlytask = nil end)
+    end
+
+    return result
+end

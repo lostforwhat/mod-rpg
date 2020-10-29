@@ -509,7 +509,7 @@ local function doSpawnItem(it, target, picker)
     if item ~= nil and needNotice(it.item) then
         local item_name = item:GetDisplayName() or "???"
         resetNotice(item_name)
-        picker:PushEvent("tumbleweeddropped", {item = item})
+        --picker:PushEvent("tumbleweeddropped", {item = item})
     end
     return item
 end
@@ -598,10 +598,10 @@ AddPrefabPostInit(
                 if titles[13] == 1 then
                     num_loots = num_loots + 1
                 end
-                if TUNING.more_blueprint and level >=2 then
+                --[[if TUNING.more_blueprint and level >=2 then
                     spawnAtGround("blueprint", x, y, z)
                     num_loots = num_loots - 1
-                end
+                end]]
 
                 local res_loot = {}
                 while num_loots > 0 do
@@ -635,7 +635,7 @@ AddPrefabPostInit(
 
 --api
 GLOBAL.AddLoot = function(loot_tb, loot_type)
-    if not loot_table[loot_type] then
+    if not loot_type or not loot_table[loot_type] then
         loot_type = "new_loot"
     end
     if loot_tb and loot_tb.item and loot_tb.chance then

@@ -1,11 +1,11 @@
 local _G = GLOBAL
 local TheNet = _G.TheNet
 local TUNING = _G.TUNING
---local AddIngredientValues = _G.AddIngredientValues
---local AddCookerRecipe = _G.AddCookerRecipe
-local FOODTYPE = _G.FOODTYPE
 env.require = GLOBAL.require
 
+require 'modmain/loot_table'
+require 'modmain/task_constant'
+require 'modmain/skill_constant'
 local PlayerStatus = require('widgets/playerstatus')
 local TaskScreen = require('screens/taskscreen')
 
@@ -46,30 +46,18 @@ table.insert(PrefabFiles, "new_buffs")
 
 
 --引入mod文件
-modimport("scripts/strings.lua")
-modimport("scripts/tumbleweed_pick.lua")
-modimport("scripts/modactions")
+modimport("scripts/modmain/strings.lua")
+modimport("scripts/modmain/tumbleweed_pick.lua")
+modimport("scripts/modmain/modactions.lua")
+modimport("scripts/modmain/task_events.lua")
+modimport("scripts/modmain/modrecipes.lua")
 
---添加烹饪配方
-AddIngredientValues({"coffeebean"}, {fruit=.5}, true)
-AddIngredientValues({"coffeebean_cooked"}, {fruit=.5, coffeebean=1}, true)
-local coffeeRecipe = {
-		test = function(cooker, names, tags) return tags.coffeebean and (tags.coffeebean >= 4 or (tags.coffeebean>=3 and tags.dairy)) end,
-		priority = 30,
-		foodtype = FOODTYPE.GOODIES,
-		cooktime = 1,
-        --potlevel = "high",
-        --floater = {"med", nil, 0.65},
-        name = "coffee",
-        weight = 1,
-        overridebuild = "coffee"
-	}
-AddCookerRecipe("cookpot", coffeeRecipe)
-AddCookerRecipe("portablecookpot", coffeeRecipe)
 
 
 --角色初始化
 AddPlayerPostInit(function(inst) 
+	inst:AddComponent("taskdata")
+
 	inst:AddComponent("attackdeath")
 	inst:AddComponent("attackbroken")
 	inst:AddComponent("attackback")

@@ -58,20 +58,20 @@ task_data = {
 	},
 	pick_tumbleweed_light_20 = {
 		name="神秘宝物",
-		desc="采集橙色风滚草60次",
+		desc="采集发光风滚草20次",
 		need=20,
 		reward=5,
 		hide=true
 	},
 	pick_tumbleweed_green_120 = {
 		name="灾厄之物",
-		desc="采集橙色风滚草120次",
+		desc="采集绿色风滚草120次",
 		need=120,
 		reward=3
 	},
 	pick_tumbleweed_blue_60 = {
 		name="厄运之兆",
-		desc="采集橙色风滚草60次",
+		desc="采集蓝色风滚草60次",
 		need=60,
 		reward=4
 	},
