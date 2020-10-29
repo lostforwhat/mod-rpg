@@ -1,5 +1,6 @@
 local PI = GLOBAL.PI
-require("loot_table")
+require("modmain/loot_table")
+local loot_table = GLOBAL.loot_table
 
 local function removetools(picker)
     for k,v in pairs(picker.components.inventory.itemslots) do

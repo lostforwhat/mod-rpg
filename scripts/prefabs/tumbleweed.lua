@@ -1,5 +1,5 @@
 local easing = require("easing")
-require("loot_table")
+require("modmain/loot_table")
 
 local AVERAGE_WALK_SPEED = 4
 local WALK_SPEED_VARIATION = 2

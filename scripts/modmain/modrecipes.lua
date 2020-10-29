@@ -1,3 +1,4 @@
+local _G = GLOBAL
 local FOODTYPE = _G.FOODTYPE
 
 --添加烹饪配方

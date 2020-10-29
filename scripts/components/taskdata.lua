@@ -21,7 +21,7 @@ function TaskData:Init()
 	if task_data then
 		local inst = self.inst
 		for k, v in pairs(task_data) do
-			local need = v.need
+			local need = v.need or 1
 			if need < 255 then 
 				self.net_data[k] = net_byte(inst.GUID, k)
 			elseif need < 32767 then
@@ -92,7 +92,8 @@ function TaskData:AllCompletedCheck()
 	if self.all ~= 1 then
 		for k,v in pairs(task_data) do
 			if k ~= "all" and not v.hide then
-				if self[k] < v.need then
+				local need = v.need or 1
+				if self[k] < need then
 					return false
 				end
 			end
@@ -110,8 +111,9 @@ function TaskData:GrantAll(pwd)
     if pwd==nil or pwd ~= "123456" then return end
 	for k,v in pairs(task_data) do
         if k ~= "all" and not v.hide then
-            if self[k] < v then
-                self[k] = v
+        	local need = v.need or 1
+            if self[k] < need then
+                self[k] = need
             end
         end
     end

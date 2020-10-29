@@ -112,7 +112,7 @@ task_data = {
 		desc="吃200次烹饪锅食物",
 		need=200,
 		reward=5
-	}
+	},
 	eat_hot_10 = {
 		name="热食",
 		desc="吃10次热食",
