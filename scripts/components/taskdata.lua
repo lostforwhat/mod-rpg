@@ -29,9 +29,10 @@ function TaskData:Init()
 			else
 				self.net_data[k] = net_int(inst.GUID, k)
 			end
-			
+			self[k] = 0
 		end
 	end
+	self:AllCompletedCheck()
 end
 
 function TaskData:OnSave()

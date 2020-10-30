@@ -21,7 +21,7 @@ local TaskScreen = Class(Screen, function(self, owner)
     self:SetVAnchor(ANCHOR_MIDDLE)
     self:SetHAnchor(ANCHOR_MIDDLE)
 
-    self.scalingroot = self:AddChild(Widget("travelablewidgetscalingroot"))
+    self.scalingroot = self:AddChild(Widget("taskwidgetscalingroot"))
     self.scalingroot:SetScale(TheFrontEnd:GetHUDScale())
 
     self.inst:ListenForEvent("continuefrompause", function()
@@ -68,30 +68,55 @@ local TaskScreen = Class(Screen, function(self, owner)
 end)
 
 function TaskScreen:TaskItem()
+    local taskdata = self.owner.components.taskdata
 	local task = Widget("taskitem")
 
     local item_width, item_height = 130, 90
     task.backing = task:AddChild(TEMPLATES.ListItemBackground(item_width, item_height, function() end))
     task.backing.move_on_click = true
 
-    task.name = task:AddChild(Text(BODYTEXTFONT, 35))
+    task.name = task:AddChild(Text(BODYTEXTFONT, 30))
     task.name:SetVAlign(ANCHOR_MIDDLE)
     task.name:SetHAlign(ANCHOR_LEFT)
     task.name:SetPosition(0, 25, 0)
     task.name:SetRegionSize(130, 50)
 
+    task.desc = task:AddChild(Text(BODYTEXTFONT, 15))
+    task.desc:SetVAlign(ANCHOR_MIDDLE)
+    task.desc:SetHAlign(ANCHOR_LEFT)
+    task.desc:SetPosition(0, -20)
+    task.desc:SetRegionSize(130, 40)
 
-    task.SetInfo = function(_, info)
-        if info.name and info.name ~= "" then
-            task.name:SetString(info.name)
-            task.name:SetColour(1, 1, 1, 1)
+    task.SetInfo = function(_, data)
+        local info = data.task
+        local index = data.index
+        task.name:SetString(info.name)
+        
+        local current = taskdata.net_data[index]:value()
+        local need = info.need or 1
+        task.desc:SetString(string.format(info.desc, current.."/"..need))
+        
+
+        if current >= need then
+            task.name:SetColour(0, 1, 0, 1)
+            task.desc:SetColour(0, 1, 0, 1)
         else
-            task.name:SetString("Unknow")
-            task.name:SetColour(1, 1, 0, 0.6)
+            task.name:SetColour(1, 1, 1, 1)
+            task.desc:SetColour(1, 1, 1, 1)
         end
 
 		task.backing:SetOnClick(function()
-            
+            --此处做宣告使用
+            if TheInput:IsKeyDown(KEY_ALT) and TheInput:IsKeyDown(KEY_SHIFT) then
+                if not self.cooldown then
+
+                    local str = "任务：%s, 完成度：%s/%s"
+                    TheNet:Say(string.format(str, info.name, current, need), false)
+                    
+                    self.cooldown = true
+                    self.inst:DoTaskInTime(3, function() self.cooldown = nil end)
+                end
+            end
         end)
     end
 
@@ -128,15 +153,15 @@ function TaskScreen:LoadTasks()
 
         local taskitem = widget.taskitem
 
-        taskitem:SetInfo(data.task)
+        taskitem:SetInfo(data)
 	end
 
 	self.task_widgets = {}
 	if task_data then
 		for k, v in pairs(task_data) do
-			local num = #self.task_widgets + 1
+			--local num = #self.task_widgets + 1
 			--print(num)
-			table.insert(self.task_widgets, {index=num, task=v})
+			table.insert(self.task_widgets, {index=k, task=v})
 		end
 	end
 
