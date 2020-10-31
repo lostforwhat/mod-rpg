@@ -20,8 +20,15 @@ local Email = Class(Widget, function(self, owner)
             --self:OnShow()
         end
     end, TheWorld)
+
+    self:Hide()
+    self:CheckEmail()
     
 end)
+
+function Email:CheckEmail()
+    
+end
 
 function Email:DoRecievedEmail()
 

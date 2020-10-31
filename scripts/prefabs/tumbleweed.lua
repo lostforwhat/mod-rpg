@@ -385,7 +385,7 @@ local function MakeLoot(inst)
             end
         end
     elseif level == -2 then
-        possible_loot = loot_table.monster
+        possible_loot = loot_table.monstor_loot
         for a,b in ipairs(loot_table.monstor_loot) do
             if b.chance > 0 then
                 table.insert(possible_loot, b)

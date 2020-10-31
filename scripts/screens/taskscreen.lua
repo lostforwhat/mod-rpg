@@ -50,10 +50,13 @@ local TaskScreen = Class(Screen, function(self, owner)
     self.taskspanel = self.root:AddChild(TEMPLATES.RectangleWindow(650, 550))
     self.taskspanel:SetPosition(0, 25)
 
-    self.current = self.taskspanel:AddChild(Text(BODYTEXTFONT, 35))
-    self.current:SetPosition(0, 250, 0)
-    self.current:SetRegionSize(650, 50)
+    self.current = self.taskspanel:AddChild(Text(BODYTEXTFONT, 30))
+    self.current:SetPosition(0, 250)
+    self.current:SetRegionSize(250, 50)
     self.current:SetHAlign(ANCHOR_MIDDLE)
+    self.current:SetColour(0.7, 0.7, 0.7, 1)
+    self.title_str = "我的任务(%s/%s)"
+    self.current:SetString(string.format(self.title_str, self:GetMyTask()))
 
     self.cancelbutton = self.taskspanel:AddChild(
                             TEMPLATES.StandardButton(
@@ -67,42 +70,75 @@ local TaskScreen = Class(Screen, function(self, owner)
     self.isopen = true
 end)
 
+function TaskScreen:GetMyTask()
+	local total = 0
+	local num = 0
+	local taskdata = self.owner.components.taskdata
+	for k, v in pairs(task_data) do
+		if not v.hide then
+			local current = taskdata.net_data[k]:value() or 0
+			local need = v.need or 1
+			if current >= need then
+				num = num + 1
+			end
+			total = total + 1
+		end
+	end
+	return num, total
+end
+
 function TaskScreen:TaskItem()
     local taskdata = self.owner.components.taskdata
 	local task = Widget("taskitem")
 
-    local item_width, item_height = 130, 90
+    local item_width, item_height = 160, 75
     task.backing = task:AddChild(TEMPLATES.ListItemBackground(item_width, item_height, function() end))
     task.backing.move_on_click = true
 
-    task.name = task:AddChild(Text(BODYTEXTFONT, 30))
+    task.name = task:AddChild(Text(BODYTEXTFONT, 32))
     task.name:SetVAlign(ANCHOR_MIDDLE)
     task.name:SetHAlign(ANCHOR_LEFT)
-    task.name:SetPosition(0, 25, 0)
-    task.name:SetRegionSize(130, 50)
+    task.name:SetPosition(-10, 20, 0)
+    --task.name:SetRegionSize(120, 35)
 
-    task.desc = task:AddChild(Text(BODYTEXTFONT, 15))
+    task.reward = task:AddChild(Text(BODYTEXTFONT, 30))
+    task.reward:SetVAlign(ANCHOR_MIDDLE)
+    task.reward:SetHAlign(ANCHOR_MIDDLE)
+    task.reward:SetPosition(70, 20, 0)
+    --task.reward:SetRegionSize(30, 20)
+
+    task.desc = task:AddChild(Text(BODYTEXTFONT, 18))
     task.desc:SetVAlign(ANCHOR_MIDDLE)
     task.desc:SetHAlign(ANCHOR_LEFT)
-    task.desc:SetPosition(0, -20)
-    task.desc:SetRegionSize(130, 40)
+    task.desc:SetPosition(0, -17.5, 0)
 
     task.SetInfo = function(_, data)
         local info = data.task
         local index = data.index
-        task.name:SetString(info.name)
+        --task.name:SetString(info.name)
+        task.name:SetTruncatedString(info.name, 120, 100, "")
+        local line = task.name:GetString()
+		while #line < #info.name do
+			task.name:SetSize(task.name:GetSize() - 0.2)
+			task.name:SetTruncatedString(info.name, 120, 100, "")
+			line = task.name:GetString()
+		end
+		task.name:SetRegionSize(120, 35)
         
         local current = taskdata.net_data[index]:value()
         local need = info.need or 1
-        task.desc:SetString(string.format(info.desc, current.."/"..need))
-        
+        task.desc:SetMultilineTruncatedString(string.format(info.desc, current.."/"..need), 2, 140, 100, "", true)
+        task.desc:SetRegionSize(140, 40)
 
+        local reward = info.reward or 1
+        task.reward:SetString(reward)
+        task.reward:SetColour(1, 0.84, 0, 1)
         if current >= need then
             task.name:SetColour(0, 1, 0, 1)
             task.desc:SetColour(0, 1, 0, 1)
         else
-            task.name:SetColour(1, 1, 1, 1)
-            task.desc:SetColour(1, 1, 1, 1)
+            task.name:SetColour(1, 0.65, 0, 1)
+            task.desc:SetColour(1, 0.94, 0.71, 1)
         end
 
 		task.backing:SetOnClick(function()
@@ -161,7 +197,9 @@ function TaskScreen:LoadTasks()
 		for k, v in pairs(task_data) do
 			--local num = #self.task_widgets + 1
 			--print(num)
-			table.insert(self.task_widgets, {index=k, task=v})
+			if not v.hide then
+				table.insert(self.task_widgets, {index=k, task=v})
+			end
 		end
 	end
 
@@ -169,10 +207,10 @@ function TaskScreen:LoadTasks()
 		self.tasks_scroll_list = self.taskspanel:AddChild(
                                      TEMPLATES.ScrollingGrid(self.task_widgets, {
                 context = {},
-                widget_width = 130,
-                widget_height = 90,
-                num_visible_rows = 5,
-                num_columns = 5,
+                widget_width = 160,
+                widget_height = 75,
+                num_visible_rows = 6,
+                num_columns = 4,
                 item_ctor_fn = ScrollWidgetsCtor,
                 apply_fn = ApplyDataToWidget,
                 scrollbar_offset = 10,

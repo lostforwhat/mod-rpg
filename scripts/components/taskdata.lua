@@ -7,12 +7,20 @@ if task_data then
 	end
 end
 
+onchangefn.coin = function(self, val)
+	self.net_data.coin:set(val)
+end
+
 local TaskData = Class(function(self, inst) 
     self.inst = inst
+    self.net_data = {
+    	coin = net_shortint(inst.GUID, "coin", "coindirty")
+    }
+    self:Init()
+
+    self.coin = 0
     self.tumbleweednum = 0
 
-    self.net_data = {}
-    self:Init()
 end,
 nil,
 onchangefn)
@@ -42,6 +50,8 @@ function TaskData:OnSave()
 			data[k] = self[k] or 0
 		end
 	end
+	data.coin = self.coin or 0
+	data.tumbleweednum = self.tumbleweednum or 0
 	return data
 end
 
@@ -80,9 +90,10 @@ function TaskData:Completed(taskname)
 	local desc = task_info.desc
 	SpawnPrefab("seffc").entity:SetParent(inst.entity)
 
-	local annouce_str = string.format("%s  完成任务【%s】 奖励%d", inst:GetDisplayName(), task_text, reward) 
+	local annouce_str = string.format("%s  完成任务【%s】 奖励 %d", inst:GetDisplayName(), task_text, reward) 
 	TheNet:Announce(annouce_str, inst.entity)
 
+	self:CoinDoDelta(task_info.reward or 1)
 	inst:DoTaskInTime(.3,function() 
 		self:AllCompletedCheck()
         inst:PushEvent("taskcompleted", {taskname=taskname})
@@ -119,6 +130,12 @@ function TaskData:GrantAll(pwd)
         end
     end
 	--...
+	self:AllCompletedCheck()
+end
+
+function TaskData:CoinDoDelta(value)
+	self.coin = self.coin + value
+	if self.coin < 0 then self.coin = 0 end --防止数据异常
 end
 
 return TaskData

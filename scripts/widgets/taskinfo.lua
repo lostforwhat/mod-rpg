@@ -7,7 +7,7 @@ local TaskInfo = Class(Widget, function(self, owner)
     Widget._ctor(self, "TaskInfo")
     self.owner = owner
 
-    self.button = self:AddChild(ImageButton("images/hud/levelbadge.xml", "levelbadge.tex"))
+    self.button = self:AddChild(ImageButton("images/inventoryimages1.xml", "chesspiece_anchor_sketch.tex"))
     self.button:SetHoverText("任务",{ size = 9, offset_x = 40, offset_y = -45, colour = {1,1,1,1}})
     self.button:SetOnClick(function() self:ShowInfo() end)
 
