@@ -1,23 +1,29 @@
 local MAX_LEVEL = 200
 
 local function OnLevel(self, level)
-
+	self.net_data.level:set(level)
 end
 
 local function OnXp(self, xp)
-
+	self.net_data.xp:set(xp)
 end
 
 local function OnTotalxp(self, totalxp)
-
+	self.net_data.totalxp:set(totalxp)
 end
 
 local Level = Class(function(self, inst)
     self.inst = inst
+	
+	self.net_data = {
+		level = net_shortint(inst.GUID, "level.level", "leveldirty"),
+		xp = net_float(inst.GUID, "level.xp", "xpdirty"),
+		totalxp = net_float(inst.GUID, "level.totalxp", "totalxpdirty"),
+	}
+
 	self.level = 1
     self.xp = 0
 	self.totalxp = 0
-	
 end,
 nil,
 {

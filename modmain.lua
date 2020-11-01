@@ -7,6 +7,7 @@ require 'modmain/loot_table'
 require 'modmain/task_constant'
 require 'modmain/skill_constant'
 local PlayerStatus = require('widgets/playerstatus')
+local PlayerDetail = require('widgets/playerdetail')
 local TaskScreen = require('screens/taskscreen')
 
 Assets = {
@@ -249,4 +250,16 @@ AddClassPostConstruct("screens/playerhud", function(self, anim, owner)
             self.taskscreen = nil
         end
     end
+
+    self.ShowPlayerDetail = function(_)
+    	if self.playerdetail == nil then
+    		self.playerdetail = self.controls.right_root:AddChild(PlayerDetail(self.owner))
+    	end
+	end
+	self.ClosePlayerDetail = function(_) 
+		if self.playerdetail then
+			self.playerdetail:Close()
+			self.playerdetail = nil
+		end
+	end
 end)
