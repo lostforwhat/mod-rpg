@@ -6,7 +6,6 @@ local Image = require "widgets/image"
 local UIAnim = require "widgets/uianim"
 local Widget = require "widgets/widget"
 local ImageButton = require "widgets/imagebutton"
-local PlayerAvatarPortrait = require "widgets/redux/playeravatarportrait"
 local TEMPLATES = require "widgets/templates"
 local EquipSlot = require("equipslotutil")
 

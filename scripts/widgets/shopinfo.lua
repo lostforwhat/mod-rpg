@@ -19,12 +19,12 @@ local ShopInfo = Class(Widget, function(self, owner)
     self.image:MoveToBack()
     
     self.text = self.root:AddChild(Text(BODYTEXTFONT, 35))
-    self.text:SetPosition(10, 0)
+    self.text:SetPosition(10, -25)
     self.text:SetColour(0,1,1,1)
-    self.text:SetString(self:GetCoin())
+    --self.text:SetString(self:GetCoin())
 
     self.inst:ListenForEvent("coindirty", function(owner) 
-    	self.text:SetString(self:GetCoin()) 
+    	self.text:SetString("$ "..self:GetCoin()) 
     end, self.owner)
 
 end)
@@ -38,7 +38,11 @@ function ShopInfo:GetCoin()
 end
 
 function ShopInfo:OpenShop()
-
+    if self.owner.HUD.shopdetail == nil then
+        self.owner.HUD:ShowShopDetail()
+    else
+        self.owner.HUD:CloseShopDetail()
+    end
 end
 
 return ShopInfo

@@ -18,11 +18,11 @@ local PlayerInfo = Class(Widget, function(self, owner)
     self.button:SetOnClick(function() self:ShowInfo() end)
 
     self.text = self:AddChild(Text(TALKINGFONT, 28))
-    self.text:SetPosition(1, 0)
+    self.text:SetPosition(1, -32)
     self.text:SetColour(0, 1, 1, 1)
     
     self.inst:ListenForEvent("leveldirty", function(owner) 
-        self.text:SetString(self:GetLevel()) 
+        self.text:SetString("LV "..self:GetLevel()) 
     end, self.owner)
 end)
 

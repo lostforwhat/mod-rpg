@@ -8,6 +8,7 @@ require 'modmain/task_constant'
 require 'modmain/skill_constant'
 local PlayerStatus = require('widgets/playerstatus')
 local PlayerDetail = require('widgets/playerdetail')
+local ShopDetail = require('widgets/shopdetail')
 local TaskScreen = require('screens/taskscreen')
 
 Assets = {
@@ -261,5 +262,27 @@ AddClassPostConstruct("screens/playerhud", function(self, anim, owner)
 			self.playerdetail:Close()
 			self.playerdetail = nil
 		end
+	end
+
+	self.ShowShopDetail = function(_)
+		if self.shopdetail == nil then
+			self.shopdetail = self.controls.topleft_root:AddChild(ShopDetail(self.owner))
+		end
+	end
+	self.CloseShopDetail = function(_) 
+		if self.shopdetail then
+			self.shopdetail:Close()
+			self.shopdetail = nil
+		end
+	end
+
+	--修改esc按键关闭窗口
+	local OldOnControl = self.OnControl
+	self.OnControl = function(_, control, down) 
+		if not down and control == _G.CONTROL_CANCEL then
+			self:ClosePlayerDetail()
+			self:CloseShopDetail()
+		end
+		return OldOnControl(self, control, down)
 	end
 end)

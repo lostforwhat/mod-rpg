@@ -113,6 +113,7 @@ function TaskScreen:TaskItem()
     task.desc:SetPosition(0, -17.5, 0)
 
     task.SetInfo = function(_, data)
+        task.data = data
         local info = data.task
         local index = data.index
         --task.name:SetString(info.name)
@@ -127,7 +128,7 @@ function TaskScreen:TaskItem()
         
         local current = taskdata.net_data[index]:value()
         local need = info.need or 1
-        task.desc:SetMultilineTruncatedString(string.format(info.desc, current.."/"..need), 2, 140, 100, "", true)
+        task.desc:SetMultilineTruncatedString(string.format(info.desc, " "..current.."/"..need.." "), 2, 140, 100, "", true)
         task.desc:SetRegionSize(140, 40)
 
         local reward = info.reward or 1
@@ -198,7 +199,7 @@ function TaskScreen:LoadTasks()
 			--local num = #self.task_widgets + 1
 			--print(num)
 			if task_data[v] and not task_data[v].hide then
-				table.insert(self.task_widgets, {index=k, task=task_data[v]})
+				table.insert(self.task_widgets, {index=v, task=task_data[v]})
 			end
 		end
 	end
