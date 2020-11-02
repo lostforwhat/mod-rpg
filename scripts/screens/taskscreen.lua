@@ -194,11 +194,11 @@ function TaskScreen:LoadTasks()
 
 	self.task_widgets = {}
 	if task_data then
-		for k, v in pairs(task_data) do
+		for k, v in pairs(task_list) do
 			--local num = #self.task_widgets + 1
 			--print(num)
-			if not v.hide then
-				table.insert(self.task_widgets, {index=k, task=v})
+			if task_data[v] and not task_data[v].hide then
+				table.insert(self.task_widgets, {index=k, task=task_data[v]})
 			end
 		end
 	end
