@@ -20,6 +20,7 @@ local TaskData = Class(function(self, inst)
 
     self.coin = 0
     self.tumbleweednum = 0
+    self.eat_types = {}
 
 end,
 nil,

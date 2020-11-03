@@ -40,6 +40,10 @@ end
 local function OnEat(inst, data)
 	local food = data.food
 	local feeder = data.feeder
+	local taskdata = inst.components.taskdata
+	taskdata:AddOne("eat_100")
+	taskdata:AddOne("eat_1888")
+	
 
 end
 

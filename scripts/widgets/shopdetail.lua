@@ -19,7 +19,7 @@ function GetDescriptionString(name)
     if name ~= nil and name ~= "" then
         local itemtip = string.upper(TrimString( name ))
         if STRINGS.NAMES[itemtip] ~= nil and STRINGS.NAMES[itemtip] ~= "" then
-                str = STRINGS.NAMES[itemtip]
+            str = STRINGS.NAMES[itemtip]
         end
     end
 
@@ -189,6 +189,16 @@ end
 
 function ShopDetail:Close()
     self:MoveTo(self.in_pos, self.out_pos, .33, function() self:Kill() end)
+end
+
+function ShopDetail:OnGainFocus()
+    --此处需要控制鼠标滑动不影响游戏缩放
+    local controller = TheInput:ControllerAttached()
+    TheInput:EnableMouse(not controller)
+end
+
+function ShopDetail:OnLoseFocus()
+    TheInput:EnableMouse(true)
 end
 
 return ShopDetail
