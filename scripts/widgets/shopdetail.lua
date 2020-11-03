@@ -42,6 +42,47 @@ local ShopDetail = Class(Widget, function(self, owner)
     
 end)
 
+function ShopDetail:GetCoin()
+    local taskdata = self.owner.components.taskdata
+    if taskdata and taskdata.net_data then
+        return taskdata.net_data.coin:value() or 0
+    end
+    return 0
+end
+
+function ShopDetail:LoadMenus()
+    self.menu = self.frame:AddChild(Widget("Menu"))
+    self.menu:SetPosition(0, 240)
+
+    self.menu.title = self.menu:AddChild(Text(BODYTEXTFONT, 48))
+    self.menu.title:SetPosition(0, 15)
+    self.menu.title:SetVAlign(ANCHOR_MIDDLE)
+    self.menu.title:SetHAlign(ANCHOR_MIDDLE)
+    --self.menu.title:SetColour(1, 1, 1, 1)
+    self.menu.title:SetString("交易小店")
+    self.menu.title:SetRegionSize(150, 60)
+
+    self.menu.coin = self.menu:AddChild(ImageButton("images/hud.xml", "tab_refine.tex"))
+    self.menu.coin:SetPosition(150, 25)
+    self.menu.coin:SetScale(0.34, 0.34)
+    self.menu.coin.value = self.menu.coin:AddChild(Text(TALKINGFONT, 55))
+    self.menu.coin.value:SetColour(0, 1, 1, 1)
+    self.menu.coin.value:SetPosition(100, 0)
+    self.menu.coin.value:SetString(self:GetCoin())
+    self.menu.coin:SetOnClick(function() 
+        --此处做宣告使用
+        if TheInput:IsKeyDown(KEY_ALT) and TheInput:IsKeyDown(KEY_SHIFT) then
+            if not self.cooldown then
+                local str = "当前剩余财富：%s"
+                TheNet:Say(string.format(str, self:GetCoin()), false)
+                
+                self.cooldown = true
+                self.inst:DoTaskInTime(3, function() self.cooldown = nil end)
+            end
+        end
+    end)
+end
+
 function ShopDetail:ShopItem()
     
     local shop_item = Widget("ShopItem")
@@ -49,6 +90,15 @@ function ShopDetail:ShopItem()
     local item_width, item_height = 60, 60
     shop_item.backing = shop_item:AddChild(TEMPLATES2.ListItemBackground(item_width, item_height, function() end))
     shop_item.backing.move_on_click = true
+
+    shop_item.num = shop_item:AddChild(Text(TALKINGFONT, 15))
+    shop_item.num:SetPosition(0, -18)
+    shop_item.num:SetColour(1, 0, 1, 1)
+    shop_item.num:SetHAlign(ANCHOR_RIGHT)
+    shop_item.value = shop_item:AddChild(Text(TALKINGFONT, 15))
+    shop_item.value:SetColour(0, 1, 1, 1)
+    shop_item.value:SetPosition(0, 18)
+    shop_item.value:SetHAlign(ANCHOR_LEFT)
 
     shop_item.SetInfo = function(_, data)
         if shop_item.image then
@@ -62,8 +112,19 @@ function ShopDetail:ShopItem()
         local image = name .. ".tex"
 
         shop_item.image = shop_item:AddChild(Image(atlas, image, "chesspiece_anchor_sketch.tex"))
-        shop_item.image:SetScale(0.8, 0.8)
-        shop_item:SetTooltip(GetDescriptionString(name))
+        shop_item.image:SetScale(0.7, 0.7)
+
+        local value = item.value or 1
+        local num = item.num or 1
+        local use_left = item.use_left or 1
+        shop_item:SetTooltip(GetDescriptionString(name).."\n 价格："..value.."\n 数量："..num.."\n 耐久："..(use_left*100).."%")
+
+        shop_item.value:SetString("-"..(item.value or 1))
+        shop_item.num:SetString("x "..(item.num or 1))
+        shop_item.value:SetRegionSize(55, 18)
+        shop_item.num:SetRegionSize(55, 18)
+        shop_item.value:MoveToFront()
+        shop_item.num:MoveToFront()
 
         shop_item.backing:SetOnClick(function()
             --此处做宣告使用
@@ -134,7 +195,8 @@ function ShopDetail:LoadItems()
                         {prefab="spear"}, {prefab="footballhat"}, {prefab="hivehat"}, {prefab="hivehat"},
                         {prefab="spear"}, {prefab="footballhat"}, {prefab="hivehat"}, {prefab="hivehat"},
                         {prefab="spear"}, {prefab="footballhat"}, {prefab="hivehat"}, {prefab="hivehat"},
-                        {prefab="spear"}, {prefab="footballhat"}, {prefab="hivehat"}, {prefab="hivehat"},
+                        {prefab="spear", use_left=0.5}, {prefab="footballhat"}, {prefab="hivehat"}, {prefab="hivehat"},
+                        {prefab="achiv_clear", num=5, value=20}
                         }
     if shop_list then
         for k, v in pairs(shop_list) do
@@ -145,7 +207,7 @@ function ShopDetail:LoadItems()
     end
 
     if not self.shop_scroll_list then
-        self.shop_scroll_list = self.proot:AddChild(
+        self.shop_scroll_list = self.frame:AddChild(
                                      TEMPLATES2.ScrollingGrid(self.shop_widgets, {
                 context = {},
                 widget_width = 60,
@@ -154,7 +216,7 @@ function ShopDetail:LoadItems()
                 num_columns = 7,
                 item_ctor_fn = ScrollWidgetsCtor,
                 apply_fn = ApplyDataToWidget,
-                scrollbar_offset = 5,
+                scrollbar_offset = 15,
                 scrollbar_height_offset = -20,
                 peek_percent = 0, -- may init with few clientmods, but have many servermods.
                 allow_bottom_empty_row = true -- it's hidden anyway
@@ -169,7 +231,7 @@ end
 
 function ShopDetail:Layout()
     self.frame = self.proot:AddChild(TEMPLATES.CurlyWindow(260, 540, .6, .6, 39, -25))
-    self.frame:SetPosition(0, 20)
+    self.frame:SetPosition(0, 0)
 
     self.frame_bg = self.frame:AddChild(Image("images/fepanel_fills.xml", "panel_fill_tall.tex"))
     self.frame_bg:SetScale(0.67, .74)
@@ -177,6 +239,7 @@ function ShopDetail:Layout()
     self.frame:SetTint(0.8, 0.8, 0.8, 0.8)
     self.frame_bg:SetTint(0.8, 0.8, 0.8, 0.8)
 
+    self:LoadMenus()
     self:LoadItems()
 
     local w, h = self.frame_bg:GetSize()
