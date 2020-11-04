@@ -6,6 +6,7 @@ env.require = GLOBAL.require
 require 'modmain/loot_table'
 require 'modmain/task_constant'
 require 'modmain/skill_constant'
+require 'modmain/modrpc'
 local PlayerStatus = require('widgets/playerstatus')
 local PlayerDetail = require('widgets/playerdetail')
 local ShopDetail = require('widgets/shopdetail')
@@ -59,7 +60,8 @@ modimport("scripts/modmain/modrecipes.lua")
 --角色初始化
 AddPlayerPostInit(function(inst) 
 	inst:AddComponent("taskdata")
-
+	inst:AddComponent("purchase")
+	
 	inst:AddComponent("attackdeath")
 	inst:AddComponent("attackbroken")
 	inst:AddComponent("attackback")
