@@ -13,14 +13,20 @@ end
 
 local TaskData = Class(function(self, inst) 
     self.inst = inst
+    --网络数据，客主机需要并保存
     self.net_data = {
     	coin = net_shortint(inst.GUID, "coin", "coindirty")
     }
     self:Init()
-
     self.coin = 0
+
+    --主机数据，需保存
     self.tumbleweednum = 0
     self.eat_types = {}
+    self.shadowboss_killed = {}
+
+    --主机临时数据，无需保存
+    self.killed_temp = {} --临时存储击杀数据，防止重复击杀判定
 
 end,
 nil,
@@ -53,6 +59,8 @@ function TaskData:OnSave()
 	end
 	data.coin = self.coin or 0
 	data.tumbleweednum = self.tumbleweednum or 0
+	data.eat_types = self.eat_types or {}
+	data.shadowboss_killed = self.shadowboss_killed or {}
 	return data
 end
 

@@ -91,13 +91,13 @@ task_data = {
 	},
 	eat_type_20 = {
 		name="尝鲜",
-		desc="吃%s种不同的食物",
+		desc="吃%s种不同的烹饪食物",
 		need=20,
 		reward=2
 	},
 	eat_type_40 = {
 		name="佳肴",
-		desc="吃%s种不同的食物",
+		desc="吃%s种不同的烹饪食物",
 		need=40,
 		reward=4
 	},
@@ -105,7 +105,7 @@ task_data = {
 		name="特殊料理",
 		desc="吃%s次特殊料理的食物",
 		need=10,
-		reward=3
+		reward=2
 	},
 	eat_prefared_200 = {
 		name="挑食",
@@ -116,6 +116,12 @@ task_data = {
 	eat_hot_10 = {
 		name="热食",
 		desc="吃%s次热食",
+		need=10,
+		reward=2
+	},
+	eat_cold_10 = {
+		name="冷食",
+		desc="吃%s次冷食",
 		need=10,
 		reward=2
 	},
@@ -798,6 +804,7 @@ task_list = {
 	'eat_special_10',
 	'eat_prefared_200',
 	'eat_hot_10',
+	'eat_cold_10',
 
 	--击杀部分
 	'kill_100',

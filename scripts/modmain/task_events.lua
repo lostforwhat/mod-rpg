@@ -1,5 +1,14 @@
 local _G = GLOBAL
 
+local function ExistInTable(tab, val)
+	for k, v in pairs(tab) do
+		if v == val then
+			return true
+		end
+	end
+	return false
+end
+
 local function OnTumbleweedDroped(inst, data)
 	local item = data.item
     if not item:HasTag("monster") and item.components.combat == nil then
@@ -43,43 +52,208 @@ local function OnEat(inst, data)
 	local taskdata = inst.components.taskdata
 	taskdata:AddOne("eat_100")
 	taskdata:AddOne("eat_1888")
-	
 
+	local eat_types = taskdata.eat_types or {}
+	local function HasEated(type)
+		for k,v in pairs(eat_types) do
+			if v == type then
+				return true
+			end
+		end
+		return false
+	end
+	if food:HasTag("preparedfood") then
+		taskdata:AddOne("eat_prefared_200")
+
+		if not HasEated(food.prefab) then
+			table.insert(taskdata.eat_types, food.prefab)
+			taskdata:AddOne("eat_type_20")
+			taskdata:AddOne("eat_type_40")
+		end
+	end
+	if food:HasTag("spicedfood") then
+		taskdata:AddOne("eat_special_10")
+	end
+	--冷热食
+	local temp = food.components.edible.temperaturedelta or 0
+	if temp < 0 then
+		taskdata:AddOne("eat_cold_10")
+	elseif temp > 0 then
+		taskdata:AddOne("eat_hot_10")
+	end
 end
 
 local function OnDeath(inst, data)
 	local attacker = inst.components.combat.lastattacker
 	local cause = data.cause
+	local taskdata = inst.components.taskdata
 
 end
 
 local function OnKilled(inst, data)
 	local victim = data.victim
     if victim == nil then return end
+    local taskdata = inst.components.taskdata
+    if taskdata.killed_temp[victim.GUID] then
+    	return
+    end
+    taskdata.killed_temp[victim.GUID] = true
+    inst:DoTaskInTime(1, function()
+        taskdata.killed_temp[victim.GUID] = nil
+    end)
+
+    if victim:HasTag("monster") then
+	    taskdata:AddOne("kill_100")
+	    taskdata:AddOne("kill_1000")
+	end
+	local prefab = victim.prefab
+	if string.find(prefab, "spider") then
+        taskdata:AddOne("kill_spider_100")
+    end
+    if string.find(prefab, "hound") then
+        taskdata:AddOne("kill_hound_100")
+    end
+    if string.find(prefab, "bee") then
+        taskdata:AddOne("kill_bee_100")
+    end
+    if prefab == "mosquito" then
+        taskdata:AddOne("kill_mosquito_100")
+    end
+    if prefab == "frog" then
+        taskdata:AddOne("kill_frog_100")
+    end
+    if string.find(prefab, "koale") then
+        taskdata:AddOne("kill_koale_5")
+    end
+    if prefab == "monkey" then
+        taskdata:AddOne("kill_monkey_20")
+    end
+    if prefab == "leif" or prefab == "leif_sparse" then
+        taskdata:AddOne("kill_leif_5")
+    end
+    if prefab == "bunnyman" then
+        taskdata:AddOne("kill_bunnyman_20")
+    end
+    if prefab == "tallbird" then
+        taskdata:AddOne("kill_tallbird_50")
+    end
+    if prefab == "worm" then
+        taskdata:AddOne("kill_worm_20")
+    end
+    if prefab == "slurtle" or prefab == "snurtle" then
+        taskdata:AddOne("kill_slurtle_20")
+    end
+    if prefab == "rabbit" then
+        taskdata:AddOne("kill_rabbit_10")
+    end
+    if prefab == "ghost" then
+        taskdata:AddOne("kill_ghost_10")
+    end
+    if prefab == "tentacle" then
+        taskdata:AddOne("kill_tentacle_50")
+    end
+    if prefab == "terrorbeak" or prefab == "crawlinghorror"
+    	or prefab == "crawlingnightmare" or prefab == "nightmarebeak" then
+        taskdata:AddOne("kill_terrorbeak_50")
+    end
+    if prefab == "birchnutdrake" then
+        taskdata:AddOne("kill_birchnutdrake_20")
+    end
+    if prefab == "lightninggoat" then
+        taskdata:AddOne("kill_lightninggoat_20")
+    end
+    if prefab == "spiderqueen" then
+        taskdata:AddOne("kill_spiderqueen_10")
+    end
+    if prefab == "warg" then
+        taskdata:AddOne("kill_warg_5")
+    end
+    if prefab == "catcoon" then
+        taskdata:AddOne("kill_catcoon_20")
+    end
+    if prefab == "walrus" then
+        taskdata:AddOne("kill_walrus_20")
+    end
+    if prefab == "butterfly" then
+    	taskdata:AddOne("kill_butterfly_20")
+    end
+    if prefab == "bat" then
+    	taskdata:AddOne("kill_bat_20")
+    end
+    if prefab == "merm" then
+    	taskdata:AddOne("kill_merm_30")
+    end
+    if prefab == "butterfly" then
+    	taskdata:AddOne("kill_butterfly_20")
+    end
+    if string.find(prefab, "penguin") then
+    	taskdata:AddOne("kill_penguin_10")
+    end
+    if prefab == "perd" then
+    	taskdata:AddOne("kill_perd_20")
+    end
+    if prefab == "crow" 
+        or prefab == "canary"
+        or prefab == "puffin"
+        or prefab == "robin_winter"
+        or prefab == "robin" then
+    	taskdata:AddOne("kill_bird_20")
+    end
+    if prefab == "pigman" then
+    	taskdata:AddOne("kill_pigman_20")
+    end
+    if prefab == "krampus" then
+    	taskdata:AddOne("kill_krampus_30")
+    end
+    if prefab == "spat" then
+    	taskdata:AddOne("kill_spat")
+    end
+    if prefab == "moonpig" then
+    	if _G.TheWorld.state.isfullmoon then
+            taskdata:AddOne("kill_moonpig_10")
+        end
+    end
+    --以下为挑战boss
+    local boss_list = {"moose", "dragonfly", "beager", "deerclops",
+    				  "stalker", "stalker_atrium", "klaus", "crabking",
+                      "antlion", "minotaur", "beequeen", "toadstool", 
+              		  "toadstool_dark", "malbatross", 
+              		  "shadow_rook", "shadow_knight", "shadow_bishop"}
+    if ExistInTable(boss_list, prefab) then
+    	local ents = TheSim:FindEntities(x, y, z, 20, {"player"})
+    	
+    end
+    
 
 end	
 
 local function OnWakeup(inst, data)
+	local taskdata = inst.components.taskdata
 
 end
 --着火
 local function OnFire(inst)
+	local taskdata = inst.components.taskdata
 
 end
 --冰冻
 local function OnFreeze(inst)
+	local taskdata = inst.components.taskdata
 
 end
 --催眠
 local function OnKnockedout(inst)
+	local taskdata = inst.components.taskdata
 
 end
 --钓鱼
 local function OnFish(inst, data)
+	local taskdata = inst.components.taskdata
 
 end
 --采集
 local function OnPick(inst, data)
+	local taskdata = inst.components.taskdata
 	if data.object and data.object.components.pickable and not data.object.components.trader then
 		local item = data.object
 
@@ -87,6 +261,7 @@ local function OnPick(inst, data)
 end
 
 local function OnFinishedwork(inst, data)
+	local taskdata = inst.components.taskdata
 	--砍树
 	if data.target and data.target:HasTag("tree") then
         
@@ -102,13 +277,16 @@ end
 --复活
 local function OnRespawnfromghost(inst, data)
 	local source = data.source
+	local taskdata = inst.components.taskdata
 
 end
 --建造
 local function OnConsume(inst)
+	local taskdata = inst.components.taskdata
 
 end
 local function OnBuildItem(inst, data)
+	local taskdata = inst.components.taskdata
 	if data.recipe ~= nil then
 		local product = data.recipe.product
 
@@ -116,6 +294,7 @@ local function OnBuildItem(inst, data)
 end
 --种植
 local function OnDeployItem(inst, data)
+	local taskdata = inst.components.taskdata
 	if data.prefab == "pinecone" or 
 	    data.prefab == "acorn" or 
 	    data.prefab == "twiggy_nut"  or 
@@ -131,11 +310,13 @@ local function OnDeployItem(inst, data)
 end
 --攻击
 local function OnAttacked(inst, data)
+	local taskdata = inst.components.taskdata
 	local damage = data.damage or 0
 
 end
 
 local function OnHitOther(inst, data)
+	local taskdata = inst.components.taskdata
 	if data.damage and data.damage >= 0 then
 	    local target = data.target
 	    local absorb = target.components.health and target.components.health.absorb or 0
@@ -145,10 +326,12 @@ local function OnHitOther(inst, data)
 end
 --给予
 local function OnGiveSomething(inst, data)
+	local taskdata = inst.components.taskdata
 
 end
 --天体门重生
 local function OnReRoll(inst)
+	local taskdata = inst.components.taskdata
 
 end
 
