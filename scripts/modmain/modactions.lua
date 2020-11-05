@@ -80,3 +80,22 @@ COOK.fn = function(act, ...)
         act.doer:PushEvent("docook", {product=stewer.product})
     end
 end
+
+--修改施肥
+local FERTILIZE = ACTIONS.FERTILIZE
+local old_fertilize_fn = FERTILIZE.fn
+FERTILIZE.fn = function(act, ...)
+    if act.invobject ~= nil and act.invobject.components.fertilizer ~= nil then
+        if act.invobject.components.fertilizer.volcanic then
+            if act.target:HasTag("volcanic") then
+                return old_fertilize_fn(act, ...)
+            end
+        elseif act.target:HasTag("volcanic") then
+            if act.invobject.components.fertilizer.volcanic then
+                return old_fertilize_fn(act, ...)
+            end
+        else
+            return old_fertilize_fn(act, ...)
+        end
+    end
+end

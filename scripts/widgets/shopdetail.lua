@@ -56,7 +56,7 @@ local ShopDetail = Class(Widget, function(self, owner)
     self.proot:SetPosition(335, 0)
 
     self.shop_goods = {}
-    self:LoadShopGoods()
+    self:LoadShopFromServer()
 
     self:Layout()
 
@@ -70,7 +70,7 @@ local ShopDetail = Class(Widget, function(self, owner)
     
 end)
 
-function ShopDetail:LoadShopGoods()
+function ShopDetail:LoadShopFromServer()
     if shop_list then
         for k, v in pairs(shop_list) do
             if PrefabExists(v.prefab) then
@@ -231,9 +231,9 @@ function ShopDetail:ShopItem()
                 local success = self:AddItemToCart(item, multi)
                 if success then
                     self:DelShopGoods(data.index, multi)
-                    self.shop_scroll_list:Kill()
-                    self.shop_scroll_list = nil
-                    self:LoadItems()
+                    --self.shop_scroll_list:Kill()
+                    --self.shop_scroll_list = nil
+                    self.shop_scroll_list:SetItemsData(self.shop_goods)
                 end
             end
         end)
@@ -349,12 +349,19 @@ function ShopDetail:LoadCart()
     end
 
     self.cart.buy = self.cart:AddChild(ImageButton("images/frontend_redux.xml", "button_shop_vshort_normal.tex"))
-    self.cart.buy:SetPosition(180, 0)
-    self.cart.buy:SetScale(0.7)
+    self.cart.buy:SetPosition(195, 0)
+    self.cart.buy:SetScale(0.5)
     self.cart.buy:SetTooltip("购买")
     self.cart.buy:SetOnClick(function()
 
     end)
+
+    self.cart.back = self.cart:AddChild(TEMPLATES2.BackButton(function() 
+        self.cart_goods = {}
+        self:LoadShopFromServer()
+        self.shop_scroll_list:SetItemsData(self.shop_goods)
+    end, "清空", nil, 0.5))
+    self.cart.back:SetPosition(110, 0)
 end
 
 function ShopDetail:Layout()
@@ -366,6 +373,9 @@ function ShopDetail:Layout()
     self.frame_bg:SetPosition(5, 7)
     self.frame:SetTint(0.8, 0.8, 0.8, 0.8)
     self.frame_bg:SetTint(0.8, 0.8, 0.8, 0.8)
+
+    self.close_button = self.proot:AddChild(TEMPLATES.SmallButton("关闭", 26, .5, function() self.owner.HUD:CloseShopDetail() end))
+    self.close_button:SetPosition(0, -295)
 
     self:LoadMenus()
     self:LoadItems()

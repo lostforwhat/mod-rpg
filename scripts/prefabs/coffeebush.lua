@@ -164,6 +164,7 @@ local function fn()
 	inst:AddTag("bush")
 	inst:AddTag("plant")
 	inst:AddTag("witherable")
+	inst:AddTag("volcanic")
 
 	inst.MiniMapEntity:SetIcon("coffeebush.png")
 	inst.AnimState:SetBank("coffeebush")

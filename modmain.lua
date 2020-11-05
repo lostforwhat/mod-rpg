@@ -152,6 +152,7 @@ AddComponentPostInit("leader", function(self)
 		if self.followers[follower] == nil and follower.components.follower ~= nil then
 			self.inst:PushEvent("addfollower", {follower = follower})
 		end
+		OldAddFollower(self, follower)
 	end
 end)
 
