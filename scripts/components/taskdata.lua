@@ -89,6 +89,25 @@ function TaskData:AddOne(taskname)
     end
 end
 
+function TaskData:AddMulti(taskname, num)
+	if self[taskname] ~= nil and task_data[taskname] ~= nil then
+		local task_info = task_data[taskname]
+		local task_text = task_info.name
+		local reward = task_info.reward or 1
+		local need = task_info.need or 1
+		local hide = task_info.hide or false
+        if self[taskname] >= need then 
+            self[taskname] = need
+            return
+        end
+        self[taskname] = self[taskname] + num
+        if self[taskname] >= need then
+            self[taskname] = need
+            self:Completed(taskname)
+        end
+    end
+end
+
 function TaskData:Completed(taskname)
 	local inst = self.inst
 	local task_info = task_data[taskname]

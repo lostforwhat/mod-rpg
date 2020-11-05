@@ -145,21 +145,30 @@ AddPrefabPostInit("ash", function(inst)
 	end
 end)
 
-local function IsValidVictim(victim)
-    return victim ~= nil
-        and not ((victim:HasTag("prey") and not victim:HasTag("hostile")) or
-                victim:HasTag("veggie") or victim:HasTag("structure") or
-                victim:HasTag("wall") or victim:HasTag("balloon") or
-                victim:HasTag("groundspike") or victim:HasTag("smashable") or
-                victim:HasTag("companion") or victim:HasTag("visible"))
-        and victim.components.health ~= nil
-        and victim.components.combat ~= nil
-        and victim.components.freezable ~= nil
-end
+
+AddComponentPostInit("leader", function(self) 
+	local OldAddFollower = self.AddFollower
+	function self:AddFollower(follower)
+		if self.followers[follower] == nil and follower.components.follower ~= nil then
+			self.inst:PushEvent("addfollower", {follower = follower})
+		end
+	end
+end)
 
 --修改combat，注入暴击吸血致死等属性
 AddComponentPostInit("combat", function(self)
-	self.OldGetAttacked = self.GetAttacked
+	local function IsValidVictim(victim)
+	    return victim ~= nil
+	        and not ((victim:HasTag("prey") and not victim:HasTag("hostile")) or
+	                victim:HasTag("veggie") or victim:HasTag("structure") or
+	                victim:HasTag("wall") or victim:HasTag("balloon") or
+	                victim:HasTag("groundspike") or victim:HasTag("smashable") or
+	                victim:HasTag("companion") or victim:HasTag("visible"))
+	        and victim.components.health ~= nil
+	        and victim.components.combat ~= nil
+	        and victim.components.freezable ~= nil
+	end
+	local OldGetAttacked = self.GetAttacked
 	function self:GetAttacked(attacker, damage, weapon, stimuli)
 		--注入改写伤害
 		local extra_damage = 0
@@ -205,7 +214,7 @@ AddComponentPostInit("combat", function(self)
 			end
 		end
 
-		local blocked = self:OldGetAttacked(attacker, damage + extra_damage, weapon, stimuli)
+		local blocked = OldGetAttacked(self, attacker, damage + extra_damage, weapon, stimuli)
 		
 		if not blocked then
 			--注入吸血和攻击特效

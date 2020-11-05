@@ -420,7 +420,7 @@ task_data = {
 		name="挑战帝王蟹",
 		desc="击杀帝王蟹",
 		need=1,
-		reward=5
+		reward=6
 	},
 
 	--伤害部分
@@ -431,7 +431,7 @@ task_data = {
 		reward=2
 	},
 	attack_99999 = {
-		name="战斗",
+		name="战神",
 		desc="总共造成有效伤害%s",
 		need=99999,
 		reward=2,
@@ -534,6 +534,12 @@ task_data = {
 		desc="采集芦苇%s棵",
 		need=50,
 		reward=2
+	},
+	pick_coffeebush_50 = {
+		name="采咖啡",
+		desc="采集咖啡%s次",
+		need=50,
+		reward=3
 	},
 
 	chop_100 = {
@@ -879,6 +885,7 @@ task_list = {
 	'pick_cave_banana_tree_50',
 	'pick_wormlight_plant_40',
 	'pick_reeds_50',
+	'pick_coffeebush_50',
 
 	'chop_100',
 	'chop_1000',

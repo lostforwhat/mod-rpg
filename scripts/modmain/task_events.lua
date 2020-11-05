@@ -220,8 +220,73 @@ local function OnKilled(inst, data)
               		  "toadstool_dark", "malbatross", 
               		  "shadow_rook", "shadow_knight", "shadow_bishop"}
     if ExistInTable(boss_list, prefab) then
-    	local ents = TheSim:FindEntities(x, y, z, 20, {"player"})
-    	
+    	local ents = TheSim:FindEntities(x, y, z, 20, {"player"}, {"playerghost"})
+    	if prefab == "moose" then
+    		for k, v in pairs(ents) do
+    			v.components.taskdata:AddOne("kill_moose")
+    		end
+    	elseif prefab == "dragonfly" then
+    		for k, v in pairs(ents) do
+    			v.components.taskdata:AddOne("kill_dragonfly")
+    		end
+    	elseif prefab == "beager" then
+    		for k, v in pairs(ents) do
+    			v.components.taskdata:AddOne("kill_beager")
+    		end
+    	elseif prefab == "deerclops" then
+    		for k, v in pairs(ents) do
+    			v.components.taskdata:AddOne("kill_deerclops")
+    		end
+    	elseif ExistInTable({"shadow_bishop", "shadow_knight", "shadow_rook"}, prefab) then
+    		for k, v in pairs(ents) do
+    			if not ExistInTable(v.components.taskdata.shadowboss_killed, prefab) then
+    				table.insert(v.components.taskdata.shadowboss_killed, prefab)
+    				v.components.taskdata:AddOne("kill_killshadow_3")
+    			end
+    		end
+    	elseif prefab == "stalker" then
+    		for k, v in pairs(ents) do
+    			v.components.taskdata:AddOne("kill_stalker")
+    		end
+    	elseif prefab == "stalker_atrium" then
+    		for k, v in pairs(ents) do
+    			v.components.taskdata:AddOne("kill_stalker_atrium")
+    		end
+    	elseif prefab == "klaus" and inst:IsUnchained() then
+    		for k, v in pairs(ents) do
+    			v.components.taskdata:AddOne("kill_klaus")
+    		end
+    	elseif prefab == "antlion" then
+    		for k, v in pairs(ents) do
+    			v.components.taskdata:AddOne("kill_antlion")
+    		end
+    	elseif prefab == "minotaur" then
+    		for k, v in pairs(ents) do
+    			v.components.taskdata:AddOne("kill_minotaur")
+    		end
+    	elseif prefab == "beequeen" then
+    		for k, v in pairs(ents) do
+    			v.components.taskdata:AddOne("kill_beequeen")
+    		end
+    	elseif prefab == "toadstool" then
+    		for k, v in pairs(ents) do
+    			v.components.taskdata:AddOne("kill_toadstool")
+    		end
+    	elseif prefab == "toadstool_dark" then
+    		for k, v in pairs(ents) do
+    			v.components.taskdata:AddOne("kill_toadstool_dark")
+    		end
+    	elseif prefab == "malbatross" then
+    		for k, v in pairs(ents) do
+    			v.components.taskdata:AddOne("kill_malbatross")
+    		end
+    	elseif prefab == "crabking" then
+    		for k, v in pairs(ents) do
+    			v.components.taskdata:AddOne("kill_crabking")
+    		end
+    	end
+    	-- 此处添加重复击杀boss获得奖励,注意排除一段克劳斯
+
     end
     
 
@@ -256,7 +321,29 @@ local function OnPick(inst, data)
 	local taskdata = inst.components.taskdata
 	if data.object and data.object.components.pickable and not data.object.components.trader then
 		local item = data.object
+		taskdata:AddOne("pick_100")
+		taskdata:AddOne("pick_1000")
 
+		local prefab = item.prefab
+		if prefab == "cactus" then
+			taskdata:AddOne("pick_cactus_50")
+		elseif prefab == "mushroom" then
+			taskdata:AddOne("pick_mushroom_100")
+		elseif string.find(prefab, "flower_cave") then
+			taskdata:AddOne("pick_flower_cave_100")
+		elseif prefab == "tallbirdnest" then
+			taskdata:AddOne("pick_tallbirdnest_10")
+		elseif prefab == "rock_avocado_bush" then
+			taskdata:AddOne("pick_rock_avocado_bush_100")
+		elseif prefab == "cave_banana_tree" then
+			taskdata:AddOne("pick_cave_banana_tree_50")
+		elseif prefab == "wormlight_plant" then
+			taskdata:AddOne("pick_wormlight_plant_40")
+		elseif prefab == "reeds" then
+			taskdata:AddOne("pick_reeds_50")
+		elseif prefab == "coffeebush" then
+			taskdata:AddOne("pick_coffeebush_50")
+		end
 	end
 end
 
@@ -264,14 +351,16 @@ local function OnFinishedwork(inst, data)
 	local taskdata = inst.components.taskdata
 	--砍树
 	if data.target and data.target:HasTag("tree") then
-        
+        taskdata:AddOne("chop_100")
+        taskdata:AddOne("chop_1000")
     end
     --挖矿
     if data.target and 
     	(data.target:HasTag("boulder") or 
         data.target:HasTag("statue") or 
         findprefab(rocklist, data.target.prefab)) then
-        
+        taskdata:AddOne("mine_60")
+        taskdata:AddOne("mine_500")
     end
 end
 --复活
@@ -283,13 +372,64 @@ end
 --建造
 local function OnConsume(inst)
 	local taskdata = inst.components.taskdata
+	taskdata:AddOne("build_30")
+	taskdata:AddOne("build_300")
 
 end
 local function OnBuildItem(inst, data)
 	local taskdata = inst.components.taskdata
 	if data.recipe ~= nil then
 		local product = data.recipe.product
-
+		if product == "pumpkin_lantern" then
+			taskdata:AddOne("build_pumpkin_lantern")
+		elseif product == "armorruins" then
+			taskdata:AddOne("build_armorruins")
+		elseif product == "ruinshat" then
+			taskdata:AddOne("build_ruinshat")
+		elseif product == "ruins_bat" then
+			taskdata:AddOne("build_ruins_bat")
+		elseif product == "gunpowder" then
+			taskdata:AddOne("build_gunpowder")
+		elseif product == "healingsalve" then
+			taskdata:AddOne("build_healingsalve")
+		elseif product == "bandage" then
+			taskdata:AddOne("build_bandage")
+		elseif product == "blowdart_pipe" then
+			taskdata:AddOne("build_blowdart_pipe")
+		elseif product == "blowdart_sleep" then
+			taskdata:AddOne("build_blowdart_sleep")
+		elseif product == "blowdart_yellow" then
+			taskdata:AddOne("build_blowdart_yellow")
+		elseif product == "blowdart_fire" then
+			taskdata:AddOne("build_blowdart_fire")
+		elseif product == "nightsword" then
+			taskdata:AddOne("build_nightsword")
+		elseif product == "amulet" then
+			taskdata:AddOne("build_amulet")
+		elseif product == "panflute" then
+			taskdata:AddOne("build_panflute")
+		elseif product == "molehat" then
+			taskdata:AddOne("build_molehat")
+		elseif product == "lifeinjector" then
+			taskdata:AddOne("build_lifeinjector")
+		elseif product == "batbat" then
+			taskdata:AddOne("build_batbat")
+		elseif product == "multitool_axe_pickaxe" then
+			taskdata:AddOne("build_multitool_axe_pickaxe")
+		elseif product == "thulecite" then
+			taskdata:AddOne("build_thulecite")
+		elseif product == "yellowstaff" then
+			taskdata:AddOne("build_yellowstaff")
+		elseif product == "footballhat" then
+			taskdata:AddOne("build_footballhat")
+		elseif product == "armorwood" then
+			taskdata:AddOne("build_armorwood")
+		elseif product == "hambat" then
+			taskdata:AddOne("build_hambat")
+		elseif product == "glasscutter" then
+			taskdata:AddOne("build_glasscutter")
+		end
+		
 	end
 end
 --种植
@@ -305,7 +445,8 @@ local function OnDeployItem(inst, data)
 	    data.prefab == "moonbutterfly" or 
 	    string.find(data.prefab, "seeds") ~= nil or 
 	    data.prefab == "burr" then
-        
+        taskdata:AddOne("plant_100")
+        taskdata:AddOne("plant_1000")
     end
 end
 --攻击
@@ -313,6 +454,10 @@ local function OnAttacked(inst, data)
 	local taskdata = inst.components.taskdata
 	local damage = data.damage or 0
 
+	taskdata:AddMulti("hurt_10000", math.floor(damage))
+	if damage > 0 and damage < 1.5 then
+		taskdata:AddOne("hurt_1")
+	end
 end
 
 local function OnHitOther(inst, data)
@@ -320,14 +465,55 @@ local function OnHitOther(inst, data)
 	if data.damage and data.damage >= 0 then
 	    local target = data.target
 	    local absorb = target.components.health and target.components.health.absorb or 0
-	    local damage = data.damage * (1- math.clamp(absorb, 0, 1))
+	    local damage = math.floor(data.damage * (1- math.clamp(absorb, 0, 1)) + 0.5)
 
+	    taskdata:AddMulti("attack_30000", damage)
+	    taskdata:AddMulti("attack_99999", damage)
+
+	    if damage < 2 then
+	    	taskdata:AddOne("damage_1")
+	    end
+
+	    if damage == 66 then
+	    	taskdata:AddOne("damage_66")
+	    end
    end
 end
 --给予
 local function OnGiveSomething(inst, data)
 	local taskdata = inst.components.taskdata
 
+end
+--cook
+local function OnDoCook(inst, data)
+	local taskdata = inst.components.taskdata
+	taskdata:AddOne("cook_100")
+	taskdata:AddOne("cook_888")
+	--预留烹饪特殊食物
+
+end
+--addfollower
+local function OnAddFollower(inst, data)
+	local taskdata = inst.components.taskdata
+	local follower = data.follower
+	local prefab = follower.prefab
+	if prefab == "pigman" then
+		taskdata:AddOne("makefriend_pigman")
+	elseif prefab == "bunnyman" then
+		taskdata:AddOne("makefriend_bunnyman")
+	elseif prefab == "catcoon" then
+		taskdata:AddOne("makefriend_catcoon")
+	elseif string.find(prefab, "spider") then
+		taskdata:AddOne("makefriend_spider")
+	elseif prefab == "mandrake_active" then
+		if not TheWorld.state.isday then
+			taskdata:AddOne("makefriend_mandrake_active")
+		end
+	elseif prefab == "smallbird" then
+		taskdata:AddOne("makefriend_smallbird")
+	elseif prefab == "rocky" then
+		taskdata:AddOne("makefriend_rocky")
+	end
 end
 --天体门重生
 local function OnReRoll(inst)
@@ -382,6 +568,10 @@ AddPlayerPostInit(function(inst)
 
 	    --give
 	    inst:ListenForEvent("givesomething", OnGiveSomething)
+	    --cook
+	    inst:ListenForEvent("docook", OnDoCook)
+	    --follower
+	    inst:ListenForEvent("addfollower", OnAddFollower)
 
 	    --reroll
 	    inst:ListenForEvent("ms_playerreroll", OnReRoll)

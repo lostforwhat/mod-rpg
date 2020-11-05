@@ -63,3 +63,20 @@ GIVE.fn = function(act, ...)
 
     return result
 end
+
+--修改cook逻辑
+local COOK = ACTIONS.COOK
+local old_cook_fn = COOK.fn
+COOK.fn = function(act, ...)
+    local result = old_cook_fn(act)
+    local stewer = act.target.components.stewer
+    if result and stewer ~= nil then
+
+        if act.doer:HasTag("cookmaster") > 0 then
+            local fn = stewer.task.fn
+            stewer.task:Cancel()
+            fn(act.target, stewer)
+        end
+        act.doer:PushEvent("docook", {product=stewer.product})
+    end
+end
