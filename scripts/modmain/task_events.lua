@@ -358,7 +358,7 @@ local function OnFinishedwork(inst, data)
     if data.target and 
     	(data.target:HasTag("boulder") or 
         data.target:HasTag("statue") or 
-        findprefab(rocklist, data.target.prefab)) then
+        ExistInTable(rocklist, data.target.prefab)) then
         taskdata:AddOne("mine_60")
         taskdata:AddOne("mine_500")
     end

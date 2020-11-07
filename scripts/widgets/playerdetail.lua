@@ -40,6 +40,11 @@ function PlayerDetail:Layout()
     self.in_pos = Vector3(-.95 * w, 0, 0)
 
     self:MoveTo(self.out_pos, self.in_pos, .33, function()  end)
+
+    self.close_button = self.proot:AddChild(TEMPLATES.SmallButton(STRINGS.UI.PLAYER_AVATAR.CLOSE, 26, .5, function() 
+        self.owner.HUD:ClosePlayerDetail()
+    end))
+    self.close_button:SetPosition(0, -269)
 end
 
 function PlayerDetail:Close()

@@ -136,6 +136,7 @@ end)
 
 --给灰烬添加肥料属性
 AddPrefabPostInit("ash", function(inst) 
+	inst:AddTag("volcanic")
 	if _G.TheWorld.ismastersim then
 		inst:AddComponent("fertilizer")
 	    inst.components.fertilizer.fertilizervalue = TUNING.POOP_FERTILIZE

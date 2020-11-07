@@ -71,8 +71,9 @@ local ShopDetail = Class(Widget, function(self, owner)
 end)
 
 function ShopDetail:LoadShopFromServer()
+    self.shop_goods = {}
     if shop_list then
-        for k, v in pairs(shop_list) do
+        for k, v in pairs(deepcopy(shop_list)) do
             if PrefabExists(v.prefab) then
                 table.insert(self.shop_goods, {index=k, item=v})
             end
@@ -135,7 +136,7 @@ function ShopDetail:LoadMenus()
     self.menu.coin:SetTooltip("总财富："..self:GetCoin())
 
     self.menu.use = self.menu:AddChild(ImageButton("images/inventoryimages1.xml", "gift_small1.tex"))
-    self.menu.use:SetPosition(155, -5)
+    self.menu.use:SetPosition(154, -5)
     self.menu.use:SetScale(0.6, 0.6)
     self.menu.use.value = self.menu.use:AddChild(Text(BODYTEXTFONT, 50))
     self.menu.use.value:SetColour(0, 0.6, 0.6, 1)
@@ -167,16 +168,17 @@ function ShopDetail:ShopItem()
     local item_width, item_height = 60, 60
     shop_item.backing = shop_item:AddChild(TEMPLATES2.ListItemBackground(item_width, item_height, function() end))
     shop_item.backing.move_on_click = true
+    local shop_backing = shop_item.backing
 
-    shop_item.num = shop_item:AddChild(Text(BODYTEXTFONT, 20))
+    shop_item.num = shop_backing:AddChild(Text(BODYTEXTFONT, 20))
     shop_item.num:SetPosition(0, -18)
     shop_item.num:SetColour(1, 0, 1, 1)
     shop_item.num:SetHAlign(ANCHOR_RIGHT)
-    shop_item.value = shop_item:AddChild(Text(BODYTEXTFONT, 20))
+    shop_item.value = shop_backing:AddChild(Text(BODYTEXTFONT, 20))
     shop_item.value:SetColour(0, 1, 1, 1)
     shop_item.value:SetPosition(-15, 18)
     shop_item.value:SetHAlign(ANCHOR_LEFT)
-    shop_item.use_left = shop_item:AddChild(Text(BODYTEXTFONT, 20))
+    shop_item.use_left = shop_backing:AddChild(Text(BODYTEXTFONT, 20))
     shop_item.use_left:SetColour(0, 1, 1, 1)
     shop_item.use_left:SetPosition(15, 18)
     shop_item.use_left:SetHAlign(ANCHOR_RIGHT)
@@ -194,7 +196,7 @@ function ShopDetail:ShopItem()
             or softresolvefilepath("images/"..name..".xml") or DEFAULT_ATLAS
         local image = name .. ".tex"
 
-        shop_item.image = shop_item:AddChild(Image(atlas, image, "chesspiece_anchor_sketch.tex"))
+        shop_item.image = shop_backing:AddChild(Image(atlas, image, "chesspiece_anchor_sketch.tex"))
         shop_item.image:SetScale(0.7, 0.7)
 
         local value = item.value or 1
@@ -215,7 +217,7 @@ function ShopDetail:ShopItem()
             shop_item.use_left:SetRegionSize(25, 18)
             shop_item.use_left:MoveToFront()
         end
-        shop_item.backing:MoveToFront()
+        --shop_item.backing:MoveToFront()
         shop_item.backing:SetOnClick(function()
             --此处做宣告使用
             if TheInput:IsKeyDown(KEY_ALT) and TheInput:IsKeyDown(KEY_SHIFT) then
@@ -331,6 +333,28 @@ function ShopDetail:RefreshCart()
             local value = v.value or 1
             local num = v.num or 1
             local use_left = v.use_left or 1
+
+            self.cart.slot[k].num = self.cart.slot[k]:AddChild(Text(BODYTEXTFONT, 20))
+            self.cart.slot[k].num:SetPosition(0, -18)
+            self.cart.slot[k].num:SetColour(1, 0, 1, 1)
+            self.cart.slot[k].num:SetHAlign(ANCHOR_RIGHT)
+            self.cart.slot[k].value = self.cart.slot[k]:AddChild(Text(BODYTEXTFONT, 20))
+            self.cart.slot[k].value:SetColour(0, 1, 1, 1)
+            self.cart.slot[k].value:SetPosition(-15, 18)
+            self.cart.slot[k].value:SetHAlign(ANCHOR_LEFT)
+            self.cart.slot[k].use_left = self.cart.slot[k]:AddChild(Text(BODYTEXTFONT, 20))
+            self.cart.slot[k].use_left:SetColour(0, 1, 1, 1)
+            self.cart.slot[k].use_left:SetPosition(15, 18)
+            self.cart.slot[k].use_left:SetHAlign(ANCHOR_RIGHT)
+            if use_left < 1 then
+                self.cart.slot[k].use_left:SetString((use_left*100).."%")
+                self.cart.slot[k].use_left:SetRegionSize(25, 18)
+            end
+            self.cart.slot[k].num:SetString("x "..num)
+            self.cart.slot[k].num:SetRegionSize(55, 18)
+            self.cart.slot[k].value:SetString("-"..value)
+            self.cart.slot[k].value:SetRegionSize(25, 18)
+
             self.cart.slot[k].good:SetTooltip(GetDescriptionString(name).."\n 价格："..value.."\n 数量："..num.."\n 耐久："..(use_left*100).."%")
         end
     end
@@ -353,13 +377,14 @@ function ShopDetail:LoadCart()
     self.cart.buy:SetScale(0.5)
     self.cart.buy:SetTooltip("购买")
     self.cart.buy:SetOnClick(function()
-
+        SendModRPCToServer(MOD_RPC.RPG_shop.purchase, self.cart_goods)
     end)
 
     self.cart.back = self.cart:AddChild(TEMPLATES2.BackButton(function() 
         self.cart_goods = {}
         self:LoadShopFromServer()
         self.shop_scroll_list:SetItemsData(self.shop_goods)
+        self:RefreshCart()
     end, "清空", nil, 0.5))
     self.cart.back:SetPosition(110, 0)
 end

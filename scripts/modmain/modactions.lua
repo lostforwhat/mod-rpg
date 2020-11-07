@@ -86,15 +86,7 @@ local FERTILIZE = ACTIONS.FERTILIZE
 local old_fertilize_fn = FERTILIZE.fn
 FERTILIZE.fn = function(act, ...)
     if act.invobject ~= nil and act.invobject.components.fertilizer ~= nil then
-        if act.invobject.components.fertilizer.volcanic then
-            if act.target:HasTag("volcanic") then
-                return old_fertilize_fn(act, ...)
-            end
-        elseif act.target:HasTag("volcanic") then
-            if act.invobject.components.fertilizer.volcanic then
-                return old_fertilize_fn(act, ...)
-            end
-        else
+        if act.target:HasTag("volcanic") == act.invobject:HasTag("volcanic") then
             return old_fertilize_fn(act, ...)
         end
     end

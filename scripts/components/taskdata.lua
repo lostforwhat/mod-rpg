@@ -114,11 +114,13 @@ function TaskData:Completed(taskname)
 	if task_info == nil then return end --防止代码崩档 
 
 	local task_text = task_info.name
-	local reward = task_info.reward
+	local reward = task_info.reward or 1
 	local desc = task_info.desc
+	local need = task_info.need or 1
 	SpawnPrefab("seffc").entity:SetParent(inst.entity)
 
-	local annouce_str = string.format("%s  完成任务【%s】 奖励 %d", inst:GetDisplayName(), task_text, reward) 
+	local desc_str = string.format(desc, " "..need.." ")
+	local annouce_str = string.format("%s %s 完成任务【%s】 奖励 %d", inst:GetDisplayName(), desc_str, task_text, reward) 
 	TheNet:Announce(annouce_str, inst.entity)
 
 	self:CoinDoDelta(task_info.reward or 1)
