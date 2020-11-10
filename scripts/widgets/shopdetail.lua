@@ -29,7 +29,7 @@ local shop_list = {{prefab="spear"}, {prefab="footballhat"}, {prefab="hivehat"},
                         {prefab="achiv_clear", num=5, value=20}
                         }
 
-function GetDescriptionString(name)
+local function GetDescriptionString(name)
 
     local str = ""
 
@@ -95,9 +95,17 @@ function ShopDetail:DelShopGoods(index, multi)
 end
 
 function ShopDetail:GetCoin()
-    local taskdata = self.owner.components.taskdata
-    if taskdata and taskdata.net_data then
-        return taskdata.net_data.coin:value() or 0
+    local purchase = self.owner.components.purchase
+    if purchase and purchase.net_data then
+        return purchase.net_data.coin:value() or 0
+    end
+    return 0
+end
+
+function ShopDetail:GetCoinUsed()
+    local purchase = self.owner.components.purchase
+    if purchase and purchase.net_data then
+        return purchase.net_data.coin_used:value() or 0
     end
     return 0
 end
@@ -155,10 +163,6 @@ function ShopDetail:LoadMenus()
         end
     end)
     self.menu.use:SetTooltip("小店消费："..self:GetCoinUsed())
-end
-
-function ShopDetail:GetCoinUsed()
-    return 0
 end
 
 function ShopDetail:ShopItem()

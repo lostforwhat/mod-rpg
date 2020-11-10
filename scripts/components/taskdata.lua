@@ -15,7 +15,7 @@ local TaskData = Class(function(self, inst)
     self.inst = inst
     --网络数据，客主机需要并保存
     self.net_data = {
-    	coin = net_shortint(inst.GUID, "coin", "coindirty")
+    	coin = net_shortint(inst.GUID, "taskdata.coin", "taskcoindirty")
     }
     self:Init()
     self.coin = 0
@@ -123,7 +123,8 @@ function TaskData:Completed(taskname)
 	local annouce_str = string.format("%s %s 完成任务【%s】 奖励 %d", inst:GetDisplayName(), desc_str, task_text, reward) 
 	TheNet:Announce(annouce_str, inst.entity)
 
-	self:CoinDoDelta(task_info.reward or 1)
+	self:CoinDoDelta(task_info.reward or 1) --此处暂时保留数值
+	self.inst.components.purchase:CoinDoDelta(task_info.reward or 1)  --真实coin数量
 	inst:DoTaskInTime(.3,function() 
 		self:AllCompletedCheck()
         inst:PushEvent("taskcompleted", {taskname=taskname})

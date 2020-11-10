@@ -30,11 +30,11 @@ local ShopInfo = Class(Widget, function(self, owner)
 end)
 
 function ShopInfo:GetCoin()
-	local taskdata = self.owner.components.taskdata
-	if taskdata and taskdata.net_data then
-		return taskdata.net_data.coin:value() or 0
-	end
-	return 0
+    local purchase = self.owner.components.purchase
+    if purchase and purchase.net_data then
+        return purchase.net_data.coin:value() or 0
+    end
+    return 0
 end
 
 function ShopInfo:OpenShop()

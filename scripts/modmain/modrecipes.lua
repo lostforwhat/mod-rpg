@@ -17,3 +17,6 @@ local coffeeRecipe = {
 	}
 AddCookerRecipe("cookpot", coffeeRecipe)
 AddCookerRecipe("portablecookpot", coffeeRecipe)
+
+
+--添加制作配方

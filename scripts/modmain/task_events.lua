@@ -23,7 +23,7 @@ end
 local function OnTumbleweedPicked(inst, data)
 	local taskdata = inst.components.taskdata	
     local lucky_level = data.lucky_level
-    --print("lucky_level:"..(lucky_level or "nil"))
+    
     taskdata:AddOne("pick_one_tumbleweed")
     taskdata:AddOne("pick_tumbleweed_88")
     taskdata:AddOne("pick_tumbleweed_288")

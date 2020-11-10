@@ -18,6 +18,10 @@ Assets = {
     Asset("IMAGE", "images/hud/email.tex"),
     Asset("ATLAS", "images/hud/levelbadge.xml"),
     Asset("IMAGE", "images/hud/levelbadge.tex"),
+    Asset("IMAGE", "images/back.tex"),
+    Asset("ATLAS", "images/back.xml"),
+    Asset("IMAGE", "images/neck.tex"),
+    Asset("ATLAS", "images/neck.xml"),
 }
 
 PrefabFiles = {}
