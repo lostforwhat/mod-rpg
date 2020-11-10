@@ -75,16 +75,16 @@ AddGlobalClassPostConstruct("widgets/inventorybar", "Inv", function()
 end)
 
 AddPrefabPostInit("inventory_classified", function(inst)
-    function GetOverflowContainer(inst)
+    local function GetOverflowContainer(inst)
         local item = inst.GetEquippedItem(inst, _G.EQUIPSLOTS.BACK)
         return item ~= nil and item.replica.container or nil
     end
 
-    function Count(item)
+    local function Count(item)
         return item.replica.stackable ~= nil and item.replica.stackable:StackSize() or 1
     end
 
-    function Has(inst, prefab, amount)
+    local function Has(inst, prefab, amount)
         local count =
             inst._activeitem ~= nil and
             inst._activeitem.prefab == prefab and
@@ -142,13 +142,13 @@ AddStategraphPostInit("wilson", function(self)
     end
 end)
 
-function backpackpostinit(inst)
+local function backpackpostinit(inst)
     if IsServer then
         inst.components.equippable.equipslot = _G.EQUIPSLOTS.BACK or _G.EQUIPSLOTS.BODY
     end
 end
 
-function amuletpostinit(inst)
+local function amuletpostinit(inst)
     if IsServer then
         inst.components.equippable.equipslot = _G.EQUIPSLOTS.NECK or _G.EQUIPSLOTS.BODY
     end
