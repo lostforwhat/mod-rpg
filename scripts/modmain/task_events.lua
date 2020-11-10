@@ -1,13 +1,6 @@
+require "utils/utils"
 local _G = GLOBAL
-
-local function ExistInTable(tab, val)
-	for k, v in pairs(tab) do
-		if v == val then
-			return true
-		end
-	end
-	return false
-end
+local ExistInTable = _G.ExistInTable
 
 local function OnTumbleweedDroped(inst, data)
 	local item = data.item
@@ -349,18 +342,22 @@ end
 
 local function OnFinishedwork(inst, data)
 	local taskdata = inst.components.taskdata
-	--砍树
-	if data.target and data.target:HasTag("tree") then
-        taskdata:AddOne("chop_100")
-        taskdata:AddOne("chop_1000")
-    end
-    --挖矿
-    if data.target and 
-    	(data.target:HasTag("boulder") or 
-        data.target:HasTag("statue") or 
-        ExistInTable(rocklist, data.target.prefab)) then
-        taskdata:AddOne("mine_60")
-        taskdata:AddOne("mine_500")
+    if data.target and data.target.components.workable then
+        local action = data.target.components.workable.action
+        --砍树
+        if data.target:HasTag("tree") and action == _G.ACTIONS.CHOP then
+            taskdata:AddOne("chop_100")
+            taskdata:AddOne("chop_1000")
+        end
+        --挖矿
+        if action == _G.ACTIONS.MINE then
+            taskdata:AddOne("mine_60")
+            taskdata:AddOne("mine_500")
+        end
+        --移植
+        if not data.target:HasTag("tree") and action == _G.ACTIONS.DIG then
+
+        end
     end
 end
 --复活

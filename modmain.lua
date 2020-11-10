@@ -18,10 +18,6 @@ Assets = {
     Asset("IMAGE", "images/hud/email.tex"),
     Asset("ATLAS", "images/hud/levelbadge.xml"),
     Asset("IMAGE", "images/hud/levelbadge.tex"),
-    Asset("IMAGE", "images/back.tex"),
-    Asset("ATLAS", "images/back.xml"),
-    Asset("IMAGE", "images/neck.tex"),
-    Asset("ATLAS", "images/neck.xml"),
 }
 
 PrefabFiles = {}
@@ -58,6 +54,7 @@ modimport("scripts/modmain/tumbleweed_pick.lua")
 modimport("scripts/modmain/modactions.lua")
 modimport("scripts/modmain/task_events.lua")
 modimport("scripts/modmain/modrecipes.lua")
+modimport("scripts/modmain/extra_slots.lua")
 
 
 

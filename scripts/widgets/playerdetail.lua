@@ -29,7 +29,7 @@ end)
 function PlayerDetail:SetPlayerData()
     local options = {
         { text = "个人信息", data = 1 },
-        { text = "称号", data = 2 }
+        { text = "我的技能", data = 2 }
     }
     self.top_nav = self.proot:AddChild(TEMPLATES.LabelSpinner("", options, 0, 160, 50, 20, NEWFONT, 30, -10))
     self.top_nav:SetPosition(0, 268)

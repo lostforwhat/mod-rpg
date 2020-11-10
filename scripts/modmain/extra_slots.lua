@@ -1,7 +1,15 @@
+--添加额外装备栏
 local _G = GLOBAL
-local require = _G.require
 local IsServer = _G.TheNet:GetIsServer()
-local Inv = require "widgets/inventorybar"
+
+require "utils/utils"
+
+local ExistInTable = _G.ExistInTable
+
+table.insert(Assets, Asset("IMAGE", "images/slots/back.tex"))
+table.insert(Assets, Asset("ATLAS", "images/slots/back.xml"))
+table.insert(Assets, Asset("IMAGE", "images/slots/neck.tex"))
+table.insert(Assets, Asset("ATLAS", "images/slots/neck.xml"))
 
 _G.EQUIPSLOTS.BACK = "back"
 _G.EQUIPSLOTS.NECK = "neck"
@@ -32,11 +40,11 @@ AddComponentPostInit("inventory", function(self, inst)
     end
 end)
 
-AddGlobalClassPostConstruct("widgets/inventorybar", "Inv", function()
-    local Inv_Refresh_base = Inv.Refresh or function() return "" end
-    local Inv_Rebuild_base = Inv.Rebuild or function() return "" end
+AddClassPostConstruct("widgets/inventorybar", function(self, owner)
+    local Old_Refresh_base = self.Refresh
+    local Old_Rebuild_base = self.Rebuild
 
-    function Inv:LoadExtraSlots(self)
+    function self:LoadExtraSlots(self)
         self.bg:SetScale(1.35,1,1.25)
         self.bgcover:SetScale(1.35,1,1.25)
 
@@ -63,14 +71,14 @@ AddGlobalClassPostConstruct("widgets/inventorybar", "Inv", function()
         end
     end
 
-    function Inv:Refresh()
-        Inv_Refresh_base(self)
-        Inv:LoadExtraSlots(self)
+    function self:Refresh()
+        Old_Refresh_base(self)
+        self:LoadExtraSlots(self)
     end
 
-    function Inv:Rebuild()
-        Inv_Rebuild_base(self)
-        Inv:LoadExtraSlots(self)
+    function self:Rebuild()
+        Old_Rebuild_base(self)
+        self:LoadExtraSlots(self)
     end
 end)
 
@@ -142,6 +150,14 @@ AddStategraphPostInit("wilson", function(self)
     end
 end)
 
+local amulets = {
+    "amulet", "blueamulet", "purpleamulet", "orangeamulet", "greenamulet", "yellowamulet"
+}
+
+local backpacks = {
+    "backpack", "krampus_sack", "piggyback", "icepack"
+}
+
 local function backpackpostinit(inst)
     if IsServer then
         inst.components.equippable.equipslot = _G.EQUIPSLOTS.BACK or _G.EQUIPSLOTS.BODY
@@ -153,6 +169,15 @@ local function amuletpostinit(inst)
         inst.components.equippable.equipslot = _G.EQUIPSLOTS.NECK or _G.EQUIPSLOTS.BODY
     end
 end
+
+AddPrefabPostInitAny(function(inst) 
+    if not IsServer then return end
+    if ExistInTable(amulets, inst.prefab) then
+        inst.components.equippable.equipslot = _G.EQUIPSLOTS.NECK or _G.EQUIPSLOTS.BODY
+    elseif ExistInTable(backpacks, inst.prefab) or inst:HasTag("backpack") then
+        inst.components.equippable.equipslot = _G.EQUIPSLOTS.BACK or _G.EQUIPSLOTS.BODY
+    end
+end)
 
 
 AddPrefabPostInit("amulet", amuletpostinit)
