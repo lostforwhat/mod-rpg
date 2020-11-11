@@ -30,16 +30,20 @@ local function OnEnabled(self, enabled)
     end
 end
 
+local function OnHitohter(inst, data)
+    if inst.components.fighting then
+        inst.components.fighting:OnHitohter(data.target)
+    end
+end
+
 local Fighting = Class(function(self, inst) 
     self.inst = inst
     self.enabled = false
     self.increase = DEFAULT_INCREASE
     self.hit = 0
     self.hit_reduce_cd = DEFAULT_CD
-    self.onhitotherfn = function(inst, data)
-        self:OnHitohter(data.target)
-    end
-    self.inst:ListenForEvent("onhitother", self.onkilledfn)
+
+    self.inst:ListenForEvent("onhitother", OnHitohter)
     self.inst:StartUpdatingComponent(self)
 end,
 nil,

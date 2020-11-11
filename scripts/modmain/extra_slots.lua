@@ -13,6 +13,7 @@ table.insert(Assets, Asset("ATLAS", "images/slots/neck.xml"))
 
 _G.EQUIPSLOTS.BACK = "back"
 _G.EQUIPSLOTS.NECK = "neck"
+_G.EQUIPSLOTS.HANDS2 = "hands2"
 
 
 AddComponentPostInit("inventory", function(self, inst)
@@ -26,12 +27,10 @@ AddComponentPostInit("inventory", function(self, inst)
                 end
             end
             return true
-        else
-            return
         end
     end
 
-    self.GetOverflowContainer = function()
+    function self:GetOverflowContainer()
         if self.ignoreoverflow then
             return
         end
@@ -41,8 +40,8 @@ AddComponentPostInit("inventory", function(self, inst)
 end)
 
 AddClassPostConstruct("widgets/inventorybar", function(self, owner)
-    local Old_Refresh_base = self.Refresh
-    local Old_Rebuild_base = self.Rebuild
+    local Old_Refresh = self.Refresh
+    local Old_Rebuild = self.Rebuild
 
     function self:LoadExtraSlots(self)
         self.bg:SetScale(1.35,1,1.25)
@@ -72,12 +71,12 @@ AddClassPostConstruct("widgets/inventorybar", function(self, owner)
     end
 
     function self:Refresh()
-        Old_Refresh_base(self)
+        Old_Refresh(self)
         self:LoadExtraSlots(self)
     end
 
     function self:Rebuild()
-        Old_Rebuild_base(self)
+        Old_Rebuild(self)
         self:LoadExtraSlots(self)
     end
 end)
@@ -129,27 +128,6 @@ AddPrefabPostInit("inventory_classified", function(inst)
     end
 end)
 
-AddStategraphPostInit("wilson", function(self)
-    for key,value in pairs(self.states) do
-        if value.name == 'amulet_rebirth' then
-            local original_amulet_rebirth_onexit = self.states[key].onexit
-
-
-            self.states[key].onexit = function(inst)
-                local item = inst.components.inventory:GetEquippedItem(_G.EQUIPSLOTS.NECK)
-                if item and item.prefab == "amulet" then
-                    item = inst.components.inventory:RemoveItem(item)
-                    if item then
-                        item:Remove()
-                        item.persists = false
-                    end
-                end
-                original_amulet_rebirth_onexit(inst)
-            end
-        end
-    end
-end)
-
 local amulets = {
     "amulet", "blueamulet", "purpleamulet", "orangeamulet", "greenamulet", "yellowamulet"
 }
@@ -157,18 +135,6 @@ local amulets = {
 local backpacks = {
     "backpack", "krampus_sack", "piggyback", "icepack"
 }
-
-local function backpackpostinit(inst)
-    if IsServer then
-        inst.components.equippable.equipslot = _G.EQUIPSLOTS.BACK or _G.EQUIPSLOTS.BODY
-    end
-end
-
-local function amuletpostinit(inst)
-    if IsServer then
-        inst.components.equippable.equipslot = _G.EQUIPSLOTS.NECK or _G.EQUIPSLOTS.BODY
-    end
-end
 
 AddPrefabPostInitAny(function(inst) 
     if not IsServer then return end
@@ -179,15 +145,3 @@ AddPrefabPostInitAny(function(inst)
     end
 end)
 
-
-AddPrefabPostInit("amulet", amuletpostinit)
-AddPrefabPostInit("blueamulet", amuletpostinit)
-AddPrefabPostInit("purpleamulet", amuletpostinit)
-AddPrefabPostInit("orangeamulet", amuletpostinit)
-AddPrefabPostInit("greenamulet", amuletpostinit)
-AddPrefabPostInit("yellowamulet", amuletpostinit)
-
-AddPrefabPostInit("backpack", backpackpostinit)
-AddPrefabPostInit("krampus_sack", backpackpostinit)
-AddPrefabPostInit("piggyback", backpackpostinit)
-AddPrefabPostInit("icepack", backpackpostinit)

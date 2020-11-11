@@ -62,6 +62,7 @@ modimport("scripts/modmain/extra_slots.lua")
 AddPlayerPostInit(function(inst) 
 	inst:AddComponent("taskdata")
 	inst:AddComponent("purchase")
+	inst:AddComponent("suit")
 	
 	inst:AddComponent("attackdeath")
 	inst:AddComponent("attackbroken")
@@ -118,6 +119,9 @@ AddPlayerPostInit(function(inst)
 
 	end
 	if prefab == "waxwell" then
+
+	end
+	if prefab == "warly" then
 
 	end
 
