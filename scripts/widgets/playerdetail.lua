@@ -31,15 +31,165 @@ function PlayerDetail:SetPlayerData()
     self.content:KillAllChildren()
     self.vertical_line = self.content:AddChild(Image("images/ui.xml", "line_vertical_5.tex"))
     self.vertical_line:SetScale(.5, .72)
-    self.vertical_line:SetPosition(5, 0)
+    self.vertical_line:SetPosition(0, 0)
 
+    local meta_data = {
+        {
+            name = "生命值",
+            widget_fn = function(self, width, height) 
+                            local str_format = "%.1f/%.1f (+%.1f)"
+                            local text = Text(TALKINGFONT, 25)
+                            local max = self.owner.replica.health:Max()
+                            local current = self.owner.replica.health:GetCurrent()
+                            text:SetString(string.format(str_format, current, max, 0))
+                            text:SetVAlign(ANCHOR_MIDDLE)
+                            text:SetHAlign(ANCHOR_LEFT)
+                            text:SetRegionSize(width, height*0.9)
+                            text.inst:ListenForEvent("healthdirty", function(inst) 
+                                --text:SetString(string.format("%.1f",inst._parent.replica.health:Max()))
+                                max = inst._parent.replica.health:Max()
+                                current = inst._parent.replica.health:GetCurrent()
+                                text:SetString(string.format(str_format, current, max, 0))
+                            end, self.owner.player_classified)
+                            return text
+                        end
+        },
+        {
+            name = "精神值",
+            widget_fn = function(self, width, height) 
+                            local str_format = "%.1f/%.1f (+%.1f)"
+                            local text = Text(TALKINGFONT, 25)
+                            local max = self.owner.replica.sanity:Max()
+                            local current = self.owner.replica.sanity:GetCurrent()
+                            text:SetString(string.format(str_format, current, max, 0))
+                            text:SetVAlign(ANCHOR_MIDDLE)
+                            text:SetHAlign(ANCHOR_LEFT)
+                            text:SetRegionSize(width, height*0.9)
+                            text.inst:ListenForEvent("sanitydirty", function(inst) 
+                                max = inst._parent.replica.sanity:Max()
+                                current = inst._parent.replica.sanity:GetCurrent()
+                                text:SetString(string.format(str_format, current, max, 0))
+                            end, self.owner.player_classified)
+                            return text
+                        end
+        },
+        {
+            name = "饥饿值",
+            widget_fn = function(self, width, height) 
+                            local str_format = "%.1f/%.1f (+%.1f)"
+                            local text = Text(TALKINGFONT, 25)
+                            local max = self.owner.replica.hunger:Max()
+                            local current = self.owner.replica.hunger:GetCurrent()
+                            text:SetString(string.format(str_format, current, max, 0))
+                            text:SetVAlign(ANCHOR_MIDDLE)
+                            text:SetHAlign(ANCHOR_LEFT)
+                            text:SetRegionSize(width, height*0.9)
+                            text.inst:ListenForEvent("hungerdirty", function(inst) 
+                                max = inst._parent.replica.hunger:Max()
+                                current = inst._parent.replica.hunger:GetCurrent()
+                                text:SetString(string.format(str_format, current, max, 0))
+                            end, self.owner.player_classified)
+                            return text
+                        end
+        },
+        {
+            name = "伤害",
+            widget_fn = function(self, width, height) 
+                            local text = Text(TALKINGFONT, 30)
+                            text:SetString(0)
+                            text:SetVAlign(ANCHOR_MIDDLE)
+                            text:SetHAlign(ANCHOR_LEFT)
+                            text:SetRegionSize(width, height*0.9)
+                            return text
+                        end
+        },
+        {
+            name = "生命值",
+            widget_fn = function(self, width, height) 
+                            local text = Text(TALKINGFONT, 30)
+                            text:SetString(0)
+                            text:SetVAlign(ANCHOR_MIDDLE)
+                            text:SetHAlign(ANCHOR_LEFT)
+                            text:SetRegionSize(width, height*0.9)
+                            return text
+                        end
+        },
+        {
+            name = "生命值",
+            widget_fn = function(self, width, height) 
+                            local text = Text(TALKINGFONT, 30)
+                            text:SetString(0)
+                            text:SetVAlign(ANCHOR_MIDDLE)
+                            text:SetHAlign(ANCHOR_LEFT)
+                            text:SetRegionSize(width, height*0.9)
+                            return text
+                        end
+        },
+        {
+            name = "生命值",
+            widget_fn = function(self, width, height) 
+                            local text = Text(TALKINGFONT, 30)
+                            text:SetString(0)
+                            text:SetVAlign(ANCHOR_MIDDLE)
+                            text:SetHAlign(ANCHOR_LEFT)
+                            text:SetRegionSize(width, height*0.9)
+                            return text
+                        end
+        },
+        {
+            name = "生命值",
+            widget_fn = function(self, width, height) 
+                            local text = Text(TALKINGFONT, 30)
+                            text:SetString(0)
+                            text:SetVAlign(ANCHOR_MIDDLE)
+                            text:SetHAlign(ANCHOR_LEFT)
+                            text:SetRegionSize(width, height*0.9)
+                            return text
+                        end
+        },
+        {
+            name = "生命值",
+            widget_fn = function(self, width, height) 
+                            local text = Text(TALKINGFONT, 30)
+                            text:SetString(0)
+                            text:SetVAlign(ANCHOR_MIDDLE)
+                            text:SetHAlign(ANCHOR_LEFT)
+                            text:SetRegionSize(width, height*0.9)
+                            return text
+                        end
+        },
+        {
+            name = "生命值",
+            widget_fn = function(self, width, height) 
+                            local text = Text(TALKINGFONT, 30)
+                            text:SetString(0)
+                            text:SetVAlign(ANCHOR_MIDDLE)
+                            text:SetHAlign(ANCHOR_LEFT)
+                            text:SetRegionSize(width, height*0.9)
+                            return text
+                        end
+        },
+    }
+
+    self.names = {}
+    self.values = {}
     self.horizontal_line = {}
-    local max_line = 10
+    local max_line = #meta_data
     local height_line = math.ceil(500/max_line)
-    for k=1, 10 do
+    for k=1, max_line do
         self.horizontal_line[k] = self.content:AddChild(Image("images/ui.xml", "line_horizontal_6.tex"))
         self.horizontal_line[k]:SetScale(1.05, .25)
         self.horizontal_line[k]:SetPosition(7, 250 - height_line * k)
+
+        self.names[k] = self.content:AddChild(Text(TALKINGFONT, 30))
+        self.names[k]:SetVAlign(ANCHOR_MIDDLE)
+        self.names[k]:SetHAlign(ANCHOR_RIGHT)
+        self.names[k]:SetPosition(-80, 250 - height_line * (k - 0.5), 0)
+        self.names[k]:SetString(meta_data[k].name)
+        self.names[k]:SetRegionSize(140, height_line*0.9)
+
+        self.values[k] = self.content:AddChild(meta_data[k].widget_fn(self, 140, height_line))
+        self.values[k]:SetPosition(80, 250 - height_line * (k - 0.5), 0)
     end 
     
 end
@@ -83,7 +233,7 @@ function PlayerDetail:Layout()
         { text = "我的技能", data = 2 }
     }
     self.top_nav = self.proot:AddChild(TEMPLATES.LabelSpinner("", options, 0, 160, 50, 20, NEWFONT, 30, -10))
-    self.top_nav:SetPosition(0, 268)
+    self.top_nav:SetPosition(100, 288)
     self.top_nav.spinner:SetTextColour(1,0.4,0.35,1)
     self.top_nav.spinner:SetOnChangedFn(function(selected, old) 
         if selected == 1 then
