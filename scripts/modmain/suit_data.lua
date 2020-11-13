@@ -8,6 +8,12 @@ suit_data = {
 		prefabs = {"footballhat", "armorwood", "hambat"},
 		num = 3,
 		required_prefabs = {"footballhat", "armorwood", "hambat"},
-		
+		onmatch = function(owner) end,
+		onmismatch = function(owner) end
 	},
+	{
+		prefabs = {"nightsword", "armor_sanity"},
+		num = 2,
+
+	}
 }
