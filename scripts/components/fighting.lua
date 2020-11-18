@@ -1,3 +1,4 @@
+--女武神改版后废弃，直接使用激励值代替
 local MAX_HIT = 20
 local DEFAULT_INCREASE = 0.01
 local DEFAULT_CD = 5
@@ -15,18 +16,21 @@ local function IsValidVictim(victim)
 end
 
 local function OnIncrease(self, increase)
-    self.inst.components.combat.externaldamagemultipliers:SetModifier("fighting", 1 + self.hit*increase)
+    if self.inst.components.fighting then
+        self.inst.components.fighting:CalcDamage()
+    end
 end
 
 local function OnHit(self, hit)
-    self.hit_reduce_cd = DEFAULT_CD
-    self.inst.components.combat.externaldamagemultipliers:SetModifier("fighting", 1 + hit*self.increase)
+    if self.inst.components.fighting then
+        self.inst.components.fighting:RestCooldown()
+        self.inst.components.fighting:CalcDamage()
+    end
 end
 
 local function OnEnabled(self, enabled)
-    if not enabled then
-        self.hit = 0
-        self.inst.components.combat.externaldamagemultipliers:RemoveModifier("fighting")
+    if self.inst.components.fighting then
+        self.inst.components.fighting:CalcDamage()
     end
 end
 
@@ -38,10 +42,10 @@ end
 
 local Fighting = Class(function(self, inst) 
     self.inst = inst
-    self.enabled = false
     self.increase = DEFAULT_INCREASE
     self.hit = 0
     self.hit_reduce_cd = DEFAULT_CD
+    self.enabled = false
 
     self.inst:ListenForEvent("onhitother", OnHitohter)
     self.inst:StartUpdatingComponent(self)
@@ -67,6 +71,23 @@ function Fighting:ReduceCD(dt)
     self.hit_reduce_cd = self.hit_reduce_cd - dt
     if self.hit_reduce_cd < 0 then
         self.hit_reduce_cd = 0
+    end
+end
+
+function Fighting:RestCooldown()
+    if self.enabled and self.hit > 0 and self.increase > 0 then
+        self.hit_reduce_cd = DEFAULT_CD
+    end
+end
+
+function Fighting:CalcDamage()
+    if self.enabled then
+        local hit = self.hit or 0
+        local increase = self.increase or 0
+        self.inst.components.combat.externaldamagemultipliers:SetModifier("fighting", 1 + hit*increase)
+    else
+        self.inst.components.combat.externaldamagemultipliers:RemoveModifier("fighting")
+        --self.hit = 0
     end
 end
 

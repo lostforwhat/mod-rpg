@@ -16,9 +16,10 @@ local PlayerInfo = Class(Widget, function(self, owner)
     self.button = self:AddChild(ImageButton(atlas_name, image_name))
     self.button:SetHoverText("个人",{ size = 9, offset_x = 40, offset_y = -45, colour = {1,1,1,1}})
     self.button:SetOnClick(function() self:ShowInfo() end)
+    self.button:SetScale(0.9)
 
-    self.text = self:AddChild(Text(TALKINGFONT, 28))
-    self.text:SetPosition(1, -32)
+    self.text = self:AddChild(Text(BODYTEXTFONT, 28))
+    self.text:SetPosition(0, -30)
     self.text:SetColour(0, 1, 1, 1)
     
     self.inst:ListenForEvent("leveldirty", function(owner) 

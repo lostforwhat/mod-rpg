@@ -348,7 +348,7 @@ local function MakeLoot(inst)
             end
         end
     elseif level == 3 then
-        possible_loot = loot_table.luck_loot
+        possible_loot = deepcopy(loot_table.luck_loot) --此处一个深坑
     elseif level == -1 then
         for a,b in ipairs(loot_table.bad_loot) do
             if b.chance > 0 then
@@ -366,7 +366,7 @@ local function MakeLoot(inst)
             end
         end
     elseif level == -2 then
-        possible_loot = loot_table.monstor_loot
+        possible_loot = deepcopy(loot_table.monstor_loot)
         for a,b in ipairs(loot_table.monstor_loot) do
             if b.chance > 0 then
                 table.insert(possible_loot, b)
@@ -628,11 +628,15 @@ local function fn()
     inst.Light:Enable(false)
     inst.Light:SetColour(180 / 255, 195 / 255, 225 / 255)
 
+    --inst:AddTag("_named")
+
     inst.entity:SetPristine()
 
     if not TheWorld.ismastersim then
         return inst
     end
+    --inst:RemoveTag("_named")
+    --inst:AddComponent("colourtweener")
 
     inst:AddComponent("locomotor")
     inst.components.locomotor:SetTriggersCreep(false)
@@ -695,6 +699,7 @@ local function fn()
         return true
     end)
 
+    --inst:AddComponent("named")
     inst.onpickup = onpickup
     inst.MakeLoot = MakeLoot
 

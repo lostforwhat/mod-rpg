@@ -2,6 +2,15 @@ require "utils/utils"
 local _G = GLOBAL
 local ExistInTable = _G.ExistInTable
 
+local function GiveExp(inst, exp)
+    --预留插槽，用于提升或减少额外经验等
+
+    exp = math.floor(exp)
+    if exp > 0 and inst.components.level then
+        inst.components.level:AddXp(exp)
+    end
+end
+
 local function OnTumbleweedDroped(inst, data)
 	local item = data.item
     if not item:HasTag("monster") and item.components.combat == nil then
@@ -37,6 +46,8 @@ local function OnTumbleweedPicked(inst, data)
         end
     end
     taskdata.tumbleweednum = taskdata.tumbleweednum + 1
+
+    GiveExp(inst, math.random(1, 5))
 end
 
 local function OnEat(inst, data)
@@ -69,11 +80,23 @@ local function OnEat(inst, data)
 	end
 	--冷热食
 	local temp = food.components.edible.temperaturedelta or 0
-	if temp < 0 then
-		taskdata:AddOne("eat_cold_10")
-	elseif temp > 0 then
-		taskdata:AddOne("eat_hot_10")
-	end
+    local temperatureduration = food.components.edible.temperatureduration or 0
+    local chill = food.components.edible.chill or 0
+    if temp ~= 0 and temperatureduration ~= 0 and chill < 1 then
+       --print(temp, temperatureduration, chill)
+    	if temp < 0 then
+    		taskdata:AddOne("eat_cold_10")
+    	elseif temp > 0 then
+    		taskdata:AddOne("eat_hot_10")
+    	end
+    end
+
+    if food.components.edible then
+        local hunger_val = food.components.edible:GetHunger(inst)
+        local sanity_val = food.components.edible:GetSanity(inst)
+        local health_val = food.components.edible:GetHealth(inst)
+        GiveExp(inst, hunger_val*0.05 + sanity_val*0.12 + health_val*0.1)
+    end
 end
 
 local function OnDeath(inst, data)
@@ -83,9 +106,21 @@ local function OnDeath(inst, data)
 
 end
 
+local function IsValidVictim(victim)
+    return victim ~= nil
+        and not ((victim:HasTag("prey") and not victim:HasTag("hostile")) or
+                victim:HasTag("veggie") or victim:HasTag("structure") or
+                victim:HasTag("wall") or victim:HasTag("balloon") or
+                victim:HasTag("groundspike") or victim:HasTag("smashable") or
+                victim:HasTag("companion") or victim:HasTag("visible"))
+        and victim.components.health ~= nil
+        and victim.components.combat ~= nil
+        and victim.components.freezable ~= nil
+end
+
 local function OnKilled(inst, data)
 	local victim = data.victim
-    if victim == nil then return end
+    if not IsValidVictim(victim) then return end
     local taskdata = inst.components.taskdata
     if taskdata.killed_temp[victim.GUID] then
     	return
@@ -213,7 +248,8 @@ local function OnKilled(inst, data)
               		  "toadstool_dark", "malbatross", 
               		  "shadow_rook", "shadow_knight", "shadow_bishop"}
     if ExistInTable(boss_list, prefab) then
-    	local ents = TheSim:FindEntities(x, y, z, 20, {"player"}, {"playerghost"})
+        local x,y,z = victim.Transform:GetWorldPosition()
+    	local ents = TheSim:FindEntities(x, y, z, 15, {"player"}, {"playerghost"})
     	if prefab == "moose" then
     		for k, v in pairs(ents) do
     			v.components.taskdata:AddOne("kill_moose")
@@ -280,9 +316,16 @@ local function OnKilled(inst, data)
     	end
     	-- 此处添加重复击杀boss获得奖励,注意排除一段克劳斯
 
+        local health = victim.components.health.maxhealth or 0
+        local num = #ents
+        for k, v in pairs(ents) do
+            GiveExp(v, math.floor((health/num)*0.01))
+        end
+    else
+        local health = victim.components.health.maxhealth or 0
+        GiveExp(inst, math.floor(health*0.01))
     end
     
-
 end	
 
 local function OnWakeup(inst, data)
@@ -337,13 +380,15 @@ local function OnPick(inst, data)
 		elseif prefab == "coffeebush" then
 			taskdata:AddOne("pick_coffeebush_50")
 		end
+
+        GiveExp(inst, 1)
 	end
 end
 
 local function OnFinishedwork(inst, data)
 	local taskdata = inst.components.taskdata
     if data.target and data.target.components.workable then
-        local action = data.target.components.workable.action
+        local action = data.action
         --砍树
         if data.target:HasTag("tree") and action == _G.ACTIONS.CHOP then
             taskdata:AddOne("chop_100")
@@ -358,6 +403,8 @@ local function OnFinishedwork(inst, data)
         if not data.target:HasTag("tree") and action == _G.ACTIONS.DIG then
 
         end
+
+        GiveExp(inst, 1)
     end
 end
 --复活
@@ -372,6 +419,7 @@ local function OnConsume(inst)
 	taskdata:AddOne("build_30")
 	taskdata:AddOne("build_300")
 
+    GiveExp(inst, 1)
 end
 local function OnBuildItem(inst, data)
 	local taskdata = inst.components.taskdata
@@ -444,6 +492,8 @@ local function OnDeployItem(inst, data)
 	    data.prefab == "burr" then
         taskdata:AddOne("plant_100")
         taskdata:AddOne("plant_1000")
+
+        GiveExp(inst, 1)
     end
 end
 --攻击
@@ -488,6 +538,7 @@ local function OnDoCook(inst, data)
 	taskdata:AddOne("cook_888")
 	--预留烹饪特殊食物
 
+    GiveExp(inst, 1)
 end
 --addfollower
 local function OnAddFollower(inst, data)
@@ -517,6 +568,30 @@ local function OnReRoll(inst)
 	local taskdata = inst.components.taskdata
 
 end
+
+local function OnInspirationdelta(inst, data)
+    if inst.components.singinginspiration then
+        local inspiration = inst.components.singinginspiration.current or 0
+        local inspiration_max = inst.components.singinginspiration:GetMaxInspiration()
+
+        if inst.components.combat ~= nil then
+            local add = inspiration * 0.004
+            inst.components.combat.externaldamagemultipliers:SetModifier("inspirate", 1 + add)
+        end
+
+        if inst.components.crit ~= nil then
+            local add = (inspiration >= inspiration_max * 0.9) and inspiration_max * 0.1 or 0 
+            inst.components.crit:AddExtraChance("inspirate", add*0.01)
+        end
+        
+    end
+end
+
+--[[local function OnWorking(inst, data)
+    if inst:HasTag("chopmaster") and data.target and data.target:HasTag("tree") then
+        data.target.components.workable.workleft = 0
+    end
+end]]
 
 --玩家事件
 AddPlayerPostInit(function(inst)
@@ -572,6 +647,15 @@ AddPlayerPostInit(function(inst)
 
 	    --reroll
 	    inst:ListenForEvent("ms_playerreroll", OnReRoll)
+
+        --女武神激励值事件
+        if inst.prefab == "wathgrithr" then
+            inst:ListenForEvent("inspirationdelta", OnInspirationdelta)
+        end
+
+        --技能相关事件
+        --不合适，无法触发完成工作条件
+        --inst:ListenForEvent("working", OnWorking)
     end
 	
 end)

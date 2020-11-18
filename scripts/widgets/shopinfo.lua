@@ -9,17 +9,18 @@ local ShopInfo = Class(Widget, function(self, owner)
     Widget._ctor(self, "ShopInfo")
     self.owner = owner
 
-    self.root = self:AddChild(Button())
+    self.root = self:AddChild(ImageButton("images/hud.xml", "tab_refine.tex"))
     self.root:SetHoverText("商店",{ size = 9, offset_x = 40, offset_y = -45, colour = {1,1,1,1}})
     self.root:SetOnClick(function() self:OpenShop() end)
-
-    self.image = self.root:AddChild(Image("images/hud.xml", "tab_refine.tex"))
-    self.image:SetPosition(0, 0)
-    self.image:SetScale(0.67)
-    self.image:MoveToBack()
+    self.root:SetScale(0.6)
+    self.root:SetPosition(0, -5)
+    --[[self.image = self.root:AddChild(Image("images/hud.xml", "tab_refine.tex"))
+    self.image:SetPosition(0, -3)
+    self.image:SetScale(0.6)
+    self.image:MoveToBack()]]
     
-    self.text = self.root:AddChild(Text(BODYTEXTFONT, 35))
-    self.text:SetPosition(10, -25)
+    self.text = self:AddChild(Text(BODYTEXTFONT, 30))
+    self.text:SetPosition(7, -28)
     self.text:SetColour(0,1,1,1)
     --self.text:SetString(self:GetCoin())
 

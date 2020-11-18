@@ -1,6 +1,6 @@
 local MIN_CHANCE = 0
 local MAX_CHANCE = 1
-local DEFAULT_CHANCE = 0.01
+local DEFAULT_CHANCE = 0
 
 local function onchance(self, chance)
 

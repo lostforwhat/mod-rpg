@@ -117,10 +117,11 @@ function TaskData:Completed(taskname)
 	local reward = task_info.reward or 1
 	local desc = task_info.desc
 	local need = task_info.need or 1
+	local tag = (task_info.hide and "*隐藏任务*" or "") or ""
 	SpawnPrefab("seffc").entity:SetParent(inst.entity)
 
 	local desc_str = string.format(desc, " "..need.." ")
-	local annouce_str = string.format("%s %s 完成任务【%s】 奖励 %d", inst:GetDisplayName(), desc_str, task_text, reward) 
+	local annouce_str = string.format("%s %s %s 完成任务【%s】 奖励 %d", tag, inst:GetDisplayName(), desc_str, task_text, reward) 
 	TheNet:Announce(annouce_str, inst.entity)
 
 	self:CoinDoDelta(task_info.reward or 1) --此处暂时保留数值

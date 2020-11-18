@@ -1,3 +1,4 @@
+require "utils/utils"
 local Button = require "widgets/button"
 local AnimButton = require "widgets/animbutton"
 local Menu = require "widgets/menu"
@@ -11,23 +12,6 @@ local TEMPLATES2 = require "widgets/redux/templates"
 local EquipSlot = require("equipslotutil")
 
 local DEFAULT_ATLAS = "images/inventoryimages.xml"
-
---test
-local shop_list = {{prefab="spear"}, {prefab="footballhat"}, {prefab="hivehat"}, {prefab="hivehat"},
-                        {prefab="spear"}, {prefab="footballhat"}, {prefab="hivehat"}, {prefab="hivehat"},
-                        {prefab="spear"}, {prefab="footballhat"}, {prefab="hivehat"}, {prefab="hivehat"},
-                        {prefab="spear"}, {prefab="footballhat"}, {prefab="hivehat"}, {prefab="hivehat"},
-                        {prefab="spear"}, {prefab="footballhat"}, {prefab="hivehat"}, {prefab="hivehat"},
-                        {prefab="spear"}, {prefab="footballhat"}, {prefab="hivehat"}, {prefab="hivehat"},
-                        {prefab="spear"}, {prefab="footballhat"}, {prefab="hivehat"}, {prefab="hivehat"},
-                        {prefab="spear"}, {prefab="footballhat"}, {prefab="hivehat"}, {prefab="hivehat"},
-                        {prefab="spear"}, {prefab="footballhat"}, {prefab="hivehat"}, {prefab="hivehat"},
-                        {prefab="spear"}, {prefab="footballhat"}, {prefab="hivehat"}, {prefab="hivehat"},
-                        {prefab="spear"}, {prefab="footballhat"}, {prefab="hivehat"}, {prefab="hivehat"},
-                        {prefab="spear"}, {prefab="footballhat"}, {prefab="hivehat"}, {prefab="hivehat"},
-                        {prefab="spear", use_left=0.5}, {prefab="footballhat"}, {prefab="hivehat"}, {prefab="hivehat"},
-                        {prefab="achiv_clear", num=5, value=20}
-                        }
 
 local function GetDescriptionString(name)
 
@@ -56,8 +40,11 @@ local ShopDetail = Class(Widget, function(self, owner)
     self.proot:SetPosition(335, 0)
 
     self.shop_goods = {}
-    self:LoadShopFromServer()
-
+    --self:LoadShopFromServer()
+    SendModRPCToServer(MOD_RPC.RPG_shop.refresh)
+    self.inst:DoTaskInTime(1, function() 
+        self:LoadShopFromServer() 
+    end)
     self:Layout()
 
     self.inst:ListenForEvent("coindirty", function(owner) 
@@ -67,17 +54,25 @@ local ShopDetail = Class(Widget, function(self, owner)
         self.menu.use.value:SetString(self:GetCoinUsed())
         self.menu.coin:SetTooltip("小店消费："..self:GetCoinUsed())
     end, self.owner)
+
+    self.inst:ListenForEvent("goodsdirty", function(inst) 
+        self:LoadShopFromServer()
+    end, self.owner)
     
 end)
 
 function ShopDetail:LoadShopFromServer()
     self.shop_goods = {}
-    if shop_list then
-        for k, v in pairs(deepcopy(shop_list)) do
+    if self.owner.components.purchase then
+        local shop_goods = deepcopy(self.owner.components.purchase:GetGoods())
+        for k, v in pairs(shop_goods) do
             if PrefabExists(v.prefab) then
                 table.insert(self.shop_goods, {index=k, item=v})
             end
         end
+    end
+    if self.shop_scroll_list ~= nil then
+        self.shop_scroll_list:SetItemsData(self.shop_goods)
     end
 end
 
@@ -305,8 +300,8 @@ function ShopDetail:LoadItems()
 
         self.shop_scroll_list:SetPosition(0, 0)
 
-        --self.shop_scroll_list:SetFocusChangeDir(MOVE_DOWN, self.cancelbutton)
-        --self.cancelbutton:SetFocusChangeDir(MOVE_UP, self.shop_scroll_list)
+        self.shop_scroll_list:SetFocusChangeDir(MOVE_DOWN, self.close_button)
+        self.close_button:SetFocusChangeDir(MOVE_UP, self.shop_scroll_list)
     end
 end
 
@@ -376,18 +371,25 @@ function ShopDetail:LoadCart()
         self.cart.slot[k]:SetScale(0.8)
     end
 
-    self.cart.buy = self.cart:AddChild(ImageButton("images/frontend_redux.xml", "button_shop_vshort_normal.tex"))
+    self.cart.buy = self.cart:AddChild(ImageButton("images/frontend_redux.xml", "button_shop_vshort_normal.tex", nil, "button_shop_vshort_disabled.tex"))
     self.cart.buy:SetPosition(195, 0)
     self.cart.buy:SetScale(0.5)
     self.cart.buy:SetTooltip("购买")
     self.cart.buy:SetOnClick(function()
-        SendModRPCToServer(MOD_RPC.RPG_shop.purchase, self.cart_goods)
+        SendModRPCToServer(MOD_RPC.RPG_shop.purchase, Table2String(self.cart_goods))
+        self:RefreshCart()
+        self.cart.buy:Disable()
+        --self.cart.buy:SetClickable(false)
+        self.cart.buy.inst:DoTaskInTime(5, function() 
+            self.cart.buy:Enable() 
+            --self.cart.buy:SetClickable(true)
+        end)
     end)
 
     self.cart.back = self.cart:AddChild(TEMPLATES2.BackButton(function() 
         self.cart_goods = {}
         self:LoadShopFromServer()
-        self.shop_scroll_list:SetItemsData(self.shop_goods)
+        --self.shop_scroll_list:SetItemsData(self.shop_goods)
         self:RefreshCart()
     end, "清空", nil, 0.5))
     self.cart.back:SetPosition(110, 0)
@@ -423,9 +425,10 @@ function ShopDetail:Close()
 end
 
 function ShopDetail:OnGainFocus()
-    --此处需要控制鼠标滑动不影响游戏缩放
+    --此处需要控制鼠标滑动不影响游戏缩放(未完成)
     local controller = TheInput:ControllerAttached()
     TheInput:EnableMouse(not controller)
+    --self:SetFocus()
 end
 
 function ShopDetail:OnLoseFocus()

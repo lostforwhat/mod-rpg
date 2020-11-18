@@ -1,6 +1,6 @@
 local MIN_CHANCE = 0
 local MAX_CHANCE = 1
-local DEFAULT_CHANCE = 5
+local DEFAULT_CHANCE = 0
 
 local function onchance(self, chance)
 
@@ -12,7 +12,7 @@ local AttackBroken = Class(function(self, inst)
     self.extra_chance = 0
     self.force_broken = false
     --self.next_force_broken = false
-    self.broken_percent = 10
+    self.broken_percent = 5
 end,
 nil,
 {
@@ -39,6 +39,10 @@ function AttackBroken:GetBrokenPercent()
     return self.broken_percent or 0
 end
 
+function AttackBroken:SetBrokenPercent(per)
+    self.broken_percent = per
+end
+
 --每次攻击执行这个函数，若返回true，则执行触发代码
 function AttackBroken:Effect()
     local effect = self.next_force_broken or self.force_broken or (math.random()<self:GetFinalChance())
@@ -50,7 +54,7 @@ function AttackBroken:OnRemoveFromEntity()
     
 end
 
-function AttackBroken:OnSave()
+--[[function AttackBroken:OnSave()
     return {
         chance = self.chance,
         extra_chance = self.extra_chance
@@ -62,7 +66,7 @@ function AttackBroken:OnLoad(data)
         self.chance = data.chance or DEFAULT_CHANCE
         self.extra_chance = data.extra_chance or 0
     end
-end
+end]]
 
 
 return AttackBroken

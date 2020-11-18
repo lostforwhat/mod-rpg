@@ -1,11 +1,21 @@
 local MAX_PERCENT = 100
 
 local function onpercent(self, percent)
+    self.net_data.percent:set(percent)
+end
 
+local function onextra_percent(self, percent)
+    self.net_data.extra_percent:set(percent)
 end
 
 local LifeSteal = Class(function(self, inst) 
     self.inst = inst
+
+    self.net_data = {
+        percent = net_shortint(inst.GUID, "lifesteal.percent", "lifestealdirty"),
+        extra_percent = net_shortint(inst.GUID, "lifesteal.extra_percent", "lifestealdirty")
+    }
+
     self.default = 0
     self.percent = 0
     self.max_percent = MAX_PERCENT
@@ -14,14 +24,15 @@ local LifeSteal = Class(function(self, inst)
 end,
 nil,
 {
-	percent = onpercent
+	percent = onpercent,
+    extra_percent = onextra_percent
 })
 
-function LifeSteal:OnSave()
+--[[function LifeSteal:OnSave()
 	return {
 		percent = self.percent
 	}
-end
+end]]
 
 function LifeSteal:SetPercent(val)
     if val > 0 and val < MAX_PERCENT then
@@ -30,7 +41,7 @@ function LifeSteal:SetPercent(val)
 end
 
 function LifeSteal:GetPercent()
-    return self.percent or 0
+    return self.net_data.percent:value() or self.percent or 0
 end
 
 function LifeSteal:AddExtraPercent(source, val)
@@ -59,7 +70,11 @@ function LifeSteal:RemoveExtraPercent(source)
 end
 
 function LifeSteal:GetFinalPercent()
-    return self.percent + self.extra_percent
+    if TheWorld.ismastersim then
+        return self.percent + self.extra_percent
+    else
+        return self.net_data.percent:value() + self.net_data.extra_percent:value()
+    end
 end
 
 function LifeSteal:Effect(damage)

@@ -27,7 +27,9 @@ local Email = Class(Widget, function(self, owner)
 end)
 
 function Email:CheckEmail()
-    
+    self.inst:ListenForEvent("emaildirty", function() 
+        
+    end, self.owner)
 end
 
 function Email:DoRecievedEmail()

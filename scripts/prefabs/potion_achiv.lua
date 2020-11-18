@@ -5,6 +5,14 @@ local assets =
     Asset("ATLAS", "images/potion_achiv.xml"),
 }
 
+local function get_name(inst)
+    local ownerstr = ""
+    if inst._owner ~= nil then
+        ownerstr = "["..inst._owner.."]"
+    end
+    return STRINGS.NAMES.POTION_ACHIV.."("..inst.minachiv.."-"..inst.maxachiv..")"..ownerstr
+end
+
 local function OnSave(inst, data)
     if  inst._userid ~= nil then
         data._userid = inst._userid
@@ -23,33 +31,18 @@ local function OnLoad(inst, data)
     inst.minachiv = data.minachiv or 1
     inst.maxachiv = data.maxachiv or 3
     inst._owner = data._owner or nil
+
+    inst.components.named:SetName(get_name(inst)) 
 end
 
 local function Oneat(inst, eater)
     local coin = math.random(inst.minachiv, inst.maxachiv)
-    if inst._userid ~= nil then
-        if inst._userid ~= eater.userid then 
-            if eater.components.talker then
-                eater.components.talker:Say(STRINGS.TALKER_NO_EFFECT)
-            end
-            return false
-        end
-    end
-    if eater.components.allachivcoin then
-        eater.components.allachivcoin:coinDoDelta(coin)
-        eater.components.talker:Say(STRINGS.TALKER_GETCOIN..coin)
+    if eater.components.purchase then
+        eater.components.purchase:CoinDoDelta(coin)
+        eater.components.talker:Say("获得："..coin)
     end
     return true
 end
-
-local function get_name(inst)
-    local ownerstr = ""
-    if inst._owner ~= nil then
-        ownerstr = "["..inst._owner.."]"
-    end
-    return STRINGS.NAMES.POTION_ACHIV.."("..inst.minachiv.."-"..inst.maxachiv..")"..ownerstr
-end
-
 
 local function fn()
     local inst = CreateEntity()

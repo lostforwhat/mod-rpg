@@ -2,7 +2,7 @@ local MAX_LUCK = 100
 local MIN_LUCK = 0
 
 local function onluck(self, luck)
-	
+	self.net_data.luck:set(luck)
 end
 
 local function onstate(self, state)
@@ -11,6 +11,11 @@ end
 
 local Luck = Class(function(self, inst) 
     self.inst = inst
+
+    self.net_data = {
+    	luck = net_shortint(inst.GUID, "luck.luck", "luckdirty")
+    }
+
     self.defaultluck = 0
     self.luck = 0
     self.state = ""
@@ -23,7 +28,7 @@ nil,
 })
 
 function Luck:GetLuck()
-	return self.luck or 0
+	return self.net_data.luck:value() or self.luck or 0
 end
 
 function Luck:SetLuck(val)

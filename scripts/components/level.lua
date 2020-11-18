@@ -1,7 +1,52 @@
-local MAX_LEVEL = 200
+local MAX_LEVEL = 100
+
+local function DefaultLevelUp(inst, level)
+	if inst.components.extrameta then
+		inst.components.extrameta.extra_hunger:SetModifier("levelup", level)
+		inst.components.extrameta.extra_sanity:SetModifier("levelup", level)
+		inst.components.extrameta.extra_health:SetModifier("levelup", level)
+	end
+end
+
+local function WxLevelUp(inst, level)
+	if inst.components.extrameta then
+		inst.components.extrameta.extra_hunger:SetModifier("levelup", level*2)
+		inst.components.extrameta.extra_sanity:SetModifier("levelup", level*2)
+		inst.components.extrameta.extra_health:SetModifier("levelup", level*2)
+	end
+end
+
+local level_fn_data = {
+	wilson = DefaultLevelUp,
+	wendy = DefaultLevelUp,
+	willow = DefaultLevelUp,
+	wathgrithr = DefaultLevelUp,
+	wolfgang = DefaultLevelUp,
+	wortox = DefaultLevelUp,
+	wx78 = WxLevelUp,
+	winona = DefaultLevelUp,
+	wickerbottom = DefaultLevelUp,
+	wes = DefaultLevelUp,
+	woodie = DefaultLevelUp,
+	wormwood = DefaultLevelUp,
+	wurt = DefaultLevelUp,
+	walter = DefaultLevelUp,
+	waxwell = DefaultLevelUp,
+	warly = DefaultLevelUp,
+}
+
+local function RecalcMeta(inst, level)
+	local level_fn = level_fn_data[inst.prefab] or DefaultLevelUp
+	level_fn(inst, level)
+end
+
+local function GetLevelUpNeedXp(lv)
+	return lv*100 + lv*(lv-1)
+end
 
 local function OnLevel(self, level)
 	self.net_data.level:set(level)
+	RecalcMeta(self.inst, level)
 end
 
 local function OnXp(self, xp)
@@ -18,7 +63,7 @@ local Level = Class(function(self, inst)
 	self.net_data = {
 		level = net_shortint(inst.GUID, "level.level", "leveldirty"),
 		xp = net_float(inst.GUID, "level.xp", "xpdirty"),
-		totalxp = net_float(inst.GUID, "level.totalxp", "totalxpdirty"),
+		totalxp = net_float(inst.GUID, "level.totalxp", "xpdirty"),
 	}
 
 	self.level = 1
@@ -32,6 +77,21 @@ nil,
 	totalxp = OnTotalxp
 })
 
+function Level:OnSave()
+	return {
+		level = self.level or 1,
+		xp = self.xp or 0,
+		totalxp = self.totalxp or self.xp or 0
+	}
+end
+
+function Level:OnLoad(data)
+	if data and type(data) == "table" then
+		self.level = data.level or 1
+		self.xp = data.xp or 0
+		self.totalxp = data.totalxp or data.xp or 0
+	end
+end
 
 function Level:AddXp(xp)
 	self.totalxp = self.totalxp + xp
@@ -40,7 +100,11 @@ function Level:AddXp(xp)
 end
 
 function Level:GetLevelUpNeedXp()
-	return self.level*100 + self.level*self.level
+	if TheWorld.ismastersim then
+		return GetLevelUpNeedXp(self.level or 1)
+	else
+		return GetLevelUpNeedXp(self.net_data.level:value() or 1)
+	end
 end
 
 function Level:LevelCheck()

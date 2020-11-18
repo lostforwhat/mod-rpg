@@ -1,20 +1,22 @@
 local DEFAULT_DAMAGE = 0
 
 local function OnCommon(self, common)
-
-end
-
-local function OnSpecail(self, special)
-
+    self.net_data.common:set(common)
 end
 
 local function OnMemorykilldata(self, memorykilldata)
-
+    self.net_data.memorykilldata:set(memorykilldata)
 end
 
 
 local ExtraDamage = Class(function(self, inst) 
     self.inst = inst
+
+    self.net_data = {
+        common = net_float(inst.GUID, "extradamage.common", "extradamagedirty"),
+        memorykilldata = net_bytearray(inst.GUID, "extradamage.memorykilldata", "memorykilldatadirty")
+    }
+
     self.common = DEFAULT_DAMAGE
     self.memorykilldata = {}
     self.memory_enable = false
@@ -39,12 +41,14 @@ function ExtraDamage:OnKilled(victim)
 end
 
 function ExtraDamage:AddMemoryDamage(target, damage)
+    if damage <= 0 then return end
     local prefab = target.prefab
     if self.memorykilldata[prefab] == nil then
         self.memorykilldata[prefab] = damage
     else
         self.memorykilldata[prefab] = self.memorykilldata[prefab] + damage
     end
+    self.memorykilldata = deepcopy(self.memorykilldata)
 end
 
 --孰能生巧技能需打开此开关
@@ -58,6 +62,14 @@ end
 
 function ExtraDamage:AddDamage(damage)
     self.common = self.common + damage
+end
+
+function ExtraDamage:GetCommonExtraDamage()
+    if TheWorld.ismastersim then
+        return self.common or 0
+    else
+        return self.net_data.common:value()
+    end 
 end
 
 function ExtraDamage:GetDamage(target)

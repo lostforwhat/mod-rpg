@@ -6,8 +6,8 @@ version = "0.0.1"
 
 api_version = 10
 
+all_clients_require_mod = true
 client_only_mod = false
 dst_compatible = true
-server_only_mod = false
 
 forumthread = ""

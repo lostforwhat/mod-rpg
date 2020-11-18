@@ -1,6 +1,6 @@
 local MIN_CHANCE = 0
 local MAX_CHANCE = 1
-local DEFAULT_CHANCE = 0.2
+local DEFAULT_CHANCE = 0
 
 local function onchance(self, chance)
 
@@ -21,6 +21,10 @@ nil,
     chance = onchance,
 })
 
+function AttackFrozen:SetChance(chance)
+    self.chance = chance
+end
+
 function AttackFrozen:GetFinalChance()
     return self.chance + self.extra_chance
 end
@@ -38,7 +42,7 @@ function AttackFrozen:OnRemoveFromEntity()
     
 end
 
-function AttackFrozen:OnSave()
+--[[function AttackFrozen:OnSave()
     return {
         chance = self.chance,
         coldness = self.coldness,
@@ -52,7 +56,7 @@ function AttackFrozen:OnLoad(data)
         self.coldness = data.coldness or 1
         self.freezetime = data.freezetime or 2
     end
-end
+end]]
 
 
 return AttackFrozen

@@ -3,11 +3,40 @@ local MAX_CHANCE = 1
 local MAX_HIT = 4
 
 local function onchance(self, chance)
+	self.net_data.chance:set(chance)
+	if self.inst.components.crit then
+		self.inst.components.crit:CalcRealChance()
+	end
+end
 
+local function onmax_hit(self, hit)
+	self.net_data.max_hit:set(hit)
+end
+
+local function onmin_hit(self, hit)
+	self.net_data.min_hit:set(hit)
+end
+
+local function onextra_chance(self, extra_chance)
+
+end
+
+local function onreal_chance(self, val)
+	if self.inst.components.crit then
+		self.inst.components.crit:CalcRealChance()
+	end
 end
 
 local Crit = Class(function(self, inst) 
     self.inst = inst
+
+    self.net_data = {
+    	chance = net_float(inst.GUID, "crit.chance", "critdirty"),
+    	max_hit = net_shortint(inst.GUID, "crit.max_hit", "critdirty"),
+    	min_hit = net_shortint(inst.GUID, "crit.min_hit", "critdirty"),
+    	real_chance = net_float(inst.GUID, "cirt.real_chance", "critdirty")
+    }
+
     self.default = 0
     self.chance = 0
     self.extra_chance = 0
@@ -22,9 +51,15 @@ end,
 nil,
 {
 	chance = onchance,
+	max_hit = onmax_hit,
+	min_hit = onmin_hit,
+	extra_chance = onreal_chance,
+	force_crit = onreal_chance,
+	next_must_crit = onreal_chance,
+	luck_crit = onreal_chance,
 })
 
-function Crit:OnSave()
+--[[function Crit:OnSave()
 	return {
 		chance = self.chance,
 		max_hit = self.max_hit
@@ -36,6 +71,16 @@ function Crit:OnLoad(data)
 		self.chance = data.chance or 0
 		self.max_hit = data.max_hit or MAX_HIT
 	end
+end]]
+
+function Crit:CalcRealChance()
+	if TheWorld.ismastersim then
+		self.net_data.real_chance:set((self.next_must_crit or self.force_crit or self.luck_crit) and 1 or self:GetFinalChance())
+	end
+end
+
+function Crit:GetRealChance()
+	return self.net_data.real_chance:value()
 end
 
 function Crit:SetChance(val)
@@ -98,11 +143,11 @@ function Crit:SetMinHit(hit)
 end
 
 function Crit:GetMaxHit()
-	return self.max_hit or MAX_HIT
+	return self.net_data.max_hit:value() or self.max_hit or MAX_HIT
 end
 
 function Crit:GetMinHit()
-	return self.min_hit < self.max_hit and self.min_hit or 1
+	return self.net_data.min_hit:value() or self.min_hit < self.max_hit and self.min_hit or 1
 end
 
 function Crit:GetRandomHit()
