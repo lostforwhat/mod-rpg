@@ -72,7 +72,7 @@ COOK.fn = function(act, ...)
     local stewer = act.target.components.stewer
     if result and stewer ~= nil then
 
-        if act.doer:HasTag("cookmaster") > 0 then
+        if act.doer:HasTag("cookmaster") then
             local fn = stewer.task.fn
             stewer.task:Cancel()
             fn(act.target, stewer)

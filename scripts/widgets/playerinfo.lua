@@ -18,7 +18,7 @@ local PlayerInfo = Class(Widget, function(self, owner)
     self.button:SetOnClick(function() self:ShowInfo() end)
     self.button:SetScale(0.9)
 
-    self.text = self:AddChild(Text(BODYTEXTFONT, 28))
+    self.text = self:AddChild(Text(NUMBERFONT, 28))
     self.text:SetPosition(0, -30)
     self.text:SetColour(0, 1, 1, 1)
     

@@ -1,3 +1,20 @@
+
+local NO_PVP_TAGS = {"ghost", "player"}
+local function areahitcheck(target, attacker)
+	local leader = target.components.follower and target.components.follower:GetLeader() or nil
+	if leader == attacker then
+		return false
+	end
+	if not TheNet:GetPVPEnabled() then
+		for k,v in pairs(NO_PVP_TAGS) do
+			if target:HasTag(v) and (leader ~= nil and leader:HasTag(v)) then
+				return false
+			end
+		end
+	end
+	return true
+end
+
 function DefaultSkillLevelFn(self, owner)
 	local id = self.id
 	if owner and owner.components.skilldata then
@@ -38,6 +55,319 @@ end
 
 -- skill constant
 skill_constant = {
+	--专属
+	{
+		id="potionbuilder",
+		name="魔法实验",
+		max_level=1,
+		exclusive={"wilson"},
+		desc_fn=function(self, owner)
+			local desc_str = self.name
+			local level = self:level_fn(owner)
+			local max_level = self.max_level or 1
+			local max = level >= max_level and " (Max)" or ""
+			desc_str = desc_str.."\n Lv:"..level..max.."\n"
+			.."通过魔法栏可以制作一些特殊能力的药水"
+			return desc_str
+		end,
+		effect_fn=function(self, owner) 
+			local level = self:level_fn(owner)
+			if level > 0 then
+				owner:AddTag("potionbuilder")
+			else
+				owner:RemoveTag("potionbuilder")
+			end
+		end
+	},
+	{
+		id="soulfire",
+		name="灵魂之火",
+		max_level=1,
+		exclusive={"willow"},
+		desc_fn=function(self, owner)
+			local desc_str = self.name
+			local level = self:level_fn(owner)
+			local max_level = self.max_level or 1
+			local max = level >= max_level and " (Max)" or ""
+			desc_str = desc_str.."\n Lv:"..level..max.."\n"
+			..""
+			return desc_str
+		end,
+		effect_fn=function(self, owner) 
+			local level = self:level_fn(owner)
+			
+		end
+	},
+	{
+		id="hitaoe",
+		name="横扫千军",
+		max_level=11,
+		step=0.05,
+		exclusive={"wolfgang"},
+		desc_fn=function(self, owner)
+			local desc_str = self.name
+			local level = self:level_fn(owner)
+			local max_level = self.max_level or 1
+			local max = level >= max_level and " (Max)" or ""
+			desc_str = desc_str.."\n Lv:"..level..max.."\n"
+			.."攻击时对周围3码范围内单位附带"..(45 + level*self.step*100).."%伤害"
+			return desc_str
+		end,
+		effect_fn=function(self, owner) 
+			local level = self:level_fn(owner)
+			if level > 0 then
+				owner.components.combat:EnableAreaDamage(true)
+        		owner.components.combat:SetAreaDamage(3, 0.45 + level*self.step, areahitcheck)
+			else
+				owner.components.combat:EnableAreaDamage(false)
+			end
+		end
+	},
+	{
+		id="abigailclone",
+		name="灵魂分裂",
+		max_level=1,
+		exclusive={"wendy"},
+		desc_fn=function(self, owner)
+			local desc_str = self.name
+			local level = self:level_fn(owner)
+			local max_level = self.max_level or 1
+			local max = level >= max_level and " (Max)" or ""
+			desc_str = desc_str.."\n Lv:"..level..max.."\n"
+			.."阿比盖尔可以分裂出4个分身"
+			return desc_str
+		end,
+	},
+	{
+		id="runhit",
+		name="机械冲刺",
+		max_level=1,
+		exclusive={"wx78"},
+		desc_fn=function(self, owner)
+			local desc_str = self.name
+			local level = self:level_fn(owner)
+			local max_level = self.max_level or 1
+			local max = level >= max_level and " (Max)" or ""
+			desc_str = desc_str.."\n Lv:"..level..max.."\n"
+			..""
+			return desc_str
+		end,
+	},
+	{
+		id="newbookbuilder",
+		name="禁忌之书",
+		max_level=1,
+		exclusive={"wickerbottom"},
+		desc_fn=function(self, owner)
+			local desc_str = self.name
+			local level = self:level_fn(owner)
+			local max_level = self.max_level or 1
+			local max = level >= max_level and " (Max)" or ""
+			desc_str = desc_str.."\n Lv:"..level..max.."\n"
+			.."学会编写图书馆未曾收藏的禁忌书籍"
+			return desc_str
+		end,
+		effect_fn=function(self, owner) 
+			local level = self:level_fn(owner)
+			if level > 0 then
+				owner:AddTag("newbookbuilder")
+			else
+				owner:RemoveTag("newbookbuilder")
+			end
+		end
+	},
+	{
+		id="flylucy",
+		name="露西飞斧",
+		max_level=1,
+		exclusive={"woodie"},
+		desc_fn=function(self, owner)
+			local desc_str = self.name
+			local level = self:level_fn(owner)
+			local max_level = self.max_level or 1
+			local max = level >= max_level and " (Max)" or ""
+			desc_str = desc_str.."\n Lv:"..level..max.."\n"
+			..""
+			return desc_str
+		end,
+	},
+	{
+		id="balloondummy",
+		name="气球替身",
+		max_level=1,
+		exclusive={"wes"},
+		desc_fn=function(self, owner)
+			local desc_str = self.name
+			local level = self:level_fn(owner)
+			local max_level = self.max_level or 1
+			local max = level >= max_level and " (Max)" or ""
+			desc_str = desc_str.."\n Lv:"..level..max.."\n"
+			..""
+			return desc_str
+		end,
+	},
+	{
+		id="sanityprotection",
+		name="精神护体",
+		max_level=1,
+		exclusive={"waxwell"},
+		desc_fn=function(self, owner)
+			local desc_str = self.name
+			local level = self:level_fn(owner)
+			local max_level = self.max_level or 1
+			local max = level >= max_level and " (Max)" or ""
+			desc_str = desc_str.."\n Lv:"..level..max.."\n"
+			..""
+			return desc_str
+		end,
+	},
+	{
+		id="inspirate",
+		name="战技",
+		max_level=11,
+		step=0.0005,
+		exclusive={"wathgrithr"},
+		desc_fn=function(self, owner)
+			local desc_str = self.name
+			local level = self:level_fn(owner)
+			local max_level = self.max_level or 1
+			local max = level >= max_level and " (Max)" or ""
+			desc_str = desc_str.."\n Lv:"..level..max.."\n"
+			.."每点鼓舞值提升"..(0.4 + level*self.step*100).."%伤害\n"
+			.."鼓舞值大于90提升"..(10+level).."%暴击"
+			return desc_str
+		end
+	},
+	{
+		id="spiderbody",
+		name="蜘蛛体质",
+		max_level=1,
+		exclusive={"webber"},
+		desc_fn=function(self, owner)
+			local desc_str = self.name
+			local level = self:level_fn(owner)
+			local max_level = self.max_level or 1
+			local max = level >= max_level and " (Max)" or ""
+			desc_str = desc_str.."\n Lv:"..level..max.."\n"
+			..""
+			return desc_str
+		end,
+	},
+	{
+		id="throwrocks",
+		name="徒手投石",
+		max_level=11,
+		exclusive={"winona"},
+		desc_fn=function(self, owner)
+			local desc_str = self.name
+			local level = self:level_fn(owner)
+			local max_level = self.max_level or 1
+			local max = level >= max_level and " (Max)" or ""
+			desc_str = desc_str.."\n Lv:"..level..max.."\n"
+			.."可使用石头作为武器，升级提升攻击及距离"
+			return desc_str
+		end,
+		effect_fn=function(self, owner) 
+			local level = self:level_fn(owner)
+			if level > 0 then
+				owner:AddTag("throwrocks")
+			else
+				owner:RemoveTag("throwrocks")
+			end
+		end
+	},
+	{
+		id="memorykill",
+		name="鲜血记忆",
+		max_level=1,
+		exclusive={"warly"},
+		desc_fn=function(self, owner)
+			local desc_str = self.name
+			local level = self:level_fn(owner)
+			local max_level = self.max_level or 1
+			local max = level >= max_level and " (Max)" or ""
+			desc_str = desc_str.."\n Lv:"..level..max.."\n"
+			.."记忆每次击杀目标，下次对该目标伤害提升"
+			return desc_str
+		end,
+		effect_fn=function(self, owner) 
+			if owner.components.extradamage then
+				local step = self.step or 1
+				local level = self:level_fn(owner) or 0
+				owner.components.extradamage:EnableMemory(level > 0 )
+			end
+		end
+	},
+	{
+		id="shootingmaster",
+		name="连续射击",
+		max_level=11,
+		exclusive={"walter"},
+		desc_fn=function(self, owner)
+			local desc_str = self.name
+			local level = self:level_fn(owner)
+			local max_level = self.max_level or 1
+			local max = level >= max_level and " (Max)" or ""
+			desc_str = desc_str.."\n Lv:"..level..max.."\n"
+			.."提升弹弓射速和射程"
+			return desc_str
+		end,
+		effect_fn=function(self, owner) 
+			local level = self:level_fn(owner)
+			if level > 0 then
+				owner:AddTag("shootingmaster")
+			else
+				owner:RemoveTag("shootingmaster")
+			end
+		end
+	},
+	{
+		id="superjump",
+		name="魔力跃击",
+		max_level=11,
+		exclusive={"wortox"},
+		desc_fn=function(self, owner)
+			local desc_str = self.name
+			local level = self:level_fn(owner)
+			local max_level = self.max_level or 1
+			local max = level >= max_level and " (Max)" or ""
+			desc_str = desc_str.."\n Lv:"..level..max.."\n"
+			.."灵魂跳跃时造成一次范围伤害"
+			return desc_str
+		end,
+	},
+	{
+		id="seedsmagic",
+		name="撒豆成兵",
+		max_level=11,
+		exclusive={"wormwood"},
+		desc_fn=function(self, owner)
+			local desc_str = self.name
+			local level = self:level_fn(owner)
+			local max_level = self.max_level or 1
+			local max = level >= max_level and " (Max)" or ""
+			desc_str = desc_str.."\n Lv:"..level..max.."\n"
+			..""
+			return desc_str
+		end,
+	},
+	{
+		id="smoothskin",
+		name="光滑体表",
+		max_level=11,
+		exclusive={"wurt"},
+		desc_fn=function(self, owner)
+			local desc_str = self.name
+			local level = self:level_fn(owner)
+			local max_level = self.max_level or 1
+			local max = level >= max_level and " (Max)" or ""
+			desc_str = desc_str.."\n Lv:"..level..max.."\n"
+			..""
+			return desc_str
+		end,
+	},
+
+	--基础技能
 	{
 		id="extra_hunger",
 		name="额外饱腹",
@@ -238,6 +568,31 @@ skill_constant = {
 			end
 		end
 	},
+	{
+		id="minemaster",
+		name="快速采矿",
+		cost=40,
+		effect_fn=function(self, owner) 
+			local level = self:level_fn(owner)
+			if level > 0 then
+				owner:AddTag("minemaster")
+			else
+				owner:RemoveTag("minemaster")
+			end
+		end
+	},
+	{
+		id="cookmaster",
+		name="快速烹饪",
+		effect_fn=function(self, owner) 
+			local level = self:level_fn(owner)
+			if level > 0 then
+				owner:AddTag("cookmaster")
+			else
+				owner:RemoveTag("cookmaster")
+			end
+		end
+	}
 	
 }
 

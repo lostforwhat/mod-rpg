@@ -19,7 +19,7 @@ local ShopInfo = Class(Widget, function(self, owner)
     self.image:SetScale(0.6)
     self.image:MoveToBack()]]
     
-    self.text = self:AddChild(Text(BODYTEXTFONT, 30))
+    self.text = self:AddChild(Text(NUMBERFONT, 30))
     self.text:SetPosition(7, -28)
     self.text:SetColour(0,1,1,1)
     --self.text:SetString(self:GetCoin())

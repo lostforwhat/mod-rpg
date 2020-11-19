@@ -2,6 +2,27 @@ local _G = GLOBAL
 local TheNet = _G.TheNet
 local TUNING = _G.TUNING
 
+--修复打包导致的存档崩溃问题
+AddComponentPostInit("entitytracker", function(self)
+    self.OnSave = function()
+        if _G.next(self.entities) == nil then
+            return
+        end
+
+        local ents = {}
+        local refs = {}
+
+        for k, v in pairs(self.entities) do
+            if v and v.inst and v.inst.GUID then
+                table.insert(ents, { name = k, GUID = v.inst.GUID })
+                table.insert(refs, v.inst.GUID)
+            end
+        end
+
+        return { entities = ents }, refs
+    end
+end)
+
 AddComponentPostInit("leader", function(self) 
 	local OldAddFollower = self.AddFollower
 	function self:AddFollower(follower)
@@ -187,6 +208,9 @@ AddComponentPostInit("workable", function(self)
 	local OldWorkedBy = self.WorkedBy
 	function self:WorkedBy(worker, numworks)
 		if worker:HasTag("chopmaster") and self.action == _G.ACTIONS.CHOP then
+			numworks = self.workleft
+		end
+		if worker:HasTag("minemaster") and self.action == _G.ACTIONS.MINE then
 			numworks = self.workleft
 		end
 		OldWorkedBy(self, worker, numworks)

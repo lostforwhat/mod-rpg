@@ -77,26 +77,7 @@ local potions_type = {
 		hunger = 1,
 		fn = function(inst, eater)
 			if eater and eater.components.locomotor and eater:HasTag("player") then
-				if eater.potion_blue_task ~= nil then
-					eater.potion_blue_task:Cancel()
-					eater.potion_blue_task = nil
-				end
-				local speedup = 1.2
-				if eater:HasTag("potionbuilder") then
-					speedup = 1.5
-				end
-				eater.components.locomotor:SetExternalSpeedMultiplier(eater,"potionspeedup", speedup)
-				eater:AddTag("shadow")
-				eater.components.colourtweener:StartTween({0.3,0.3,0.3,1}, 0)
-
-				eater.potion_blue_task = eater:DoTaskInTime(120, function() 
-					eater.components.locomotor:RemoveExternalSpeedMultiplier(eater, "potionspeedup")
-					if eater:HasTag("shadow") then
-						eater:Show()
-		                eater:RemoveTag("shadow")
-		                eater.components.colourtweener:StartTween({1,1,1,1}, 0)
-		            end
-				end)
+				
 			end
 			
 		end

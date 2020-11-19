@@ -110,6 +110,7 @@ end)
 --end
 
 --引入mod文件
+modimport("scripts/modmain/stacksize.lua")
 modimport("scripts/modmain/initcomponents.lua")
 modimport("scripts/modmain/initprefab.lua")
 modimport("scripts/modmain/strings.lua")
@@ -118,3 +119,5 @@ modimport("scripts/modmain/modactions.lua")
 modimport("scripts/modmain/task_events.lua")
 modimport("scripts/modmain/modrecipes.lua")
 modimport("scripts/modmain/extra_slots.lua")
+--debug
+modimport("scripts/modmain/debug.lua")

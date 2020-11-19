@@ -273,15 +273,15 @@ function PlayerDetail:SetSkillData()
     self.skills_scroll_list = nil
 
     self.desc = self.content:AddChild(Widget("desc"))
-    self.desc:SetPosition(0, -170)
-    self.desc.backing = self.desc:AddChild(TEMPLATES2.ListItemBackground(330, 120))
+    self.desc:SetPosition(0, -165)
+    self.desc.backing = self.desc:AddChild(TEMPLATES2.ListItemBackground(330, 130))
     self.desc.backing:SetClickable(false)
-    self.desc.text = self.desc:AddChild(Text(BODYTEXTFONT, 26, "", {0, 1, 0, 1}))
-    self.desc.text:SetRegionSize(300, 100)
+    self.desc.text = self.desc:AddChild(Text(NUMBERFONT, 26, "", {0, 1, 0, 1}))
+    self.desc.text:SetRegionSize(300, 110)
     self.desc.text:SetHAlign(ANCHOR_LEFT)
     self.desc.text:SetVAlign(ANCHOR_TOP)
     self.desc.btn = self.desc:AddChild(TEMPLATES2.StandardButton(nil, "升级", {60, 40}))
-    self.desc.btn:SetPosition(120, 30)
+    self.desc.btn:SetPosition(120, 35)
     self.desc.btn:Disable()
     self.desc.btn:Hide()
 
@@ -316,8 +316,8 @@ function PlayerDetail:RefreshDesc()
             self.desc.btn:Hide()
             self.desc.btn:SetOnClick(nil)
         end
-        local str = item.desc_fn and item:desc_fn(self.owner) or name..""
-        self.desc.text:SetMultilineTruncatedString(str, 5, 300, 15, "", false)
+        local str = item.desc_fn and item:desc_fn(self.owner) or item.name..""
+        self.desc.text:SetMultilineTruncatedString(str, 5, 300, 20, "", false)
     end
 end
 
@@ -330,11 +330,11 @@ function PlayerDetail:LoadSkills()
         skill_item.backing.move_on_click = true
         local item_backing = skill_item.backing
 
-        skill_item.title = item_backing:AddChild(Text(BODYTEXTFONT, 24, "", {1, 1, 0, 1}))
+        skill_item.title = item_backing:AddChild(Text(NEWFONT, 24, "", {1, 1, 0, 1}))
         skill_item.title:SetPosition(0, 15)
         skill_item.title:SetHAlign(ANCHOR_LEFT)
         skill_item.title:SetRegionSize(70, 30)
-        skill_item.level = item_backing:AddChild(Text(BODYTEXTFONT, 20, "", {1, 1, 0, 1}))
+        skill_item.level = item_backing:AddChild(Text(NUMBERFONT, 20, "", {1, 1, 0, 1}))
         skill_item.level:SetPosition(0, -15)
         skill_item.level:SetHAlign(ANCHOR_RIGHT)
         skill_item.level:SetRegionSize(70, 30)
@@ -353,7 +353,8 @@ function PlayerDetail:LoadSkills()
             local cost = item.cost or 0
 
             skill_item.title:SetMultilineTruncatedString(item.name, 2, 70, 4, "...", false)
-            skill_item.level:SetString("Lv "..(level>=max_level and "MAX" or level))
+            local level_str = "Lv "..(level>=max_level and "MAX" or level)
+            skill_item.level:SetString(level_str)
 
             if level >= max_level then
                 skill_item.title:SetColour({1, 0.8, 0.1, 1})
@@ -366,15 +367,28 @@ function PlayerDetail:LoadSkills()
                 skill_item.level:SetColour({1, 1, 0, 1})
             end
 
-            skill_item.coin = skill_item.backing:AddChild(Image("images/hud.xml", "tab_refine.tex"))
-            skill_item.coin:SetScale(0.16)
-            skill_item.coin:SetPosition(-32, -15)
-            skill_item.coin.value = skill_item.coin:AddChild(Text(BODYTEXTFONT, 120, "", {1, 0, 0, 1}))
-            skill_item.coin.value:SetPosition(80, 0)
-            skill_item.coin.value:SetString(-cost)
             if cost > 0 then
-                skill_item.coin:Show()
+                skill_item.coin = skill_item.backing:AddChild(Image("images/hud.xml", "tab_refine.tex"))
+                skill_item.coin:SetScale(0.16)
+                skill_item.coin:SetPosition(-32, -15)
+                skill_item.coin.value = skill_item.coin:AddChild(Text(NUMBERFONT, 120, "", {1, 0, 0, 1}))
+                skill_item.coin.value:SetPosition(90, 0)
+                skill_item.coin.value:SetString(-cost)
             else
+                if (type(item.exclusive) == "table" and table.contains(item.exclusive, self.owner.prefab)) or
+                    (type(item.exclusive) == "string" and item.exclusive == self.owner.prefab) then
+                    local image_name = "avatar_"..self.owner.prefab..".tex"
+                    local atlas_name = "images/avatars/avatar_"..self.owner.prefab..".xml"
+                    if softresolvefilepath(atlas_name) == nil then
+                        atlas_name = "images/avatars.xml"
+                    end
+                    skill_item.coin = skill_item.backing:AddChild(Image(atlas_name, image_name))
+                    skill_item.coin:SetPosition(-28, -15)
+                    skill_item.coin:SetScale(0.3)
+                end
+            end
+            if skill_item.coin == nil then
+                skill_item.coin = self:AddChild(Widget("ForEvent"))
                 skill_item.coin:Hide()
             end
 
@@ -383,8 +397,7 @@ function PlayerDetail:LoadSkills()
                 --此处做宣告使用
                 if TheInput:IsKeyDown(KEY_ALT) and TheInput:IsKeyDown(KEY_SHIFT) then
                     if not self.cooldown then
-                        --local str = "我想购买：%s"
-                        --TheNet:Say(string.format(str, GetDescriptionString(name)), false)
+                        TheNet:Say(name..":"..level_str, false)
                         
                         self.cooldown = true
                         self.inst:DoTaskInTime(3, function() self.cooldown = nil end)
@@ -442,7 +455,13 @@ function PlayerDetail:LoadSkills()
     if skill_constant then
         for k, v in pairs(skill_constant) do
             if v.id then
-                table.insert(self.skills_data, {index=v.id, skill=v})
+                if v.exclusive == nil or
+                    (type(v.exclusive) == "table" and table.contains(v.exclusive, self.owner.prefab)) or
+                    (type(v.exclusive) == "string" and v.exclusive == self.owner.prefab) then
+                    if not v.hide or (v.level_fn and v:level_fn(self.owner) > 0) then
+                        table.insert(self.skills_data, {index=v.id, skill=v})
+                    end
+                end
             end
         end
     end
@@ -511,7 +530,7 @@ function PlayerDetail:Layout()
 
     self.level = self.proot:AddChild(Widget("Experience"))
     self.level:SetPosition(30, 250)
-    self.level.text = self.level:AddChild(Text(BODYTEXTFONT, 25))
+    self.level.text = self.level:AddChild(Text(NUMBERFONT, 25))
     self.level.text:SetPosition(125, 0)
     self.level.text:SetString("Lv "..self:GetLevel())
     self.level.text:SetColour(0, 1, 0, 1)

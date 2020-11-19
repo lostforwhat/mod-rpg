@@ -409,7 +409,7 @@ local function OnFinishedwork(inst, data)
 end
 --复活
 local function OnRespawnfromghost(inst, data)
-	local source = data.source
+	local source = data and data.source or nil
 	local taskdata = inst.components.taskdata
 
 end
@@ -574,14 +574,19 @@ local function OnInspirationdelta(inst, data)
         local inspiration = inst.components.singinginspiration.current or 0
         local inspiration_max = inst.components.singinginspiration:GetMaxInspiration()
 
-        if inst.components.combat ~= nil then
-            local add = inspiration * 0.004
-            inst.components.combat.externaldamagemultipliers:SetModifier("inspirate", 1 + add)
-        end
+        if inst.components.skilldata ~= nil then
+            local level = inst.components.skilldata:GetLevel("inspirate")
+            local step = inst.components.skilldata.skills["inspirate"] and inst.components.skilldata.skills["inspirate"].step or 0
 
-        if inst.components.crit ~= nil then
-            local add = (inspiration >= inspiration_max * 0.9) and inspiration_max * 0.1 or 0 
-            inst.components.crit:AddExtraChance("inspirate", add*0.01)
+            if inst.components.combat ~= nil then
+                local add = inspiration * (0.004 + level * step)
+                inst.components.combat.externaldamagemultipliers:SetModifier("inspirate", 1 + add)
+            end
+
+            if inst.components.crit ~= nil then
+                local add = (inspiration >= inspiration_max * 0.9) and (inspiration_max * 0.1 + level) or 0 
+                inst.components.crit:AddExtraChance("inspirate", add*0.01)
+            end
         end
         
     end

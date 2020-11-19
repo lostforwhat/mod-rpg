@@ -90,6 +90,22 @@ function SkillData:LevelUp(id, amount)
 	end
 end
 
+function SkillData:SetLevel(id, level)
+	if TheWorld.ismastersim then
+		if self.skills[id] then
+			local skill = self.skills[id]
+			local max_level = skill.max_level or 1
+			if level < 0 then
+				level = 0
+			end
+			if level > max_level then
+				level = max_level
+			end
+			self[id] = math.floor(level)
+		end
+	end
+end
+
 function SkillData:OnSave()
 	local data = {}
 	if skill_constant then

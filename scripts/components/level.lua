@@ -1,5 +1,11 @@
 local MAX_LEVEL = 100
-
+--[[
+	*****************
+	特别注意！
+	只有跟等级相关的变化才写这里，避免资源消耗
+	人物初始化属性写postinit里
+	*****************
+]]
 local function DefaultLevelUp(inst, level)
 	if inst.components.extrameta then
 		inst.components.extrameta.extra_hunger:SetModifier("levelup", level)
@@ -16,23 +22,56 @@ local function WxLevelUp(inst, level)
 	end
 end
 
+local function WathgrithrLevelUp(inst, level)
+	DefaultLevelUp(inst, level)
+	
+	if inst.components.skilldata then
+		local inspiratelevel = math.floor(level*0.1) + 1
+		inst.components.skilldata:SetLevel("inspirate", inspiratelevel)
+	end
+end
+
+local function WolfgangLevelUp(inst, level)
+	DefaultLevelUp(inst, level)
+
+	if inst.components.skilldata then
+		local skilllevel = math.floor(level*0.1) + 1
+		inst.components.skilldata:SetLevel("hitaoe", skilllevel)
+	end
+end
+
+local function WinonaLevelUp(inst, level)
+	DefaultLevelUp(inst, level)
+	if inst.components.skilldata then
+		inst.components.skilldata:SetLevel("throwrocks", math.floor(level*0.1) + 1)
+	end
+end
+
+local function WalterLevelUp(inst, level)
+	DefaultLevelUp(inst, level)
+	if inst.components.skilldata then
+		inst.components.skilldata:SetLevel("shootingmaster", math.floor(level*0.1) + 1)
+	end
+end
+
 local level_fn_data = {
 	wilson = DefaultLevelUp,
 	wendy = DefaultLevelUp,
 	willow = DefaultLevelUp,
-	wathgrithr = DefaultLevelUp,
-	wolfgang = DefaultLevelUp,
+	wathgrithr = WathgrithrLevelUp,
+	wolfgang = WolfgangLevelUp,
 	wortox = DefaultLevelUp,
 	wx78 = WxLevelUp,
-	winona = DefaultLevelUp,
+	winona = WinonaLevelUp,
 	wickerbottom = DefaultLevelUp,
 	wes = DefaultLevelUp,
 	woodie = DefaultLevelUp,
 	wormwood = DefaultLevelUp,
 	wurt = DefaultLevelUp,
-	walter = DefaultLevelUp,
+	walter = WalterLevelUp,
 	waxwell = DefaultLevelUp,
 	warly = DefaultLevelUp,
+	webber = DefaultLevelUp,
 }
 
 local function RecalcMeta(inst, level)
@@ -94,6 +133,7 @@ function Level:OnLoad(data)
 end
 
 function Level:AddXp(xp)
+	xp = math.clamp(xp, 0, 99999) --防止崩内存
 	self.totalxp = self.totalxp + xp
 	self.xp = self.xp + xp
 	self:LevelCheck()
