@@ -66,7 +66,13 @@ function SkillData:GetLevel(id)
 	end
 end
 
-function SkillData:LevelUp(id, amount)
+function SkillData:LevelUp(id, amount, book)
+	if type(amount) ~= "number" then 
+		book = amount == true 
+		amount = 1 
+	else
+		book = book == true
+	end
 	if self[id] == nil or self.net_data[id] == nil then return end
 	if TheWorld.ismastersim then
 		if self.skills[id] then
@@ -74,13 +80,17 @@ function SkillData:LevelUp(id, amount)
 			local cost = skill.cost or 0
 			local max_level = skill.max_level or 1
 			if self[id] + amount > max_level then
-				return
+				return false
 			end
-			if self.inst.components.purchase then
+			if book then
+				self[id] = self[id] + math.floor(amount)
+				return true
+			elseif self.inst.components.purchase then
 				if self.inst.components.purchase.coin >= cost then
 					self.inst.components.purchase:CoinDoDelta(-cost)
 					self.coin_used = self.coin_used + cost
 					self[id] = self[id] + math.floor(amount)
+					return true
 				end
 			end
 		end
@@ -101,7 +111,9 @@ function SkillData:SetLevel(id, level)
 			if level > max_level then
 				level = max_level
 			end
-			self[id] = math.floor(level)
+			if self[id] ~= math.floor(level) then
+				self[id] = math.floor(level)
+			end
 		end
 	end
 end

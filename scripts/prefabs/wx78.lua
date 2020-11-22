@@ -4,6 +4,8 @@ local assets =
 {
     Asset("SCRIPT", "scripts/prefabs/player_common.lua"),
     Asset("SOUND", "sound/wx78.fsb"),
+    Asset("ANIM", "anim/rook.zip"),
+    Asset("ANIM", "anim/rook_build.zip"),
 }
 
 local prefabs =
@@ -49,6 +51,15 @@ local function oneat(inst, food)
     end
 end
 
+local function OnSkill(inst) 
+    if inst.components.skilldata and inst.components.skilldata:GetLevel("electricprotection") then
+        local skill = inst.components.skilldata.skills["electricprotection"]
+        if skill and skill.effect_fn then
+            skill:effect_fn(inst)
+        end
+    end
+end
+
 local function onupdate(inst, dt)
     inst.charge_time = inst.charge_time - dt
     if inst.charge_time <= 0 then
@@ -64,6 +75,7 @@ local function onupdate(inst, dt)
         inst.components.bloomer:PopBloom("overcharge")
         inst.components.temperature.mintemp = -20
         inst.components.talker:Say(GetString(inst, "ANNOUNCE_DISCHARGE"))
+        OnSkill(inst)
     else
         local runspeed_bonus = .5
         local rad = 3
@@ -119,6 +131,7 @@ local function startovercharge(inst, duration)
         inst.charged_task = inst:DoPeriodicTask(1, onupdate, nil, 1)
         onupdate(inst, 0)
     end
+    OnSkill(inst)
 end
 
 local function onload(inst, data)
@@ -313,6 +326,10 @@ local function master_postinit(inst)
     elseif TheNet:GetServerGameMode() == "quagmire" then
         event_server_data("quagmire", "prefabs/wx78").master_postinit(inst)
     end
+
+    inst.kind = ""
+    inst.soundpath = "dontstarve/creatures/rook/"
+    inst.effortsound = "dontstarve/creatures/rook/steam"
 end
 
 return MakePlayerCharacter("wx78", prefabs, assets, common_postinit, master_postinit)

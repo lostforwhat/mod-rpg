@@ -1,7 +1,6 @@
 --添加额外装备栏
 local _G = GLOBAL
 local IsServer = _G.TheNet:GetIsServer()
-local Inv = require "widgets/inventorybar"
 
 require "utils/utils"
 
@@ -15,14 +14,6 @@ table.insert(Assets, Asset("ATLAS", "images/slots/neck.xml"))
 _G.EQUIPSLOTS.BACK = "back"
 _G.EQUIPSLOTS.NECK = "neck"
 _G.EQUIPSLOTS.HANDS2 = "hands2"
-
-GLOBAL.EQUIPSLOT_IDS = {}
-local slot = 0
-for k, v in pairs(GLOBAL.EQUIPSLOTS) do
-    slot = slot + 1
-    GLOBAL.EQUIPSLOT_IDS[v] = slot
-end
-slot = nil
 
 
 AddComponentPostInit("inventory", function(self, inst)
@@ -48,12 +39,11 @@ AddComponentPostInit("inventory", function(self, inst)
     end
 end)
 
-AddGlobalClassPostConstruct("widgets/inventorybar", "Inv", function()
-    --local self = Inv
-    local Old_Refresh = Inv.Refresh
-    local Old_Rebuild = Inv.Rebuild
+AddClassPostConstruct("widgets/inventorybar", function(self)
+    local Old_Refresh = self.Refresh
+    local Old_Rebuild = self.Rebuild
 
-    function Inv:LoadExtraSlots(self)
+    function self:LoadExtraSlots(self)
         self.bg:SetScale(1.35,1,1.25)
         self.bgcover:SetScale(1.35,1,1.25)
 
@@ -80,14 +70,14 @@ AddGlobalClassPostConstruct("widgets/inventorybar", "Inv", function()
         end
     end
 
-    function Inv:Refresh()
+    function self:Refresh()
         Old_Refresh(self)
-        Inv:LoadExtraSlots(self)
+        self:LoadExtraSlots(self)
     end
 
-    function Inv:Rebuild()
+    function self:Rebuild()
         Old_Rebuild(self)
-        Inv:LoadExtraSlots(self)
+        self:LoadExtraSlots(self)
     end
 end)
 

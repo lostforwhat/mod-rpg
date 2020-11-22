@@ -52,75 +52,92 @@ AddComponentPostInit("combat", function(self)
 		local extra_damage = 0
 		local target = self.inst
 
-		--先计算闪避
-		if target.components.dodge and target.components.dodge:GetChance() > 0 then
-			if target.components.dodge:Effect() then
-				--damage = 0
+		if attacker ~= nil then
+			--避免boss互掐
+			if target:HasTag("epic") and attacker:HasTag("epic") then
+				target:DoTaskInTime(0, function()
+					if target.components.combat:TargetIs(attacker) then 
+						target.components.combat:DropTarget()
+					end
+					if attacker.components.combat:TargetIs(target) then
+						attacker.components.combat:DropTarget()
+					end
+				end)
 				return OldGetAttacked(self, attacker, 0, weapon, stimuli)
 			end
-		end
 
-		if attacker and IsValidVictim(target) and not target.components.health:IsInvincible() then
-			--致死优先级最高, 出现致死后后面其他逻辑可忽略
-			if attacker.components.attackdeath ~= nil then
-				local base = 1
-				local maxhp = target.components.health.maxhealth or 4000
-				if maxhp > 4000 or target:HasTag("epic") then
-					base = math.min(4000/maxhp, 1)
-				end
-				if attacker.components.attackdeath:Effect(base) then
-					local absorb = target.components.health and target.components.health.absorb or 0
-					if absorb < 1 then
-		            	damage = maxhp * (1- math.clamp(absorb, 0, 1)) + 1 --修改伤害为致死
-		            	return OldGetAttacked(self, attacker, damage + extra_damage, weapon, stimuli)
-		            end
+			--先计算闪避
+			if target.components.dodge and target.components.dodge:GetChance() > 0 then
+				if target.components.dodge:Effect() then
+					--damage = 0
+					return OldGetAttacked(self, attacker, 0, weapon, stimuli)
 				end
 			end
-			--弱点攻击为附加伤害不参与暴击
-			if attacker.components.attackbroken ~= nil then
-				if attacker.components.attackbroken:Effect() then
-					extra_damage = extra_damage + attacker.components.attackbroken:GetBrokenPercent() * 0.01 * (target.components.health.currenthealth or 0)
-				end
-			end
-			--复仇为附加伤害
-			if attacker.components.revenge ~= nil then
-				local damageup = attacker.components.revenge:GetDamageUp(target) or 0
-				extra_damage = extra_damage + damage * damageup
-			end
-			--暴击只增加基础伤害
-			if attacker.components.crit ~= nil then
-				--print("暴击测试")
-				if attacker.components.crit:Effect() then
-					--print("暴击生效")
-					damage = damage * (attacker.components.crit:GetRandomHit() + 1)
-				end
-			end
-			--附加伤害
-			if attacker.components.extradamage ~= nil then
-				extra_damage = extra_damage + attacker.components.extradamage:GetDamage(target)
-			end
-		end
 
-		local unblocked = OldGetAttacked(self, attacker, damage + extra_damage, weapon, stimuli)
-		if unblocked and attacker then
-			--注入吸血和攻击特效
-			if attacker.components.attackfrozen ~= nil then
-				attacker.components.attackfrozen:Effect(target)
+			if IsValidVictim(target) and not target.components.health:IsInvincible() then
+				--致死优先级最高, 出现致死后后面其他逻辑可忽略
+				if attacker.components.attackdeath ~= nil then
+					local base = 1
+					local maxhp = target.components.health.maxhealth or 4000
+					if maxhp > 4000 or target:HasTag("epic") then
+						base = math.min(4000/maxhp, 1)
+					end
+					if attacker.components.attackdeath:Effect(base) then
+						local absorb = target.components.health and target.components.health.absorb or 0
+						if absorb < 1 then
+			            	damage = maxhp * (1- math.clamp(absorb, 0, 1)) + 1 --修改伤害为致死
+			            	return OldGetAttacked(self, attacker, damage + extra_damage, weapon, stimuli)
+			            end
+					end
+				end
+				--弱点攻击为附加伤害不参与暴击
+				if attacker.components.attackbroken ~= nil then
+					if attacker.components.attackbroken:Effect() then
+						extra_damage = extra_damage + attacker.components.attackbroken:GetBrokenPercent() * 0.01 * (target.components.health.currenthealth or 0)
+					end
+				end
+				--复仇为附加伤害
+				if attacker.components.revenge ~= nil then
+					local damageup = attacker.components.revenge:GetDamageUp(target) or 0
+					extra_damage = extra_damage + damage * damageup
+				end
+				--暴击只增加基础伤害
+				if attacker.components.crit ~= nil then
+					--print("暴击测试")
+					if attacker.components.crit:Effect() then
+						--print("暴击生效")
+						damage = damage * (attacker.components.crit:GetRandomHit() + 1)
+					end
+				end
+				--附加伤害
+				if attacker.components.extradamage ~= nil then
+					extra_damage = extra_damage + attacker.components.extradamage:GetDamage(target)
+				end
 			end
-			if attacker.components.lifesteal ~= nil then
-				attacker.components.lifesteal:Effect(damage) --吸血只享受基础攻击和暴击收益
-			end
-			--反伤
-			if target.components.attackback ~= nil then
-				target.components.attackback:Effect(damage)
-			end
-			--复仇
-			if target.components.revenge ~= nil then
-				target.components.revenge:Onattcked(attacker)
-			end
-		end
 
-		return blocked
+			local unblocked = OldGetAttacked(self, attacker, damage + extra_damage, weapon, stimuli)
+			if unblocked then
+				--注入吸血和攻击特效
+				if attacker.components.attackfrozen ~= nil then
+					attacker.components.attackfrozen:Effect(target)
+				end
+				if attacker.components.lifesteal ~= nil then
+					attacker.components.lifesteal:Effect(damage) --吸血只享受基础攻击和暴击收益
+				end
+				--反伤
+				if target.components.attackback ~= nil then
+					target.components.attackback:Effect(damage)
+				end
+				--复仇
+				if target.components.revenge ~= nil then
+					target.components.revenge:Onattcked(attacker)
+				end
+			end
+
+			return unblocked
+		else
+			return OldGetAttacked(self, attacker, damage, weapon, stimuli)
+		end	
 	end
 end)
 
@@ -214,5 +231,78 @@ AddComponentPostInit("workable", function(self)
 			numworks = self.workleft
 		end
 		OldWorkedBy(self, worker, numworks)
+	end
+end)
+
+AddComponentPostInit("groundpounder", function(self)
+	local WALKABLEPLATFORM_TAGS = {"walkableplatform"}
+	local OldDestroyPoints = self.DestroyPoints
+	function self:DestroyPoints(points, breakobjects, dodamage, pushplatforms)
+		if self.inst:HasTag("soulstealer") then
+			self.inst.components.combat.ignorehitrange = true
+			local getEnts = breakobjects or dodamage
+		    local map = _G.TheWorld.Map
+		    for k, v in pairs(points) do
+		        if getEnts then
+		            local ents = TheSim:FindEntities(v.x, v.y, v.z, 3, nil, self.noTags)
+		            if #ents > 0 then
+		                if breakobjects then
+		                    for i, v2 in ipairs(ents) do
+		                        if v2 ~= self.inst and v2:IsValid() then
+		                            -- Don't net any insects when we do work
+		                            if self.destroyer and
+		                                v2.components.workable ~= nil and
+		                                v2.components.workable:CanBeWorked() and
+		                                v2.components.workable.action ~= _G.ACTIONS.NET then
+		                                v2.components.workable:Destroy(self.inst)
+		                            end
+		                            if v2:IsValid() and --might've changed after work?
+		                                not v2:IsInLimbo() and --might've changed after work?
+		                                self.burner and
+		                                v2.components.fueled == nil and
+		                                v2.components.burnable ~= nil and
+		                                not v2.components.burnable:IsBurning() and
+		                                not v2:HasTag("burnt") then
+		                                v2.components.burnable:Ignite()
+		                            end
+		                        end
+		                    end
+		                end
+		                if dodamage then
+		                    for i, v2 in ipairs(ents) do
+		                        if v2 ~= self.inst and
+		                            v2:IsValid() and
+		                            v2.components.health ~= nil and
+		                            not v2.components.health:IsDead() and 
+		                            self.inst.components.combat:CanTarget(v2) then
+		                            self.inst.components.combat:DoAttack(v2, nil, nil, nil, self.groundpounddamagemult)
+		                        end
+		                    end
+		                end
+		            end
+		        end
+
+		        if pushplatforms then
+		            local platform_ents = TheSim:FindEntities(v.x, v.y, v.z, 3 + TUNING.MAX_WALKABLE_PLATFORM_RADIUS, WALKABLEPLATFORM_TAGS, self.noTags)
+		            for i, p_ent in ipairs(platform_ents) do
+		                if p_ent ~= self.inst and p_ent:IsValid() and p_ent.Transform ~= nil and p_ent.components.boatphysics ~= nil then
+		                    local v2x, v2y, v2z = p_ent.Transform:GetWorldPosition()
+		                    local mx, mz = v2x - v.x, v2z - v.z
+		                    if mx ~= 0 or mz ~= 0 then
+		                        local normalx, normalz = _G.VecUtil_Normalize(mx, mz)
+		                        p_ent.components.boatphysics:ApplyForce(normalx, normalz, 5)
+		                    end
+		                end
+		            end
+		        end
+
+		        if map:IsPassableAtPoint(v:Get()) then
+		            _G.SpawnPrefab(self.groundpoundfx).Transform:SetPosition(v.x, 0, v.z)
+		        end
+		    end
+		    self.inst.components.combat.ignorehitrange = false
+		else
+			OldDestroyPoints(self, points, breakobjects, dodamage, pushplatforms)
+		end
 	end
 end)

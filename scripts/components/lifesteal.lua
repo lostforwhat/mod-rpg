@@ -78,7 +78,7 @@ function LifeSteal:GetFinalPercent()
 end
 
 function LifeSteal:Effect(damage)
-    local lifestealnum = damage * self:GetFinalPercent()
+    local lifestealnum = damage * self:GetFinalPercent() * 0.01
     if lifestealnum > 0 and self.inst.components.health ~= nil and
         not self.inst.components.health:IsDead() and not self.inst:HasTag("playerghost") then
         self.inst.components.health:DoDelta(lifestealnum, false, "lifesteal")

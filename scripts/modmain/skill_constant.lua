@@ -53,6 +53,48 @@ function DefaultSkillDescFn(self, owner)
 	return desc_str
 end
 
+local function OnPhotosynthesis(owner, level)
+	if TheWorld.state.isday and not owner:HasTag("playerghost") then
+		owner.components.hunger:DoDelta(1 + level*0.1)
+	end
+end
+
+ -- 专属之一的方法，写这里，便于官方升级后不影响
+local function MakeElectronic(inst, num)
+    if type(num) ~= "number" then num = 0 end
+    num = math.clamp(num, 0, 6)
+    local left_num = num
+    local leader
+    if inst._electronic_formation ~= nil then
+        leader = inst._electronic_formation
+        if not leader.components.formationleader:IsFormationFull() then
+            left_num = num - leader.components.formationleader:GetFormationSize()
+        end
+    end
+    if left_num < 0 then
+        local formation = leader.components.formationleader.formation
+        for k, v in pairs(formation) do
+            v:Remove()
+            formation[k] = nil
+            left_num = left_num + 1
+            if left_num >= 0 then
+                return
+            end
+        end
+    end
+    while(left_num > 0) do
+        local ball = SpawnPrefab("electronic_ball")
+        local x, y, z = inst.Transform:GetWorldPosition()
+        ball.Transform:SetPosition(x + math.random()*4 - 2, y + math.random()*4 - 2, z + math.random()*4 - 2)
+        ball.components.locomotor.walkspeed = inst.components.locomotor.runspeed or 6
+        ball:MakeFormation(inst)
+        left_num = left_num - 1
+
+        ball:ListenForEvent("death", MakeElectronic, inst)
+        ball:ListenForEvent("onremove", MakeElectronic, inst)
+    end
+end
+
 -- skill constant
 skill_constant = {
 	--专属
@@ -139,8 +181,8 @@ skill_constant = {
 		end,
 	},
 	{
-		id="runhit",
-		name="机械冲刺",
+		id="metalbody",
+		name="A处理器",
 		max_level=1,
 		exclusive={"wx78"},
 		desc_fn=function(self, owner)
@@ -149,9 +191,62 @@ skill_constant = {
 			local max_level = self.max_level or 1
 			local max = level >= max_level and " (Max)" or ""
 			desc_str = desc_str.."\n Lv:"..level..max.."\n"
-			..""
+			.."齿轮额外提升100经验值（取消原升级效果）\n"
+			.."升级属性额外+1"
 			return desc_str
 		end,
+	},
+	{
+		id="electricprotection",
+		name="电场保护",
+		max_level=5,
+		step = 3,
+		exclusive={"wx78"},
+		desc_fn=function(self, owner)
+			local desc_str = self.name
+			local level = self:level_fn(owner)
+			local max_level = self.max_level or 1
+			local max = level >= max_level and " (Max)" or ""
+			desc_str = desc_str.."\n Lv:"..level..max.."\n"
+			.."过载时召唤电场离子保护自己\n"
+			.."当前数量："..level.."\n"
+			.."伤害: "..(5+level*self.step)
+			return desc_str
+		end,
+		effect_fn=function(self, owner)
+			local level = self:level_fn(owner)
+			--owner:DoTaskInTime(.3, function(owner) 
+			if owner:HasTag("overcharge") then
+				MakeElectronic(owner, level)
+			else
+				MakeElectronic(owner, 0)
+			end
+			--end)
+		end
+	},
+	{
+		id="wxrunhit",
+		name="机械冲刺",
+		max_level=1,
+		exclusive={"wx78"},
+		hide=true,
+		desc_fn=function(self, owner)
+			local desc_str = self.name
+			local level = self:level_fn(owner)
+			local max_level = self.max_level or 1
+			local max = level >= max_level and " (Max)" or ""
+			desc_str = desc_str.."\n Lv:"..level..max.."\n"
+			.."(未实现)"
+			return desc_str
+		end,
+		effect_fn=function(self, owner) 
+			local level = self:level_fn(owner)
+			if level > 0 then
+				--owner:AddTag("wxrunhit")
+			else
+				--owner:RemoveTag("wxrunhit")
+			end
+		end
 	},
 	{
 		id="newbookbuilder",
@@ -179,7 +274,8 @@ skill_constant = {
 	{
 		id="flylucy",
 		name="露西飞斧",
-		max_level=1,
+		max_level=11,
+		step=0.5,
 		exclusive={"woodie"},
 		desc_fn=function(self, owner)
 			local desc_str = self.name
@@ -187,7 +283,9 @@ skill_constant = {
 			local max_level = self.max_level or 1
 			local max = level >= max_level and " (Max)" or ""
 			desc_str = desc_str.."\n Lv:"..level..max.."\n"
-			..""
+			.."扔出去命中的是斧头还是斧把呢\n"
+			.."投掷范围: "..(5 + level*0.5).."\n"
+			.."伤害: "..(TUNING.AXE_DAMAGE * .5).."~"..(TUNING.AXE_DAMAGE * .5 + level*10)
 			return desc_str
 		end,
 	},
@@ -322,18 +420,65 @@ skill_constant = {
 		end
 	},
 	{
+		id="moresouls",
+		name="灵魂掌控",
+		max_level=30,
+		step=1,
+		exclusive={"wortox"},
+		desc_fn=function(self, owner)
+			local desc_str = self.name
+			local level = self:level_fn(owner)
+			local step = self.step
+			local max_level = self.max_level or 1
+			local max = level >= max_level and " (Max)" or ""
+			desc_str = desc_str.."\n Lv:"..level..max.."\n"
+			.."提升可掌控的灵魂数量\n"
+			.."可掌控灵魂数："..(level + TUNING.WORTOX_MAX_SOULS)
+			return desc_str
+		end,
+	},
+	{
 		id="superjump",
 		name="魔力跃击",
 		max_level=11,
+		step=0.2,
 		exclusive={"wortox"},
+		desc_fn=function(self, owner)
+			local desc_str = self.name
+			local level = self:level_fn(owner)
+			local step = self.step
+			local max_level = self.max_level or 1
+			local max = level >= max_level and " (Max)" or ""
+			desc_str = desc_str.."\n Lv:"..level..max.."\n"
+			.."灵魂跳跃时造成一次范围伤害\n"
+			.."当前范围："..(5 + math.floor(level*step)).."  伤害: "..((1 + level*step)*100).."%"
+			return desc_str
+		end,
+	},
+	{
+		id="photosynthesis",
+		name="光合作用",
+		max_level=20,
+		exclusive={"wormwood"},
 		desc_fn=function(self, owner)
 			local desc_str = self.name
 			local level = self:level_fn(owner)
 			local max_level = self.max_level or 1
 			local max = level >= max_level and " (Max)" or ""
 			desc_str = desc_str.."\n Lv:"..level..max.."\n"
-			.."灵魂跳跃时造成一次范围伤害"
+			.."白天可通过阳光获取能量\n"
+			.."每10秒补充饥饿值: "..(level * 0.1 + 1)
 			return desc_str
+		end,
+		effect_fn=function(self, owner)
+			local level = self:level_fn(owner)
+			if owner.photosynthesis_task ~= nil then
+				owner.photosynthesis_task:Cancel()
+				owner.photosynthesis_task = nil
+			end
+			if level > 0 then
+				owner.photosynthesis_task = owner:DoPeriodicTask(10, OnPhotosynthesis, 10, level)
+			end
 		end,
 	},
 	{
@@ -354,7 +499,7 @@ skill_constant = {
 	{
 		id="smoothskin",
 		name="光滑体表",
-		max_level=11,
+		max_level=20,
 		exclusive={"wurt"},
 		desc_fn=function(self, owner)
 			local desc_str = self.name
@@ -362,7 +507,8 @@ skill_constant = {
 			local max_level = self.max_level or 1
 			local max = level >= max_level and " (Max)" or ""
 			desc_str = desc_str.."\n Lv:"..level..max.."\n"
-			..""
+			.."光滑的皮肤很容易让对手攻击落空\n"
+			.."潮湿值提升闪避,最大: "..(20 + level).."%"
 			return desc_str
 		end,
 	},
@@ -450,6 +596,7 @@ skill_constant = {
 		id="lifesteal",
 		name="生命偷取",
 		cost=10,
+		step=1,
 		max_level=20,
 		effect_fn=function(self, owner) 
 			if owner.components.lifesteal then
@@ -596,6 +743,7 @@ skill_constant = {
 	
 }
 
+local skills_str = {unknown="???"}
 --检测data数据
 local ids = {}
 for k,v in pairs(skill_constant) do
@@ -615,5 +763,8 @@ for k,v in pairs(skill_constant) do
 		v.id = v.id..k
 	end
 	table.insert(ids, v.id)
+
+	skills_str[string.upper(v.id)] = v.name
 end
 ids = nil
+STRINGS.NAMES.SKILLS = skills_str

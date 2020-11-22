@@ -1,6 +1,8 @@
 require "utils/utils"
 local _G = GLOBAL
 local ExistInTable = _G.ExistInTable
+local ACTIONS = _G.ACTIONS
+local SpawnPrefab = _G.SpawnPrefab
 
 local function GiveExp(inst, exp)
     --预留插槽，用于提升或减少额外经验等
@@ -103,7 +105,12 @@ local function OnDeath(inst, data)
 	local attacker = inst.components.combat.lastattacker
 	local cause = data.cause
 	local taskdata = inst.components.taskdata
+    
 
+    --死亡惩罚
+    if inst.components.level then
+        inst.components.level:ReduceLevel()
+    end
 end
 
 local function IsValidVictim(victim)
@@ -598,6 +605,35 @@ end
     end
 end]]
 
+
+local function OnSoulhop(inst)
+    if inst.components.skilldata and inst.components.skilldata.superjump > 0 then
+        local level = inst.components.skilldata:GetLevel("superjump")
+        local step = inst.components.skilldata.skills["superjump"] and inst.components.skilldata.skills["superjump"].step or 0
+        
+        if inst.components.groundpounder then
+            local ringadd = math.floor(level * step)
+            inst.components.groundpounder.damageRings = 2 + ringadd
+            inst.components.groundpounder.destructionRings = 2 + ringadd
+            inst.components.groundpounder.platformPushingRings = 2 + ringadd
+            inst.components.groundpounder.numRings = 3 + ringadd
+            --inst.components.groundpounder.initialRadius = 1 + level*step
+            inst.components.groundpounder.groundpounddamagemult = 1 + level * step
+            inst.components.groundpounder:GroundPound()
+        end
+    end
+end
+
+local function OnMoisture(inst, data)
+    if inst.components.skilldata and inst.components.skilldata["smoothskin"] > 0
+        and inst.components.dodge then
+        local moisture = inst.components.moisture and inst.components.moisture.moisture or 0
+        local level = inst.components.skilldata:GetLevel("smoothskin")
+        local miss = math.clamp(moisture * (0.2 +  0.02 * level), 0, 20 + level)
+        inst.components.dodge:SetChance(miss * 0.01)
+    end
+end
+
 --玩家事件
 AddPlayerPostInit(function(inst)
 	--只进行服务端事件监听
@@ -661,6 +697,12 @@ AddPlayerPostInit(function(inst)
         --技能相关事件
         --不合适，无法触发完成工作条件
         --inst:ListenForEvent("working", OnWorking)
+
+        --恶魔跳跃
+        inst:ListenForEvent("soulhop", OnSoulhop)
+
+        --潮湿度
+        inst:ListenForEvent("moisturedelta", OnMoisture)
     end
 	
 end)

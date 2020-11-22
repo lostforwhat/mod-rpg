@@ -92,6 +92,7 @@ local function OnPray(inst, prayers)
 	if prayers:HasTag("player") then
 		if DoPlant(prayers, inst) then
     		prayers.components.sanity:DoDelta(-20)
+            return true
         end
 	end
 end

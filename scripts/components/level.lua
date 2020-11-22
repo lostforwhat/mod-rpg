@@ -8,17 +8,20 @@ local MAX_LEVEL = 100
 ]]
 local function DefaultLevelUp(inst, level)
 	if inst.components.extrameta then
-		inst.components.extrameta.extra_hunger:SetModifier("levelup", level)
-		inst.components.extrameta.extra_sanity:SetModifier("levelup", level)
-		inst.components.extrameta.extra_health:SetModifier("levelup", level)
+		inst.components.extrameta.extra_hunger:SetModifier("levelup", level-1)
+		inst.components.extrameta.extra_sanity:SetModifier("levelup", level-1)
+		inst.components.extrameta.extra_health:SetModifier("levelup", level-1)
 	end
 end
 
 local function WxLevelUp(inst, level)
 	if inst.components.extrameta then
-		inst.components.extrameta.extra_hunger:SetModifier("levelup", level*2)
-		inst.components.extrameta.extra_sanity:SetModifier("levelup", level*2)
-		inst.components.extrameta.extra_health:SetModifier("levelup", level*2)
+		inst.components.extrameta.extra_hunger:SetModifier("levelup", (level-1)*2)
+		inst.components.extrameta.extra_sanity:SetModifier("levelup", (level-1)*2)
+		inst.components.extrameta.extra_health:SetModifier("levelup", (level-1)*2)
+	end
+	if inst.components.skilldata then
+		inst.components.skilldata:SetLevel("electricprotection", math.clamp(math.floor(level*0.05) + 1, 1, 5))
 	end
 end
 
@@ -54,20 +57,49 @@ local function WalterLevelUp(inst, level)
 	end
 end
 
+local function WortoxLevelUp(inst, level)
+	DefaultLevelUp(inst, level)
+	if inst.components.skilldata then
+		inst.components.skilldata:SetLevel("superjump", math.floor(level*0.1) + 1)
+		inst.components.skilldata:SetLevel("moresouls", math.clamp(math.ceil(level * 0.5), 1, 30))
+	end
+end
+
+local function WurtLevelUp(inst, level)
+	DefaultLevelUp(inst, level)
+	if inst.components.skilldata then
+		inst.components.skilldata:SetLevel("smoothskin", math.clamp(math.ceil(level * 0.5), 1, 20))
+	end
+end
+
+local function WormwoodLevelUp(inst, level)
+	DefaultLevelUp(inst, level)
+	if inst.components.skilldata then
+		inst.components.skilldata:SetLevel("photosynthesis", math.clamp(math.ceil(level * 0.5), 1, 20))
+	end
+end
+
+local function WoodieLevelUp(inst, level)
+	DefaultLevelUp(inst, level)
+	if inst.components.skilldata then
+		inst.components.skilldata:SetLevel("flylucy", math.clamp(math.ceil(level*0.2), 1, 11))
+	end
+end
+
 local level_fn_data = {
 	wilson = DefaultLevelUp,
 	wendy = DefaultLevelUp,
 	willow = DefaultLevelUp,
 	wathgrithr = WathgrithrLevelUp,
 	wolfgang = WolfgangLevelUp,
-	wortox = DefaultLevelUp,
+	wortox = WortoxLevelUp,
 	wx78 = WxLevelUp,
 	winona = WinonaLevelUp,
 	wickerbottom = DefaultLevelUp,
 	wes = DefaultLevelUp,
 	woodie = DefaultLevelUp,
-	wormwood = DefaultLevelUp,
-	wurt = DefaultLevelUp,
+	wormwood = WormwoodLevelUp,
+	wurt = WurtLevelUp,
 	walter = WalterLevelUp,
 	waxwell = DefaultLevelUp,
 	warly = DefaultLevelUp,
@@ -132,11 +164,22 @@ function Level:OnLoad(data)
 	end
 end
 
+function Level:ReduceLevel()
+	if self.level > 1 then
+		self.level = self.level - 1
+		self:LevelCheck()
+	else
+		self.xp = 0
+	end
+end
+
 function Level:AddXp(xp)
 	xp = math.clamp(xp, 0, 99999) --防止崩内存
 	self.totalxp = self.totalxp + xp
 	self.xp = self.xp + xp
-	self:LevelCheck()
+	if self.level < MAX_LEVEL then
+		self:LevelCheck()
+	end
 end
 
 function Level:GetLevelUpNeedXp()

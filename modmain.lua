@@ -33,7 +33,9 @@ table.insert(PrefabFiles, "potions")
 table.insert(PrefabFiles, "deadbone")
 table.insert(PrefabFiles, "wes_clone")
 table.insert(PrefabFiles, "achiv_clear")
+table.insert(PrefabFiles, "skillbook")
 
+table.insert(PrefabFiles, "electronic_ball")
 table.insert(PrefabFiles, "titles_fx")
 
 table.insert(PrefabFiles, "coffee")
@@ -119,5 +121,7 @@ modimport("scripts/modmain/modactions.lua")
 modimport("scripts/modmain/task_events.lua")
 modimport("scripts/modmain/modrecipes.lua")
 modimport("scripts/modmain/extra_slots.lua")
+modimport("scripts/modmain/monster_enhancement.lua")
+modimport("scripts/modmain/worldregrowth.lua")
 --debug
 modimport("scripts/modmain/debug.lua")

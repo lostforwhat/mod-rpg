@@ -22,44 +22,8 @@ local function StrToTable(str)
 end
 
 local function OnPray(inst, prayers)
-    if prayers and not prayers:HasTag("playerghost") and 
-        prayers.components.allachivevent then
-        if allachiv_eventdata ~= nil then
-            --prayers.components.allachivevent.all < 1
-            local achiv_tab = {}
-            for k,v in pairs(allachiv_eventdata) do
-                if prayers.components.allachivevent[k] ~= nil 
-                    and prayers.components.allachivevent[k] < v and k ~= "all" then
-                    table.insert(achiv_tab, k)
-                end
-                if prayers.components.allachivevent.tempachiv and 
-                    prayers.components.allachivevent.tempachiv[k] ~= nil and
-                    prayers.components.allachivevent.tempachiv[k] < v then
-                    table.insert(achiv_tab, k)
-                end
-            end
-            if #achiv_tab > 0 then
-                local achivname = achiv_tab[math.random(#achiv_tab)]
-
-                if not IsInTable(achivname, tempachiv) then
-                    prayers.components.allachivevent[achivname] = allachiv_eventdata[achivname]
-                    prayers.components.allachivevent:seffc(prayers, achivname)
-                    prayers:DoTaskInTime(0.5,function() 
-                        prayers:PushEvent("achivecompleted", {achivname=achivname})
-                    end) 
-                else
-                    prayers.components.allachivevent.tempachiv[achivname] = allachiv_eventdata[achivname]
-                    local tempstr = TableToStr(prayers.components.allachivevent.tempachiv)
-                    prayers.components.allachivevent.tempachiv = StrToTable(tempstr)
-                    prayers.components.allachivevent:seffc(prayers, achivname)
-                    prayers:DoTaskInTime(0.5,function() 
-                        prayers:PushEvent("achivecompleted", {achivname=achivname})
-                    end) 
-                    prayers.components.allachivevent:checkAllTemp(prayers)
-                end
-                
-            end
-        end
+    if prayers and not prayers:HasTag("playerghost") then 
+        
     end
 end
 

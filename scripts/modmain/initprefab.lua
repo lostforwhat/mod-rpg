@@ -45,7 +45,15 @@ AddPlayerPostInit(function(inst)
 		
 	end
 	if prefab == "wortox" then
-
+		inst:AddComponent("groundpounder")
+		inst.components.groundpounder.destroyer = true
+	    inst.components.groundpounder.damageRings = 2
+	    inst.components.groundpounder.destructionRings = 2
+	    inst.components.groundpounder.platformPushingRings = 2
+	    inst.components.groundpounder.numRings = 3
+	    inst.components.groundpounder.noTags = TheNet:GetPVPEnabled() 
+	    and { "FX", "NOCLICK", "DECOR", "INLIMBO" } 
+	    or {"FX", "NOCLICK", "DECOR", "INLIMBO", "player"}
 	end
 	if prefab == "wx78" then
 
@@ -79,6 +87,7 @@ AddPlayerPostInit(function(inst)
 	end
 
 	if _G.TheWorld.ismastersim then
+		inst:AddComponent("timer")
 		--inst:DoTaskInTime(0.1, function() 
 	        local prefab = inst.prefab
 			if prefab == "wilson" then
@@ -102,6 +111,7 @@ AddPlayerPostInit(function(inst)
 				inst.components.locomotor:SetExternalSpeedMultiplier(inst, "player", 1.01)
 			end
 			if prefab == "wx78" then
+				inst.components.skilldata:SetLevel("metalbody", 1)
 				inst.components.attackback:SetPercent(1)
 			end
 			if prefab == "winona" then
@@ -134,6 +144,70 @@ AddPlayerPostInit(function(inst)
 		--end)
     end
 
+end)
+
+--其实也可以写在AddPlayerPostInit中，此处为了便于区分
+AddPrefabPostInit("wortox", function(inst) 
+	if _G.TheWorld.ismastersim then
+		local function IsSoul(item)
+		    return item.prefab == "wortox_soul"
+		end
+		local function GetStackSize(item)
+		    return item.components.stackable ~= nil and item.components.stackable:StackSize() or 1
+		end
+		local function SortByStackSize(l, r)
+		    return GetStackSize(l) < GetStackSize(r)
+		end
+		local function CheckSoulsAdded(inst)
+			local extra_num = 0
+			if inst.components.skilldata and inst.components.skilldata["moresouls"] > 0 then
+				local level = inst.components.skilldata["moresouls"] or 0
+				extra_num = level
+			end
+			local max_souls = TUNING.WORTOX_MAX_SOULS + extra_num
+		    inst._checksoulstask = nil
+		    local souls = inst.components.inventory:FindItems(IsSoul)
+		    local count = 0
+		    for i, v in ipairs(souls) do
+		        count = count + GetStackSize(v)
+		    end
+		    if count > max_souls then
+		        --convert count to drop count
+		        count = count - math.floor(max_souls * 0.3) + math.random(0, 2) - 1
+		        table.sort(souls, SortByStackSize)
+		        local pos = inst:GetPosition()
+		        for i, v in ipairs(souls) do
+		            local vcount = GetStackSize(v)
+		            if vcount < count then
+		                inst.components.inventory:DropItem(v, true, true, pos)
+		                count = count - vcount
+		            else
+		                if vcount == count then
+		                    inst.components.inventory:DropItem(v, true, true, pos)
+		                else
+		                    v = v.components.stackable:Get(count)
+		                    v.Transform:SetPosition(pos:Get())
+		                    v.components.inventoryitem:OnDropped(true)
+		                end
+		                break
+		            end
+		        end
+		        inst.components.sanity:DoDelta(-TUNING.SANITY_MEDLARGE)
+		        inst:PushEvent("souloverload")
+		    elseif count > max_souls * .8 then
+		        inst:PushEvent("soultoomany")
+		    end
+		end
+		local function OnGotNewItem(inst, data)
+		    if data.item ~= nil and data.item.prefab == "wortox_soul" then
+		        if inst._checksoulstask ~= nil then
+		            inst._checksoulstask:Cancel()
+		        end
+		        inst._checksoulstask = inst:DoTaskInTime(0, CheckSoulsAdded)
+		    end
+		end
+		inst:ListenForEvent("gotnewitem", OnGotNewItem)
+	end
 end)
 
 --abigail添加复仇属性
@@ -431,3 +505,4 @@ AddStategraphPostInit("wilson_client", function(sg)
         end
     end
 end)
+

@@ -1,6 +1,10 @@
 local _G = GLOBAL
-env.ACTIONS = GLOBAL.ACTIONS
-env.ActionHandler = GLOBAL.ActionHandler
+local ACTIONS = _G.ACTIONS
+local ActionHandler = _G.ActionHandler
+local State = _G.State
+local FRAMES = _G.FRAMES
+local TimeEvent = _G.TimeEvent
+local EventHandler = _G.EventHandler
 
 --[[
 添加新动作
@@ -8,8 +12,7 @@ env.ActionHandler = GLOBAL.ActionHandler
 --祈祷动作
 AddAction("PRAY",_G.STRINGS.TUM.PRAY,function(act)
     if act.doer ~= nil and act.invobject ~= nil and act.invobject.components.prayable ~= nil then
-        act.invobject.components.prayable:StartPray(act.invobject,act.doer)
-        return true
+        return act.invobject.components.prayable:StartPray(act.invobject,act.doer)
     end
 end)
 AddComponentAction("INVENTORY", "prayable", function(inst,doer,actions,right)
@@ -36,6 +39,114 @@ end)
 AddStategraphActionHandler("wilson",ActionHandler(ACTIONS.CALL, "play_horn"))
 AddStategraphActionHandler("wilson_client",ActionHandler(ACTIONS.CALL,"play_horn"))
 
+--野蛮冲撞
+AddAction("COLLIDE",_G.STRINGS.TUM.COLLIDE, function(act)
+    local act_pos = act:GetActionPoint()
+    if act.invobject ~= nil 
+        and act.doer ~= nil
+        and act.doer.sg ~= nil
+        --and act.doer.sg.currentstate.name == "portal_jumpin_pre"
+        and act_pos ~= nil
+        and not act.doer:HasTag("playerghost")
+        and act.doer:HasTag("wxrunhit")
+        and act.doer.components.timer ~= nil 
+        and not act.doer.components.timer:TimerExists("wxrunhit") then
+        act.doer.sg:GoToState("wxrunhit", act_pos)
+        act.doer.components.timer:StartTimer("wxrunhit", 10)
+        return true
+    end
+end)
+
+AddComponentAction("SCENE", "combat", function(inst, doer, actions, right) 
+    if right and not doer.replica.rider:IsRiding() and doer:HasTag("wxrunhit")
+        and inst.replica.combat ~= nil and inst.replica.combat:CanBeAttacked(doer)
+        and doer.components.timer ~= nil 
+        and not doer.components.timer:TimerExists("wxrunhit") then
+        table.insert(actions, ACTIONS.COLLIDE)
+    end
+end)
+
+--AddStategraphActionHandler("wilson",ActionHandler(ACTIONS.COLLIDE, "wxrunhit"))
+--AddStategraphActionHandler("wilson_client",ActionHandler(ACTIONS.COLLIDE, "wxrunhit"))
+
+------根据actions 修改stategraph
+AddStategraphState("wilson", State{
+    name = "wxrunhit",
+    tags = {"moving", "running", "wxrunhit"},
+    onenter = function(inst, dest)
+        local buffaction = inst:GetBufferedAction()
+        local target = buffaction ~= nil and buffaction.target or nil
+        inst.components.locomotor:Stop()
+        if target ~= nil and target:IsValid() then
+            inst:FacePoint(target:GetPosition())
+        end
+        inst.AnimState:SetBank("rook")
+        inst.AnimState:SetBuild("rook_build")
+        --inst.Transform:SetScale(0.6,0.6,0.6)
+        inst.AnimState:PlayAnimation("atk", true)
+        
+        inst.components.locomotor.runspeed = 20
+        --inst.components.locomotor:GoToPoint(dest, nil, true)
+        print("test----------------")
+        inst.sg:SetTimeout(2 * FRAMES)
+    end,
+    onupdate = function(inst)
+        inst.components.locomotor:RunForward()
+    end,
+    timeline = {
+        TimeEvent(0*FRAMES, function(inst) inst.components.combat:DoAttack() end),
+        TimeEvent(35*FRAMES, function(inst) inst.components.combat:DoAttack() end),
+        TimeEvent(70*FRAMES, function(inst) inst.components.combat:DoAttack() end),
+    },
+    ontimeout = function(inst)
+        inst.sg:GoToState("idle")
+    end,
+    events = {
+        EventHandler("onreachdestination", function(inst)
+            inst.sg:GoToState("idle")
+        end),
+        EventHandler("animqueueover", function(inst) inst.sg:GoToState("idle") end),
+    },
+    onexit = function(inst)
+        inst.components.locomotor.runspeed = 6
+        inst.AnimState:SetBank("wilson")
+        inst.AnimState:SetBuild("wx78")
+    end,
+})
+
+AddStategraphState("wilson_client", State{
+    name = "wxrunhit",
+    tags = {"moving", "running", "wxrunhit"},
+    onenter = function(inst, dest)
+        inst.components.locomotor:Stop()
+        local target = buffaction ~= nil and buffaction.target or nil
+        inst.components.locomotor:Stop()
+        if target ~= nil and target:IsValid() then
+            inst:FacePoint(target:GetPosition())
+        end
+        inst.sg:SetTimeout(2 * FRAMES)
+        --inst.components.locomotor.runspeed = 60
+        --inst.components.locomotor:GoToPoint(dest, nil, true)
+    end,
+    onupdate = function(inst)
+        --inst.components.locomotor:RunForward()
+    end,
+    timeline = {
+        
+    },
+    ontimeout = function(inst)
+        inst.sg:GoToState("idle")
+    end,
+    events = {
+        EventHandler("onreachdestination", function(inst)
+            inst.sg:GoToState("idle")
+        end),
+        EventHandler("animqueueover", function(inst) inst.sg:GoToState("idle") end),
+    },
+    onexit = function(inst)
+        --inst.components.locomotor.runspeed = 6
+    end,
+})
 
 
 --[[
