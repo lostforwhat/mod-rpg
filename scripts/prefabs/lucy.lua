@@ -90,7 +90,7 @@ local function onequip(inst, owner)
     owner.AnimState:Show("ARM_carry")
     owner.AnimState:Hide("ARM_normal")
     if owner.components.skilldata and owner.components.skilldata.skills["flylucy"] then
-        local level = owner.components.skilldata.skills["flylucy"].level_fn(owner) or 0
+        local level = owner.components.skilldata.GetLevel("flylucy") or 0
         inst.components.weapon:SetRange(5 + level * .5)
     end
 end
@@ -160,8 +160,8 @@ local function OnHit(inst, owner, target)
     else
         ReturnToOwner(inst, owner)
         if target ~= nil and target.components.combat then
-            if owner.components.skilldata and owner.components.skilldata.skills["flylucy"] then
-                local level = owner.components.skilldata.skills["flylucy"].level_fn(owner) or 0
+            if owner.components.skilldata and owner.components.skilldata["flylucy"] then
+                local level = owner.components.skilldata.GetLevel("flylucy") or 0
                 local extra_damage = math.random(2, 10) * level
                 target.components.combat:GetAttacked(owner, extra_damage)
             end
