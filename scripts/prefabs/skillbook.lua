@@ -48,6 +48,8 @@ local function fn()
     inst.AnimState:PlayAnimation("idle")
     inst.Transform:SetScale(0.8, 0.8, 1)
 
+    inst:AddTag("skillbook")
+
     inst:AddTag("_named")
     inst:SetPrefabName("skillbook")
     MakeInventoryFloatable(inst, "med", nil, 0.75)

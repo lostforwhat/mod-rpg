@@ -739,8 +739,31 @@ skill_constant = {
 				owner:RemoveTag("cookmaster")
 			end
 		end
-	}
-	
+	},
+	{
+		id="pickmaster",
+		name="快速采集",
+		effect_fn=function(self, owner) 
+			local level = self:level_fn(owner)
+			if level > 0 then
+				owner:AddTag("pickmaster")
+			else
+				owner:RemoveTag("pickmaster")
+			end
+		end
+	},
+	{
+		id="stealer",
+		name="探云手",
+		effect_fn=function(self, owner) 
+			local level = self:level_fn(owner)
+			if level > 0 then
+				owner:AddTag("stealer")
+			else
+				owner:RemoveTag("stealer")
+			end
+		end
+	},
 }
 
 local skills_str = {unknown="???"}

@@ -37,7 +37,7 @@ function Purchase:OnLoad(data)
 end
 
 function Purchase:ResetTemp()
-	if self.spend_temp > 0 then
+	if self.spend_temp ~= nil and self.spend_temp > 0 then
 		self:CoinDoDelta(self.spend_temp)
 	end
 end

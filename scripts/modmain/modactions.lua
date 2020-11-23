@@ -21,8 +21,15 @@ AddComponentAction("INVENTORY", "prayable", function(inst,doer,actions,right)
     end
 end)
 
-AddStategraphActionHandler("wilson",ActionHandler(ACTIONS.PRAY, "give"))
-AddStategraphActionHandler("wilson_client",ActionHandler(ACTIONS.PRAY,"give"))
+local function prayfn(inst, action)
+    if action.invobject ~= nil and action.invobject:HasTag("skillbook") then
+        return "dolongaction"
+    end
+    return "give"
+end
+
+AddStategraphActionHandler("wilson",ActionHandler(ACTIONS.PRAY, prayfn))
+AddStategraphActionHandler("wilson_client",ActionHandler(ACTIONS.PRAY, prayfn))
 
 --召集
 AddAction("CALL",_G.STRINGS.TUM.CALL,function(act)
@@ -153,6 +160,24 @@ AddStategraphState("wilson_client", State{
 以下代码修改原action，添加mod需要的逻辑，注册event等
 并非新增action
 ]]
+
+local function NewQuickAction(inst, action)
+    if inst and inst:HasTag("pickmaster") then
+        return "doshortaction"
+    elseif action.target and action.target.components.pickable then
+        if action.target.components.pickable.quickpick then
+            return "doshortaction"
+        else
+            return "dolongaction"
+        end
+    else 
+        return "dolongaction"
+    end
+end
+
+AddStategraphActionHandler("wilson", ActionHandler(ACTIONS.PICK, NewQuickAction))
+AddStategraphActionHandler("wilson", ActionHandler(ACTIONS.TAKEITEM, NewQuickAction))
+AddStategraphActionHandler("wilson", ActionHandler(ACTIONS.HARVEST, NewQuickAction))
 
 --修改give逻辑
 local GIVE = ACTIONS.GIVE

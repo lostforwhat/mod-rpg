@@ -115,7 +115,7 @@ AddPlayerPostInit(function(inst)
 				inst.components.attackback:SetPercent(1)
 			end
 			if prefab == "winona" then
-				
+				inst.components.dodge:AddExtraChance("player", 0.01)
 			end
 			if prefab == "wickerbottom" then
 				inst.components.skilldata:SetLevel("newbookbuilder", 1)
@@ -124,10 +124,10 @@ AddPlayerPostInit(function(inst)
 				inst.components.dodge:AddExtraChance("player", 0.01)
 			end
 			if prefab == "woodie" then
-
+				inst.components.health.externalabsorbmodifiers:SetModifier("player", 1.01)
 			end
 			if prefab == "wormwood" then
-
+				inst.components.attackback:SetPercent(1)
 			end
 			if prefab == "wurt" then
 				inst.components.dodge:AddExtraChance("player", 0.01)
@@ -139,6 +139,7 @@ AddPlayerPostInit(function(inst)
 
 			end
 			if prefab == "warly" then
+				inst.components.combat:SetRange(2.5)
 				inst.components.skilldata:SetLevel("memorykill", 1)
 			end
 		--end)

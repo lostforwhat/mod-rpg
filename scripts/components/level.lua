@@ -153,7 +153,7 @@ function Level:OnSave()
 	return {
 		level = self.level or 1,
 		xp = self.xp or 0,
-		totalxp = self.totalxp or self.xp or 0
+		totalxp = self.totalxp or self.xp or 0,
 		deathtimes = self.deathtimes or 0
 	}
 end
