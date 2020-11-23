@@ -28,6 +28,8 @@ local TaskData = Class(function(self, inst)
     --主机临时数据，无需保存
     self.killed_temp = {} --临时存储击杀数据，防止重复击杀判定
 
+    self.complete_time = nil
+    self.killboss = 0
 end,
 nil,
 onchangefn)
@@ -61,6 +63,8 @@ function TaskData:OnSave()
 	data.tumbleweednum = self.tumbleweednum or 0
 	data.eat_types = self.eat_types or {}
 	data.shadowboss_killed = self.shadowboss_killed or {}
+	data.complete_time = self.complete_time or nil
+	data.killboss = self.killboss or 0
 	return data
 end
 
@@ -143,6 +147,7 @@ function TaskData:AllCompletedCheck()
 			end
 		end
 		self:AddOne('all')
+		self.complete_time = os.date("%Y-%m-%d %X")
 		return true
 	else
 		return true

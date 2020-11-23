@@ -353,7 +353,7 @@ skill_constant = {
 	},
 	{
 		id="throwrocks",
-		name="徒手投石",
+		name="飞石术",
 		max_level=11,
 		exclusive={"winona"},
 		desc_fn=function(self, owner)
@@ -498,7 +498,7 @@ skill_constant = {
 	},
 	{
 		id="smoothskin",
-		name="光滑体表",
+		name="如鱼得水",
 		max_level=20,
 		exclusive={"wurt"},
 		desc_fn=function(self, owner)

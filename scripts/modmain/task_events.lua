@@ -109,7 +109,7 @@ local function OnDeath(inst, data)
 
     --死亡惩罚
     if inst.components.level then
-        inst.components.level:ReduceLevel()
+        inst.components.level:ReduceXpOnDeath()
     end
 end
 
@@ -140,6 +140,7 @@ local function OnKilled(inst, data)
     if victim:HasTag("monster") then
 	    taskdata:AddOne("kill_100")
 	    taskdata:AddOne("kill_1000")
+        taskdata:AddOne("kill_9999")
 	end
 	local prefab = victim.prefab
 	if string.find(prefab, "spider") then
@@ -288,7 +289,7 @@ local function OnKilled(inst, data)
     		for k, v in pairs(ents) do
     			v.components.taskdata:AddOne("kill_stalker_atrium")
     		end
-    	elseif prefab == "klaus" and inst:IsUnchained() then
+    	elseif prefab == "klaus" and victim:IsUnchained() then
     		for k, v in pairs(ents) do
     			v.components.taskdata:AddOne("kill_klaus")
     		end
@@ -321,6 +322,10 @@ local function OnKilled(inst, data)
     			v.components.taskdata:AddOne("kill_crabking")
     		end
     	end
+        if not (prefab == "klaus" and not victim:IsUnchained()) then
+            taskdata:AddOne("kill_boss_100")
+            taskdata.killboss = taskdata.killboss + 1
+        end
     	-- 此处添加重复击杀boss获得奖励,注意排除一段克劳斯
 
         local health = victim.components.health.maxhealth or 0

@@ -139,6 +139,13 @@ task_data = {
 		need=1000,
 		reward=3
 	},
+	kill_9999 = {
+		name="杀戮",
+		desc="击杀%s只怪物",
+		need=9999,
+		reward=5,
+		hide=true
+	},
 	kill_spider_100 = {
 		name="清理蜘蛛",
 		desc="击杀%s只蜘蛛",
@@ -421,6 +428,13 @@ task_data = {
 		desc="击杀帝王蟹",
 		need=1,
 		reward=6
+	},
+	kill_boss_100 = {
+		name="巨人杀手",
+		desc="击杀BOSS %s次",
+		need=100,
+		reward=9,
+		hide=true
 	},
 
 	--伤害部分

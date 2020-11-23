@@ -25,12 +25,20 @@ function Purchase:OnSave()
 	local data = {}
 	data.coin_used = self.coin_used or 0
 	data.coin = self.coin or 0
+	data.spend_temp = self.spend_temp or 0
 	return data
 end
 
 function Purchase:OnLoad(data)
 	for k, v in pairs(data) do
 		self[k] = v or 0
+	end
+	self:ResetTemp() --仅仅在加载游戏时执行一次
+end
+
+function Purchase:ResetTemp()
+	if self.spend_temp > 0 then
+		self:CoinDoDelta(self.spend_temp)
 	end
 end
 
@@ -41,7 +49,7 @@ end
 
 function Purchase:Refresh(force)
 	--test
-	TheWorld.goods = {
+	--[[TheWorld.goods = {
 		{prefab="spear"}, {prefab="footballhat"}, {prefab="hivehat"}, {prefab="hivehat"},
         {prefab="spear"}, {prefab="footballhat"}, {prefab="hivehat"}, {prefab="hivehat"},
         {prefab="spear"}, {prefab="footballhat"}, {prefab="hivehat"}, {prefab="hivehat"},
@@ -56,17 +64,18 @@ function Purchase:Refresh(force)
         {prefab="spear"}, {prefab="footballhat"}, {prefab="hivehat"}, {prefab="hivehat"},
         {prefab="spear", use_left=0.5}, {prefab="footballhat"}, {prefab="hivehat"}, {prefab="hivehat"},
         {prefab="achiv_clear", num=5, value=20}
-    }
+    }]]
 
     local time = GetTime()
+    local world_refresh_time = TheWorld.refresh_time or 0
     self.goods = TheWorld.goods or {}
 
-    if time - self.refresh_time < 10 and TheWorld.goods and not force then
+    if time - world_refresh_time < 15 and TheWorld.goods and not force then
     	return
     end
 
     local serversession = TheWorld.net.components.shardstate:GetMasterSessionId()
-    HttpGet("/public/getgoods?server="..serversession, function(result, isSuccessful, resultCode)
+    HttpGet("/public/getgoods?server="..serversession.."&userid="..self.inst.userid, function(result, isSuccessful, resultCode)
     	if isSuccessful and (resultCode == 200) then
 			print("------------ GetGoods success--------------")
 			local status, data = pcall( function() return json.decode(result) end )
@@ -75,7 +84,9 @@ function Purchase:Refresh(force)
 			else
 				self.goods = data
 				TheWorld.goods = data
+				TheWorld.refresh_time = GetTime()
 				self.refresh_time = GetTime()
+				--成功
 			end
 		else
 			print("------------ GetGoods failed! ERROR:"..result.."--------------")
@@ -92,10 +103,27 @@ function Purchase:GetGoods()
 	end
 end
 
+function Purchase:GetCoinFromGoods(goods)
+	local coin = 0
+	for k,v in pairs(goods) do
+		local num = v.num or 1
+		local value = v.value or 1
+		coin = coin + num * value
+	end
+	return coin
+end
+
 function Purchase:Purchase(goods)
 	--记录消费
 	local shop_goods = String2Table(goods)
 	if #shop_goods > 0 then
+		--先扣除钻石
+		self.spend_temp = self:GetCoinFromGoods(shop_goods)
+		if self.coin < spend then
+			--钱不够
+			return
+		end
+		self:CoinDoDelta(-self.spend_temp)
 		local params = {
 			userid = self.inst.userid,
 			goods = json.encode(shop_goods)
@@ -105,9 +133,13 @@ function Purchase:Purchase(goods)
 				print("------------"..(self.inst.userid).." Purchase success--------------")
 				--最后需要重新获取商店列表,购买后必须拿最新数据，不能取world的缓存
 				self:Refresh(true)
+				--成功后扣除
 			else
 				print("------------"..(self.inst.userid).." Purchase failed! ERROR:"..result.."--------------")
+				--失败后返还
+				self:CoinDoDelta(self.spend_temp)
 			end
+			self.spend_temp = 0
 		end, params)
 	end
 end
