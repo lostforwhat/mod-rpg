@@ -123,5 +123,6 @@ modimport("scripts/modmain/modrecipes.lua")
 modimport("scripts/modmain/extra_slots.lua")
 modimport("scripts/modmain/monster_enhancement.lua")
 modimport("scripts/modmain/worldregrowth.lua")
+modimport("scripts/modmain/asyncworld.lua")
 --debug
 modimport("scripts/modmain/debug.lua")

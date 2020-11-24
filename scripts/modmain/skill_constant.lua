@@ -519,6 +519,15 @@ skill_constant = {
 		name="额外饱腹",
 		cost=5,
 		max_level=100,
+		desc_fn=function(self, owner)
+			local desc_str = self.name
+			local level = self:level_fn(owner)
+			local max_level = self.max_level or 1
+			local max = level >= max_level and " (Max)" or ""
+			desc_str = desc_str.."\n Lv:"..level..max.."\n"
+			.."增加最大饥饿值: "..(level)
+			return desc_str
+		end,
 		effect_fn=function(self, owner) 
 			if owner.components.extrameta then
 				local step = self.step or 1
@@ -532,6 +541,15 @@ skill_constant = {
 		name="额外精神",
 		cost=5,
 		max_level=100,
+		desc_fn=function(self, owner)
+			local desc_str = self.name
+			local level = self:level_fn(owner)
+			local max_level = self.max_level or 1
+			local max = level >= max_level and " (Max)" or ""
+			desc_str = desc_str.."\n Lv:"..level..max.."\n"
+			.."增加最大精神值: "..(level)
+			return desc_str
+		end,
 		effect_fn=function(self, owner) 
 			if owner.components.extrameta then
 				local step = self.step or 1
@@ -545,6 +563,15 @@ skill_constant = {
 		name="额外生命",
 		cost=6,
 		max_level=100,
+		desc_fn=function(self, owner)
+			local desc_str = self.name
+			local level = self:level_fn(owner)
+			local max_level = self.max_level or 1
+			local max = level >= max_level and " (Max)" or ""
+			desc_str = desc_str.."\n Lv:"..level..max.."\n"
+			.."增加最大生命值: "..(level)
+			return desc_str
+		end,
 		effect_fn=function(self, owner) 
 			if owner.components.extrameta then
 				local step = self.step or 1
@@ -558,6 +585,15 @@ skill_constant = {
 		name="附加伤害",
 		cost=12,
 		max_level=100,
+		desc_fn=function(self, owner)
+			local desc_str = self.name
+			local level = self:level_fn(owner)
+			local max_level = self.max_level or 1
+			local max = level >= max_level and " (Max)" or ""
+			desc_str = desc_str.."\n Lv:"..level..max.."\n"
+			.."每次攻击附加伤害: "..(level)
+			return desc_str
+		end,
 		effect_fn=function(self, owner) 
 			if owner.components.extradamage then
 				local step = self.step or 1
@@ -570,7 +606,17 @@ skill_constant = {
 		id="extra_speed",
 		name="额外移速",
 		cost=10,
+		step=0.01,
 		max_level=10,
+		desc_fn=function(self, owner)
+			local desc_str = self.name
+			local level = self:level_fn(owner)
+			local max_level = self.max_level or 1
+			local max = level >= max_level and " (Max)" or ""
+			desc_str = desc_str.."\n Lv:"..level..max.."\n"
+			.."增加移动速度: "..(level*self.step*100).."%"
+			return desc_str
+		end,
 		effect_fn=function(self, owner) 
 			if owner.components.locomotor then
 				local step = self.step or 0.01
@@ -583,7 +629,17 @@ skill_constant = {
 		id="crit",
 		name="暴击",
 		cost=5,
+		step=0.01,
 		max_level=60,
+		desc_fn=function(self, owner)
+			local desc_str = self.name
+			local level = self:level_fn(owner)
+			local max_level = self.max_level or 1
+			local max = level >= max_level and " (Max)" or ""
+			desc_str = desc_str.."\n Lv:"..level..max.."\n"
+			.."增加暴击几率: "..(level*self.step*100).."%"
+			return desc_str
+		end,
 		effect_fn=function(self, owner) 
 			if owner.components.crit then
 				local step = self.step or 0.01
@@ -598,6 +654,15 @@ skill_constant = {
 		cost=10,
 		step=1,
 		max_level=20,
+		desc_fn=function(self, owner)
+			local desc_str = self.name
+			local level = self:level_fn(owner)
+			local max_level = self.max_level or 1
+			local max = level >= max_level and " (Max)" or ""
+			desc_str = desc_str.."\n Lv:"..level..max.."\n"
+			.."每次攻击恢复当前伤害"..(level*self.step).."%的生命值"
+			return desc_str
+		end,
 		effect_fn=function(self, owner) 
 			if owner.components.lifesteal then
 				local step = self.step or 1
@@ -611,6 +676,15 @@ skill_constant = {
 		name="力量",
 		cost=10,
 		max_level=20,
+		desc_fn=function(self, owner)
+			local desc_str = self.name
+			local level = self:level_fn(owner)
+			local max_level = self.max_level or 1
+			local max = level >= max_level and " (Max)" or ""
+			desc_str = desc_str.."\n Lv:"..level..max.."\n"
+			.."基础伤害提升: "..(level).."%"
+			return desc_str
+		end,
 		effect_fn=function(self, owner) 
 			if owner.components.combat then
 				local step = self.step or 0.01
@@ -623,7 +697,17 @@ skill_constant = {
 		id="miss",
 		name="闪避",
 		cost=20,
+		step=0.01,
 		max_level=10,
+		desc_fn=function(self, owner)
+			local desc_str = self.name
+			local level = self:level_fn(owner)
+			local max_level = self.max_level or 1
+			local max = level >= max_level and " (Max)" or ""
+			desc_str = desc_str.."\n Lv:"..level..max.."\n"
+			.."增加闪避几率: "..(level*self.step*100).."%"
+			return desc_str
+		end,
 		effect_fn=function(self, owner) 
 			if owner.components.dodge then
 				local step = self.step or 0.01
@@ -636,7 +720,17 @@ skill_constant = {
 		id="attackback",
 		name="伤害反弹",
 		cost=5,
+		step=1,
 		max_level=100,
+		desc_fn=function(self, owner)
+			local desc_str = self.name
+			local level = self:level_fn(owner)
+			local max_level = self.max_level or 1
+			local max = level >= max_level and " (Max)" or ""
+			desc_str = desc_str.."\n Lv:"..level..max.."\n"
+			.."增加荆棘值："..(level*self.step).."%"
+			return desc_str
+		end,
 		effect_fn=function(self, owner) 
 			if owner.components.attackback then
 				local step = self.step or 1
@@ -648,9 +742,20 @@ skill_constant = {
 	{
 		id="attackbroken",
 		name="弱点击破",
-		cost=30,
+		--cost=30,
 		max_level=5,
 		step=0.02,
+		desc_fn=function(self, owner)
+			local desc_str = self.name
+			local level = self:level_fn(owner)
+			local max_level = self.max_level or 1
+			local max = level >= max_level and " (Max)" or ""
+			desc_str = desc_str.."\n Lv:"..level..max.."\n"
+			.."攻击有几率附加基于目标最大生命值的伤害\n"
+			.."触发几率: "..(level*self.step*100).."%\n"
+			.."伤害值: "..(level*5).."%"
+			return desc_str
+		end,
 		effect_fn=function(self, owner) 
 			if owner.components.attackbroken then
 				local step = self.step or 0.01
@@ -664,6 +769,15 @@ skill_constant = {
 		id="attackdeath",
 		name="致死",
 		--cost=80,
+		desc_fn=function(self, owner)
+			local desc_str = self.name
+			local level = self:level_fn(owner)
+			local max_level = self.max_level or 1
+			local max = level >= max_level and " (Max)" or ""
+			desc_str = desc_str.."\n Lv:"..level..max.."\n"
+			.."每次攻击有"..(level).."%几率直接使目标死亡"
+			return desc_str
+		end,
 		effect_fn=function(self, owner) 
 			if owner.components.attackdeath then
 				local step = self.step or 0.01
@@ -674,10 +788,19 @@ skill_constant = {
 	},
 	{
 		id="attackfrozen",
-		name="冰冻",
+		name="冰霜攻击",
 		cost=20,
 		max_level=5,
 		step=0.05,
+		desc_fn=function(self, owner)
+			local desc_str = self.name
+			local level = self:level_fn(owner)
+			local max_level = self.max_level or 1
+			local max = level >= max_level and " (Max)" or ""
+			desc_str = desc_str.."\n Lv:"..level..max.."\n"
+			.."攻击时有几率使目标冰冻："..(level*self.step*100).."%"
+			return desc_str
+		end,
 		effect_fn=function(self, owner) 
 			if owner.components.attackfrozen then
 				local step = self.step or 0.01
@@ -693,6 +816,15 @@ skill_constant = {
 		id="fishmaster",
 		name="快速垂钓",
 		cost=40,
+		desc_fn=function(self, owner)
+			local desc_str = self.name
+			local level = self:level_fn(owner)
+			local max_level = self.max_level or 1
+			local max = level >= max_level and " (Max)" or ""
+			desc_str = desc_str.."\n Lv:"..level..max.."\n"
+			.."提升钓鱼技巧，一秒上钩"
+			return desc_str
+		end,
 		effect_fn=function(self, owner) 
 			local level = self:level_fn(owner)
 			if level > 0 then
@@ -706,6 +838,15 @@ skill_constant = {
 		id="chopmaster",
 		name="一刀伐木",
 		cost=40,
+		desc_fn=function(self, owner)
+			local desc_str = self.name
+			local level = self:level_fn(owner)
+			local max_level = self.max_level or 1
+			local max = level >= max_level and " (Max)" or ""
+			desc_str = desc_str.."\n Lv:"..level..max.."\n"
+			.."伐木能手，一刀砍倒"
+			return desc_str
+		end,
 		effect_fn=function(self, owner) 
 			local level = self:level_fn(owner)
 			if level > 0 then
@@ -719,6 +860,15 @@ skill_constant = {
 		id="minemaster",
 		name="快速采矿",
 		cost=40,
+		desc_fn=function(self, owner)
+			local desc_str = self.name
+			local level = self:level_fn(owner)
+			local max_level = self.max_level or 1
+			local max = level >= max_level and " (Max)" or ""
+			desc_str = desc_str.."\n Lv:"..level..max.."\n"
+			.."再多的矿，一秒挖光"
+			return desc_str
+		end,
 		effect_fn=function(self, owner) 
 			local level = self:level_fn(owner)
 			if level > 0 then
@@ -731,6 +881,15 @@ skill_constant = {
 	{
 		id="cookmaster",
 		name="快速烹饪",
+		desc_fn=function(self, owner)
+			local desc_str = self.name
+			local level = self:level_fn(owner)
+			local max_level = self.max_level or 1
+			local max = level >= max_level and " (Max)" or ""
+			desc_str = desc_str.."\n Lv:"..level..max.."\n"
+			.."加大火力，即刻完成烹饪"
+			return desc_str
+		end,
 		effect_fn=function(self, owner) 
 			local level = self:level_fn(owner)
 			if level > 0 then
@@ -743,6 +902,15 @@ skill_constant = {
 	{
 		id="pickmaster",
 		name="快速采集",
+		desc_fn=function(self, owner)
+			local desc_str = self.name
+			local level = self:level_fn(owner)
+			local max_level = self.max_level or 1
+			local max = level >= max_level and " (Max)" or ""
+			desc_str = desc_str.."\n Lv:"..level..max.."\n"
+			.."采集手法熟练到位"
+			return desc_str
+		end,
 		effect_fn=function(self, owner) 
 			local level = self:level_fn(owner)
 			if level > 0 then
@@ -755,12 +923,22 @@ skill_constant = {
 	{
 		id="stealer",
 		name="探云手",
+		max_level=5,
+		desc_fn=function(self, owner)
+			local desc_str = self.name
+			local level = self:level_fn(owner)
+			local max_level = self.max_level or 1
+			local max = level >= max_level and " (Max)" or ""
+			desc_str = desc_str.."\n Lv:"..level..max.."\n"
+			.."每次攻击有几率偷取物品\n"
+			.."当前几率: "..(level).."%"
+			return desc_str
+		end,
 		effect_fn=function(self, owner) 
 			local level = self:level_fn(owner)
-			if level > 0 then
-				owner:AddTag("stealer")
-			else
-				owner:RemoveTag("stealer")
+			if owner.components.stealer ~= nil then
+				owner.components.stealer.level = level
+				owner.components.stealer.chance = level * 0.01
 			end
 		end
 	},

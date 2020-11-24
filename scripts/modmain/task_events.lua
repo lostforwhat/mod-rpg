@@ -394,7 +394,22 @@ local function OnPick(inst, data)
 		end
 
         GiveExp(inst, 1)
+
+        --添加双倍采集逻辑
+        if data.loot ~= nil and inst:HasTag("doublepicker") then
+            if loot.components.stackable ~= nil then
+                local num = loot.components.stackable:StackSize() or 1
+                loot.components.stackable:SetStackSize(num * 2)
+            else
+                local new_loot = SpawnPrefab(loot.prefab)
+                if new_loot.components.inventoryitem ~= nil then
+                    new_loot.components.inventoryitem:InheritMoisture(_G.TheWorld.state.wetness, _G.TheWorld.state.iswet)
+                end
+                inst.components.inventory:GiveItem(new_loot, nil, item:GetPosition())
+            end
+        end
 	end
+
 end
 
 local function OnFinishedwork(inst, data)
@@ -639,6 +654,10 @@ local function OnMoisture(inst, data)
     end
 end
 
+local function OnMinHealth(inst, data)
+    
+end
+
 --玩家事件
 AddPlayerPostInit(function(inst)
 	--只进行服务端事件监听
@@ -708,6 +727,9 @@ AddPlayerPostInit(function(inst)
 
         --潮湿度
         inst:ListenForEvent("moisturedelta", OnMoisture)
+
+        --空血事件
+        inst:ListenForEvent("minhealth", OnMinHealth)
     end
 	
 end)

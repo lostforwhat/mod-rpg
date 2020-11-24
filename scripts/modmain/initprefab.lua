@@ -87,6 +87,7 @@ AddPlayerPostInit(function(inst)
 	end
 
 	if _G.TheWorld.ismastersim then
+		inst:AddComponent("stealer")
 		inst:AddComponent("timer")
 		--inst:DoTaskInTime(0.1, function() 
 	        local prefab = inst.prefab

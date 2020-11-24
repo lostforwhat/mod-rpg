@@ -97,7 +97,7 @@ local function MakeAnySkillBook()
     local skills = {}
     if skill_constant then
         for k, v in pairs(skill_constant) do
-            if v.exclusive == nil then
+            if v.exclusive == nil and not v.nobook then
                 table.insert(skills, v.id)
             end
         end
@@ -107,7 +107,28 @@ local function MakeAnySkillBook()
     return inst
 end
 
+local function MakeSkillbook(skill)
+    return function()
+        local inst = fn()
+        if not TheWorld.ismastersim then
+            return inst
+        end
+        
+        inst.skill = skill.id or "unknown"
+        inst.components.named:SetName(STRINGS.NAMES.SKILLS[string.upper(inst.skill)].." "..STRINGS.NAMES.SKILLBOOK)
+        return inst
+    end
+end
+
 local prefabs = {}
 table.insert(prefabs, Prefab("skillbook", MakeAnySkillBook, assets))
+
+if skill_constant then
+    for k, v in pairs(skill_constant) do
+        if v.exclusive == nil and not v.nobook then
+            table.insert(prefabs, Prefab(string.lower(v.id or "NONAME").."_skillbook", MakeSkillbook(v), assets))
+        end
+    end
+end
 
 return unpack(prefabs)
