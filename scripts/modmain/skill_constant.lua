@@ -809,7 +809,34 @@ skill_constant = {
 			end
 		end
 	},
-	
+	{
+		id="rejectdeath",
+		name="回光返照",
+		max_level=1,
+		hide=true,
+		desc_fn=function(self, owner)
+			local desc_str = self.name
+			local level = self:level_fn(owner)
+			local max_level = self.max_level or 1
+			local max = level >= max_level and " (Max)" or ""
+			desc_str = desc_str.."\n Lv:"..level..max.."\n"
+			.."免疫一次死亡并在5秒内持续回复50%生命值"
+			return desc_str
+		end,
+		effect_fn=function(self, owner) 
+			local level = self:level_fn(owner)
+			if level > 0 then
+				if owner.components.rejectdeath == nil then
+					owner:AddComponent("rejectdeath")
+				end
+
+			else
+				if owner.components.rejectdeath ~= nil then
+					owner:RemoveComponent("rejectdeath")
+				end
+			end
+		end
+	},
 
 	--生活技能
 	{

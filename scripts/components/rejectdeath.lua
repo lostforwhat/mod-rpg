@@ -19,6 +19,21 @@ local Rejectdeath = Class(function(self, inst)
     self.inst:ListenForEvent("minhealth", OnMinHealth)
 end)
 
+function Rejectdeath:OnSave()
+    return {
+        cd_time = self.cd_time or 0
+    }
+end
+
+function Rejectdeath:OnLoad(data)
+    if data ~= nil then
+        self.cd_time = data.cd_time or 0
+        if self.cd_time > 0 then
+            self.inst:StartUpdatingComponent(self)
+        end
+    end
+end
+
 function Rejectdeath:OnMinHealth()
     if self.cd_time <= 0 then
         local inst = self.inst
@@ -37,6 +52,12 @@ function Rejectdeath:OnMinHealth()
         self.cd_time = CD_TIME
         self.effect = true
         inst:StartUpdatingComponent(self)
+        for k=1, 5 do
+            inst:DoTaskInTime(k, function(inst) 
+                local maxhealth = inst.components.health.maxhealth or 0
+                inst.components.health:DoDelta(maxhealth * 0.1, nil, nil, true)
+            end)
+        end
     end
 end
 
@@ -44,8 +65,6 @@ function Rejectdeath:OnUpdate(dt)
     local inst = self.inst
     if self.task_time > 0 then
         self.task_time = self.task_time - dt
-        local maxhealth = inst.components.health.maxhealth or 0
-        inst.components.health:DoDelta(maxhealth * 0.1)
     else
         if self.effect then
             if inst._fx ~= nil then
