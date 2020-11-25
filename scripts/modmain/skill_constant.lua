@@ -95,6 +95,16 @@ local function MakeElectronic(inst, num)
     end
 end
 
+local function RedirectToBalloon(inst, attacker, ...)
+	local x, y, z = inst.Transform:GetWorldPosition()
+	local ents = TheSim:FindEntities(x, y, z, 25, {"balloon"}, {"NOCLICK", "notarget"})
+	for i, ent in ipairs(ents) do
+        if ent ~= attacker and ent:IsValid() then
+            return ent
+        end
+    end
+end
+
 -- skill constant
 skill_constant = {
 	--专属
@@ -300,9 +310,17 @@ skill_constant = {
 			local max_level = self.max_level or 1
 			local max = level >= max_level and " (Max)" or ""
 			desc_str = desc_str.."\n Lv:"..level..max.."\n"
-			..""
+			.."周围25码的气球会代替维斯承受伤害"
 			return desc_str
 		end,
+		effect_fn=function(self, owner)
+			local level = self:level_fn(owner)
+			if level > 0 then
+				inst.components.combat.exclusiveredirect = RedirectToBalloon
+			else
+				inst.components.combat.exclusiveredirect = nil
+			end
+		end
 	},
 	{
 		id="sanityprotection",
@@ -315,7 +333,8 @@ skill_constant = {
 			local max_level = self.max_level or 1
 			local max = level >= max_level and " (Max)" or ""
 			desc_str = desc_str.."\n Lv:"..level..max.."\n"
-			..""
+			.."拥有强大的精神修为，可以投影出精神护盾\n"
+			.."理智高于50%时每点理智可以抵消2点伤害"
 			return desc_str
 		end,
 	},
@@ -347,7 +366,8 @@ skill_constant = {
 			local max_level = self.max_level or 1
 			local max = level >= max_level and " (Max)" or ""
 			desc_str = desc_str.."\n Lv:"..level..max.."\n"
-			..""
+			.."合格的怪物是不需要理智的\n"
+			.."升级不提升理智值，双倍提升生命值"
 			return desc_str
 		end,
 	},

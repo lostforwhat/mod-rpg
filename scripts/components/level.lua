@@ -8,17 +8,17 @@ local MAX_LEVEL = 100
 ]]
 local function DefaultLevelUp(inst, level)
 	if inst.components.extrameta then
-		inst.components.extrameta.extra_hunger:SetModifier("levelup", level-1)
-		inst.components.extrameta.extra_sanity:SetModifier("levelup", level-1)
-		inst.components.extrameta.extra_health:SetModifier("levelup", level-1)
+		inst.components.extrameta.extra_hunger:SetModifier("levelup", level)
+		inst.components.extrameta.extra_sanity:SetModifier("levelup", level)
+		inst.components.extrameta.extra_health:SetModifier("levelup", level)
 	end
 end
 
 local function WxLevelUp(inst, level)
 	if inst.components.extrameta then
-		inst.components.extrameta.extra_hunger:SetModifier("levelup", (level-1)*2)
-		inst.components.extrameta.extra_sanity:SetModifier("levelup", (level-1)*2)
-		inst.components.extrameta.extra_health:SetModifier("levelup", (level-1)*2)
+		inst.components.extrameta.extra_hunger:SetModifier("levelup", (level)*2)
+		inst.components.extrameta.extra_sanity:SetModifier("levelup", (level)*2)
+		inst.components.extrameta.extra_health:SetModifier("levelup", (level)*2)
 	end
 	if inst.components.skilldata then
 		inst.components.skilldata:SetLevel("electricprotection", math.clamp(math.floor(level*0.05) + 1, 1, 5))
@@ -86,6 +86,13 @@ local function WoodieLevelUp(inst, level)
 	end
 end
 
+local function WebberLevelUp(inst, level)
+	if inst.components.extrameta then
+		inst.components.extrameta.extra_hunger:SetModifier("levelup", level)
+		inst.components.extrameta.extra_health:SetModifier("levelup", (level)*2)
+	end
+end
+
 local level_fn_data = {
 	wilson = DefaultLevelUp,
 	wendy = DefaultLevelUp,
@@ -103,7 +110,7 @@ local level_fn_data = {
 	walter = WalterLevelUp,
 	waxwell = DefaultLevelUp,
 	warly = DefaultLevelUp,
-	webber = DefaultLevelUp,
+	webber = WebberLevelUp,
 }
 
 local function RecalcMeta(inst, level)

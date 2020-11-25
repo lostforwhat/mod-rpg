@@ -89,3 +89,24 @@ function String2Table(str)
     
     return loadstring("return " .. str)()
 end
+
+function RetrieveLastEventListener(source, event, inst)
+    if inst == nil then
+        inst = source
+    end
+    local temp
+    for i,v in ipairs(source.event_listeners[event][inst]) do
+        temp = v
+    end
+    return temp
+end
+
+function RemoveLastEventListener(source, event, inst)
+    if inst == nil then
+        inst = source
+    end
+    local fn = RetrieveLastEventListener(source, event, inst)
+    if fn ~= nil then
+        inst:RemoveEventCallback(event, fn, source)
+    end
+end

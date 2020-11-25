@@ -52,10 +52,10 @@ function Rejectdeath:OnMinHealth()
         self.cd_time = CD_TIME
         self.effect = true
         inst:StartUpdatingComponent(self)
-        for k=1, 5 do
-            inst:DoTaskInTime(k, function(inst) 
+        for k=1, 10 do
+            inst:DoTaskInTime(k*.5, function(inst) 
                 local maxhealth = inst.components.health.maxhealth or 0
-                inst.components.health:DoDelta(maxhealth * 0.1, nil, nil, true)
+                inst.components.health:DoDelta(maxhealth * 0.05, nil, nil, true)
             end)
         end
     end
@@ -65,6 +65,9 @@ function Rejectdeath:OnUpdate(dt)
     local inst = self.inst
     if self.task_time > 0 then
         self.task_time = self.task_time - dt
+        if inst._fx ~= nil then
+            inst_fx.AnimState:SetMultColour(1, 1, 1, self.task_time * 0.2)
+        end
     else
         if self.effect then
             if inst._fx ~= nil then

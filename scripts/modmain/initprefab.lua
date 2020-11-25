@@ -8,6 +8,21 @@ local Vector3 = _G.Vector3
 local FRAMES = _G.FRAMES
 local TimeEvent = _G.TimeEvent
 
+local function RedirectDamageFn(inst, attacker, damage, weapon, stimuli)
+	local redirect_tagert = nil
+	if inst.components.combat ~= nil then
+		local exclusiveredirect = inst.components.combat.exclusiveredirect
+		if exclusiveredirect then
+			redirect_tagert = exclusiveredirect(inst, attacker, damage, weapon, stimuli)
+		end
+		if redirect_tagert == nil then
+			--此处写所有角色伤害转移策略
+
+		end
+	end
+	return redirect_tagert
+end
+
 --角色初始化
 AddPlayerPostInit(function(inst) 
 	inst:AddComponent("taskdata")
@@ -137,13 +152,17 @@ AddPlayerPostInit(function(inst)
 
 			end
 			if prefab == "waxwell" then
-
+				inst.components.skilldata:SetLevel("sanityprotection", 1)
 			end
 			if prefab == "warly" then
 				inst.components.combat:SetRange(2.5)
 				inst.components.skilldata:SetLevel("memorykill", 1)
 			end
 		--end)
+		--全局注册伤害转移方法
+		if inst.components.combat ~= nil then
+			inst.components.combat.redirectdamagefn = RedirectDamageFn
+		end
     end
 
 end)
@@ -208,7 +227,54 @@ AddPrefabPostInit("wortox", function(inst)
 		        inst._checksoulstask = inst:DoTaskInTime(0, CheckSoulsAdded)
 		    end
 		end
+		RemoveLastEventListener(inst, "gotnewitem")
 		inst:ListenForEvent("gotnewitem", OnGotNewItem)
+	end
+end)
+
+AddPrefabPostInit("wendy", function(inst) 
+	if _G.TheWorld.ismastersim then
+		if inst.components.health ~= nil then
+			inst.components.health.redirect = function(inst, amount, overtime, cause, ignore_invincible, afflicter, ignore_absorb) 
+				if amount < 0 then
+
+				end
+			end
+		end
+	end
+end)
+
+AddPrefabPostInit("waxwell", function(inst) 
+	if _G.TheWorld.ismastersim then
+		local function HealthRedirect(inst, amount, overtime, cause, ignore_invincible, afflicter, ignore_absorb)
+			if amount >= 0 or 
+				(not ignore_invincible and 
+					(inst.components.health:IsInvincible() or 
+						inst.components.health.inst.is_teleporting)) then
+				return false
+			end
+			if inst.components.sanity ~= nil then
+				local sanity_percent = inst.components.sanity:GetPercent() or 0
+				local current = inst.components.sanity.current or 0
+				if sanity_percent > 0.5 and current > 0 then					
+					if current + amount * 0.5 >= 0 then
+						if inst._shadow_fx == nil then
+							local inst._shadow_fx = SpawnPrefab("shadow_shield"..math.random(6))
+							inst._shadow_fx.entity:SetParent(inst.entity)
+							inst:DoTaskInTime(1, function() inst._shadow_fx=nil end)
+						end
+						inst.components.sanity:DoDelta(amount*0.5)
+					else
+						inst.components.sanity:DoDelta(current)
+						inst.components.Health:DoDelta(current + amount * 0.5, overtime, cause, ignore_invincible, afflicter, ignore_absorb)
+					end
+					return true
+				end
+			end
+		end
+		if inst.components.health ~= nil then
+			inst.components.health.redirect = HealthRedirect
+		end
 	end
 end)
 

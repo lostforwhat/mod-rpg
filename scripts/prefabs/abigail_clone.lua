@@ -409,6 +409,7 @@ local function fn()
     if not TheWorld.ismastersim then
         return inst
     end
+    inst.persists = false
 
     inst._playerlink = nil
 
