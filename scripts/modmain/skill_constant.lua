@@ -316,9 +316,9 @@ skill_constant = {
 		effect_fn=function(self, owner)
 			local level = self:level_fn(owner)
 			if level > 0 then
-				inst.components.combat.exclusiveredirect = RedirectToBalloon
+				owner.components.combat.exclusiveredirect = RedirectToBalloon
 			else
-				inst.components.combat.exclusiveredirect = nil
+				owner.components.combat.exclusiveredirect = nil
 			end
 		end
 	},
@@ -854,6 +854,29 @@ skill_constant = {
 				if owner.components.rejectdeath ~= nil then
 					owner:RemoveComponent("rejectdeath")
 				end
+			end
+		end
+	},
+	{
+		id="stealth",
+		name="伪装",
+		max_level=5,
+		hide=true,
+		desc_fn=function(self, owner)
+			local desc_str = self.name
+			local level = self:level_fn(owner)
+			local max_level = self.max_level or 1
+			local max = level >= max_level and " (Max)" or ""
+			desc_str = desc_str.."\n Lv:"..level..max.."\n"
+			.."短时间内进行伪装，怪物无法看到自己\n"
+			.."持续时间: "..(5 + level)
+			return desc_str
+		end,
+		effect_fn=function(self, owner) 
+			local level = self:level_fn(owner)
+			if owner.components.stealth then
+				owner.components.stealth:Enabled(level > 0)
+				owner.components.stealth.level = level
 			end
 		end
 	},

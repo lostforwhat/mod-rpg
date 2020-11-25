@@ -2,7 +2,11 @@ local function onskill(owner, skillid)
 	if owner.components.skilldata then
 		if owner.components.skilldata.skills then
 			local skill = owner.components.skilldata.skills[skillid]
-			if skill then
+			if skill and 
+				(skill.exclusive == nil or 
+				skill.exclusive == owner.prefab or
+				(type(skill.exclusive) == "table" and 
+					table.contains(skill.exclusive, owner.prefab))) then
 				if skill.effect_fn then
 					skill:effect_fn(owner)
 				end

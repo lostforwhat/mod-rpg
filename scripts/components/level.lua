@@ -93,6 +93,13 @@ local function WebberLevelUp(inst, level)
 	end
 end
 
+local function WesLevelUp(inst, level)
+	DefaultLevelUp(inst, level)
+	if inst.components.skilldata then
+		
+	end
+end
+
 local level_fn_data = {
 	wilson = DefaultLevelUp,
 	wendy = DefaultLevelUp,
@@ -103,7 +110,7 @@ local level_fn_data = {
 	wx78 = WxLevelUp,
 	winona = WinonaLevelUp,
 	wickerbottom = DefaultLevelUp,
-	wes = DefaultLevelUp,
+	wes = WesLevelUp,
 	woodie = WoodieLevelUp,
 	wormwood = WormwoodLevelUp,
 	wurt = WurtLevelUp,

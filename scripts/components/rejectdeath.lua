@@ -66,7 +66,8 @@ function Rejectdeath:OnUpdate(dt)
     if self.task_time > 0 then
         self.task_time = self.task_time - dt
         if inst._fx ~= nil then
-            inst_fx.AnimState:SetMultColour(1, 1, 1, self.task_time * 0.2)
+            local t = self.task_time * 0.2
+            inst._fx.AnimState:SetMultColour(t, t, t, t)
         end
     else
         if self.effect then

@@ -56,12 +56,12 @@ end
 --clonefn
 function Clone:StartClone()
 	if self.clonefn ~= nil then
-		inst:ListenForEvent("attacked", self.clonefn)
+		self.inst:ListenForEvent("attacked", self.clonefn)
 	end
 end
 
 function Clone:Init()
-	if inst.prefab == "abigail" then
+	if self.inst.prefab == "abigail" then
 		self:SetCloneFn(AbigailClone)
 		self:StartClone()
 	end

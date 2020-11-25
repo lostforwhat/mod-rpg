@@ -41,7 +41,7 @@ AddPlayerPostInit(function(inst)
 	inst:AddComponent("luck")
 	inst:AddComponent("extradamage")
 	inst:AddComponent("extrameta")
-
+	inst:AddComponent("stealth")
 	--inst:AddComponent("revenge")
 	local prefab = inst.prefab
 	if prefab == "wilson" then
@@ -138,6 +138,7 @@ AddPlayerPostInit(function(inst)
 			end
 			if prefab == "wes" then
 				inst.components.dodge:AddExtraChance("player", 0.01)
+				inst.components.skilldata:SetLevel("balloondummy", 1)
 			end
 			if prefab == "woodie" then
 				inst.components.health.externalabsorbmodifiers:SetModifier("player", 1.01)
@@ -259,7 +260,7 @@ AddPrefabPostInit("waxwell", function(inst)
 				if sanity_percent > 0.5 and current > 0 then					
 					if current + amount * 0.5 >= 0 then
 						if inst._shadow_fx == nil then
-							local inst._shadow_fx = SpawnPrefab("shadow_shield"..math.random(6))
+							inst._shadow_fx = SpawnPrefab("shadow_shield"..math.random(6))
 							inst._shadow_fx.entity:SetParent(inst.entity)
 							inst:DoTaskInTime(1, function() inst._shadow_fx=nil end)
 						end
