@@ -33,6 +33,15 @@ AddComponentPostInit("leader", function(self)
 	end
 end)
 
+AddComponentPostInit("follower", function(self) 
+	self.inst:ListenForEvent("killed", function(inst, data) 
+		local leader = self:GetLeader
+		if leader ~= nil and leader:HasTag("player") then
+			leader:PushEvent("killed", data)
+		end
+	end)
+end)
+
 --修改combat，注入暴击吸血致死等属性
 AddComponentPostInit("combat", function(self)
 	local function IsValidVictim(victim)

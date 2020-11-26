@@ -132,8 +132,29 @@ skill_constant = {
 		end
 	},
 	{
-		id="soulfire",
-		name="灵魂之火",
+		id="angrybernie",
+		name="伯尼之怒",
+		max_level=100,
+		exclusive={"willow"},
+		desc_fn=function(self, owner)
+			local desc_str = self.name
+			local level = self:level_fn(owner)
+			local max_level = self.max_level or 1
+			local max = level >= max_level and " (Max)" or ""
+			desc_str = desc_str.."\n Lv:"..level..max.."\n"
+			.."伯尼因为愤怒而强化，增加生命值和攻击力\n"
+			.."生命值: +"..(level * 10).."\n"
+			.."攻击力: +"..(level + 20)
+			return desc_str
+		end,
+		effect_fn=function(self, owner) 
+			local level = self:level_fn(owner)
+			
+		end
+	},
+	{
+		id="limbofire",
+		name="地狱之火",
 		max_level=1,
 		exclusive={"willow"},
 		desc_fn=function(self, owner)
@@ -142,7 +163,7 @@ skill_constant = {
 			local max_level = self.max_level or 1
 			local max = level >= max_level and " (Max)" or ""
 			desc_str = desc_str.."\n Lv:"..level..max.."\n"
-			..""
+			.."(未实现)"
 			return desc_str
 		end,
 		effect_fn=function(self, owner) 
@@ -512,9 +533,17 @@ skill_constant = {
 			local max_level = self.max_level or 1
 			local max = level >= max_level and " (Max)" or ""
 			desc_str = desc_str.."\n Lv:"..level..max.."\n"
-			..""
+			.."种子就是我最大的武器，上吧我的伙伴\n"
+			.."投掷伤害: " + (level * 2 + 10).."\n"
+			.."生成生物: " + (level + 5)
 			return desc_str
 		end,
+		effect_fn=function(self, owner)
+			local level = self:level_fn(owner)
+			if level > 0 then
+				owner:AddTag("seedsmagic")
+			end
+		end
 	},
 	{
 		id="smoothskin",

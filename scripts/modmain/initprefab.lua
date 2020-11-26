@@ -25,6 +25,7 @@ end
 
 --角色初始化
 AddPlayerPostInit(function(inst) 
+	inst:AddComponent("vip")
 	inst:AddComponent("taskdata")
 	inst:AddComponent("skilldata")
 	inst:AddComponent("purchase")
@@ -279,6 +280,16 @@ AddPrefabPostInit("waxwell", function(inst)
 	end
 end)
 
+--伯尼添加击杀事件
+AddPrefabPostInit("berniebig", function(inst) 
+	inst:ListenForEvent("killed", function(inst, data) 
+		if inst.brain ~= nil and inst.brain._leader ~= nil then
+			local player = inst.brain._leader
+			player:PushEvent("killed", data)
+		end
+	end)
+end)
+
 --abigail添加复仇属性
 AddPrefabPostInit("abigail", function(inst) 
 	inst:AddComponent("revenge")
@@ -382,8 +393,8 @@ local COMBAT_TAGS = { "_combat" }
 for _, v in ipairs(NO_TAGS_PVP) do
     table.insert(NO_TAGS, v)
 end
-for k, v in pairs(throwable_list) do
-    AddPrefabPostInit(k, function(inst)
+for _, m in pairs(throwable_list) do
+    AddPrefabPostInit(_, function(inst)
         if _G.TheWorld.ismastersim then
         	inst:AddComponent("equippable")
         	inst.components.equippable.restrictedtag = "throwrocks"
@@ -471,6 +482,102 @@ for k, v in pairs(throwable_list) do
     end)
 end
 
+local function SeedsBecomeWeapon(inst, owner)
+	if inst.components.weapon == nil then
+        inst:AddComponent("weapon")
+        local damage = 10
+        local range = 10
+        if owner.components.skilldata then
+        	local level = owner.components.skilldata:GetLevel("seedsmagic")
+        	damage = damage + level * 2
+        end
+        inst.components.weapon:SetDamage(damage)
+        inst.components.weapon:SetRange(range, range+2)
+    end
+end
+
+local function SpawnAtGround(prefab, x, y, z)
+	if _G.TheWorld.Map:IsPassableAtPoint(x, y, z) then
+        local item = SpawnPrefab(prefab)
+        item.Transform:SetPosition(x, y, z)
+        return item
+    end
+end
+
+local NO_PVP_TAGS = {"ghost", "player"}
+local function areahitcheck(target, attacker)
+	local leader = target.components.follower and target.components.follower:GetLeader() or nil
+	if leader == attacker then
+		return false
+	end
+	if not TheNet:GetPVPEnabled() then
+		for k,v in pairs(NO_PVP_TAGS) do
+			if target:HasTag(v) and (leader ~= nil and leader:HasTag(v)) then
+				return false
+			end
+		end
+	end
+	return true
+end
+
+local function SeedsOnHit(inst, attacker, target)
+	local num = 5
+	if attacker.components.skilldata then
+    	local level = attacker.components.skilldata:GetLevel("seedsmagic")
+    	num = 5 + level
+    end
+	--[[
+	local loot = SpawnLootPrefab(inst, "")
+	if loot ~= nil and loot.components.follower ~= nil and attacker.components.leader ~= nil then
+		attacker.components.leader:AddFollower(loot)
+	end
+	if loot.components.combat ~= nil and target ~= nil then
+		loot.components.combat:SetTarget(target)
+	end
+	]]
+	--root
+	local x,y,z = target.Transform:GetWorldPosition()
+	for k=1, num do
+        local angle = k * 2 * PI / num
+        local item = SpawnAtGround("deciduous_root", 2*math.cos(angle)+x, y, 2*math.sin(angle)+z)
+        if item ~= nil then
+        	item.components.combat:SetAreaDamage(TUNING.DECID_MONSTER_ROOT_ATTACK_RADIUS, 2, areahitcheck)
+    		item.components.combat:SetDefaultDamage(TUNING.DECID_MONSTER_DAMAGE)
+        	item:PushEvent("givetarget", { target = target, targetpos = Vector3(x,y,z), targetangle = angle, owner = inst })
+    		--击杀的话转移事件到玩家
+    		item:ListenForEvent("killed", function(item, data) attacker:PushEvent("killed", data) end)
+    	end
+    end
+    inst:Remove()
+end
+
+local function SeedsOnThrown(inst, owner, ...)
+	SeedsBecomeWeapon(inst, owner)
+	inst:AddTag("NOCLICK")
+    inst.persists = false
+end
+
+AddPrefabPostInit("seeds", function(inst) 
+	if _G.TheWorld.ismastersim then
+		inst:AddComponent("equippable")
+    	inst.components.equippable.restrictedtag = "seedsmagic"
+
+    	inst:AddComponent("projectile")
+    	inst.components.projectile:SetSpeed(30)
+    	inst.components.projectile:SetOnHitFn(SeedsOnHit)
+    	inst.components.projectile:SetOnThrownFn(SeedsOnThrown)
+    	inst.components.equippable:SetOnEquip(function(inst, owner)
+        	SeedsBecomeWeapon(inst, owner)
+        end)
+        inst.components.equippable:SetOnUnequip(function(inst, owner)
+        	if inst.components.weapon then
+        		inst:RemoveComponent("weapon")
+        	end
+        end)
+    	inst.components.equippable.equipstack = true
+	end
+end)
+
 AddPrefabPostInit("slingshot", function(inst)
 	if _G.TheWorld.ismastersim then
 		local old_onequipfn = inst.components.equippable.onequipfn
@@ -490,7 +597,12 @@ AddPrefabPostInit("slingshot", function(inst)
 	end
 end)
 
+--为所有武器添加等级
+AddPrefabPostInitAny(function(inst) 
+	if inst.components.weapon ~= nil then
 
+	end
+end)
 
 
 

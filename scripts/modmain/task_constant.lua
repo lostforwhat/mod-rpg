@@ -429,6 +429,13 @@ task_data = {
 		need=1,
 		reward=6
 	},
+	kill_klaus_rage = {
+		name="暴怒的克劳斯",
+		desc="击杀暴怒克劳斯",
+		need=1,
+		reward=10,
+		hide=true
+	},
 	kill_boss_100 = {
 		name="巨人杀手",
 		desc="击杀BOSS %s次",

@@ -293,6 +293,9 @@ local function OnKilled(inst, data)
     		for k, v in pairs(ents) do
     			v.components.taskdata:AddOne("kill_klaus")
     		end
+            if victim.enraged then
+                taskdata:AddOne("kill_klaus_rage")
+            end
     	elseif prefab == "antlion" then
     		for k, v in pairs(ents) do
     			v.components.taskdata:AddOne("kill_antlion")
@@ -655,7 +658,7 @@ local function OnMoisture(inst, data)
 end
 
 local function OnMinHealth(inst, data)
-    
+
 end
 
 --玩家事件

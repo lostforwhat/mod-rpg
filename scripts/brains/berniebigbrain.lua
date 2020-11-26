@@ -22,6 +22,14 @@ local MIN_ACTIVE_TIME = 4
 local DEACTIVATE_DELAY = 16
 local FOLLOWER_SANITY_THRESHOLD = .5
 
+local function SetLevel(self, leader)
+    if leader ~= nil then
+        local level = leader.components.skilldata and leader.components.skilldata:GetLevel("angrybernie") or 0
+        self.inst.components.health:SetMaxHealth(TUNING.BERNIE_BIG_HEALTH + level*10)
+        self.inst.components.combat:SetDefaultDamage(TUNING.BERNIE_BIG_DAMAGE + level + 20)
+    end
+end
+
 local function SetLeader(self, leader)
     if self._leader ~= leader then
         if self._leader ~= nil then
@@ -38,6 +46,7 @@ local function SetLeader(self, leader)
             end
         end
         self._leader = leader
+        SetLevel(self, leader)
     end
 end
 
@@ -57,8 +66,7 @@ local function ShouldDeactivate(self)
     for i, v in ipairs(AllPlayers) do
         if v:HasTag("bernieowner") and v.bigbernies == nil and (v.entity:IsVisible() or (v.sg ~= nil and v.sg.currentstate.name == "quicktele")) then
             if v.components.sanity:IsCrazy() 
-                or (v.components.sanity:GetPercent() < 0.5 and
-                 v.components.allachivcoin and v.components.allachivcoin.bernielevelup>0) then
+                or (v.components.sanity:GetPercent() < 0.5) then
                 local distsq = v:GetDistanceSqToPoint(x, y, z)
                 if distsq < (iscrazy and rangesq or FIND_LEADER_DIST_SQ) then
                     iscrazy = true
@@ -66,8 +74,7 @@ local function ShouldDeactivate(self)
                     closestleader = v
                 end
             elseif not iscrazy and v.components.sanity:GetPercent() < FOLLOWER_SANITY_THRESHOLD 
-                or (v.components.sanity:GetPercent() < 0.5 and
-                 v.components.allachivcoin and v.components.allachivcoin.bernielevelup>0) then
+                or (v.components.sanity:GetPercent() < 0.5) then
                 local distsq = v:GetDistanceSqToPoint(x, y, z)
                 if distsq < rangesq then
                     rangesq = distsq
@@ -96,8 +103,7 @@ local function KeepLeaderFn(inst, leader)
     return leader:IsValid()
         and (leader.entity:IsVisible() or (leader.sg ~= nil and leader.sg.currentstate.name == "quicktele"))
         and (leader.components.sanity:GetPercent() < FOLLOWER_SANITY_THRESHOLD 
-            or (leader.components.sanity:GetPercent() < 0.5 and
-                 leader.components.allachivcoin and leader.components.allachivcoin.bernielevelup>0))
+            or (leader.components.sanity:GetPercent() < 0.5))
         and inst:IsNear(leader, LOSE_LEADER_DIST_SQ)
 end
 

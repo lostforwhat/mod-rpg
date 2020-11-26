@@ -85,7 +85,7 @@ end
 
 local function keepPickerStop(picker)
     if picker.components.freezable then
-        picker.components.freezable:AddColdness(10, 2)
+        picker.components.freezable:AddColdness(10, 3)
     end
 end
 

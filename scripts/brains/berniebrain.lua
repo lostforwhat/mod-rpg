@@ -59,9 +59,7 @@ local function FindLeader(self)
     local my_platform = self.inst:GetCurrentPlatform()
     for i, v in ipairs(AllPlayers) do
         if (v.components.sanity:IsCrazy() or 
-                (v.components.sanity:GetPercent() < 0.5
-                and v.components.allachivcoin 
-                and v.components.allachivcoin.bernielevelup>0)) and v.entity:IsVisible() and my_platform == v:GetCurrentPlatform() then
+                (v.components.sanity:GetPercent() < 0.5)) and v.entity:IsVisible() and my_platform == v:GetCurrentPlatform() then
             local distsq = v:GetDistanceSqToPoint(x, y, z)
             if distsq < rangesq then
                 rangesq = distsq
@@ -89,9 +87,7 @@ local function ShouldGoBig(self)
             v.bigbernies == nil and
             v.blockbigbernies == nil and
             (v.components.sanity:IsCrazy() or 
-                (v.components.sanity:GetPercent() < 0.5
-                and v.components.allachivcoin 
-                and v.components.allachivcoin.bernielevelup>0)) and
+                (v.components.sanity:GetPercent() < 0.5)) and
             v.entity:IsVisible() and
             v:GetDistanceSqToPoint(x, y, z) < BIG_LEADER_DIST_SQ then
             self._leader = v

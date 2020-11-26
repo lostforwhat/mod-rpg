@@ -76,6 +76,7 @@ local function WormwoodLevelUp(inst, level)
 	DefaultLevelUp(inst, level)
 	if inst.components.skilldata then
 		inst.components.skilldata:SetLevel("photosynthesis", math.clamp(math.ceil(level * 0.5), 1, 20))
+		inst.components.skilldata:SetLevel("seedsmagic", math.clamp(math.ceil(level * 0.1), 1, 11))
 	end
 end
 
@@ -100,10 +101,17 @@ local function WesLevelUp(inst, level)
 	end
 end
 
+local function WillowLevelUp(inst, level)
+	DefaultLevelUp(inst, level)
+	if inst.components.skilldata then
+		inst.components.skilldata:SetLevel("angrybernie", level)
+	end
+end
+
 local level_fn_data = {
 	wilson = DefaultLevelUp,
 	wendy = DefaultLevelUp,
-	willow = DefaultLevelUp,
+	willow = WillowLevelUp,
 	wathgrithr = WathgrithrLevelUp,
 	wolfgang = WolfgangLevelUp,
 	wortox = WortoxLevelUp,

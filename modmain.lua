@@ -6,6 +6,7 @@ env.require = GLOBAL.require
 require 'modmain/loot_table'
 require 'modmain/task_constant'
 require 'modmain/skill_constant'
+require 'modmain/titles_constant'
 require 'modmain/modrpc'
 
 Assets = {
