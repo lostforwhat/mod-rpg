@@ -100,6 +100,18 @@ AddClassPostConstruct("screens/playerhud", function(self, anim, owner)
 		end
 	end
 
+	self.ShowTitlesDetail = function(_)
+		if self.titlesdetail == nil then
+			self.titlesdetail = self.controls.topleft_root:AddChild(TitlesDetail(self.owner))
+		end
+	end
+	self.CloseTitlesDetail = function(_)
+		if self.titlesdetail then
+			self.titlesdetail:Close()
+			self.titlesdetail = nil
+		end
+	end
+
 	--修改esc按键关闭窗口
 	local OldOnControl = self.OnControl
 	self.OnControl = function(_, control, down) 

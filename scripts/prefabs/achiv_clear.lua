@@ -4,22 +4,6 @@ local assets =
     Asset("ATLAS", "images/achiv_clear.xml"),
 }
 
-local function IsInTable(value, tbl)
-    for k,v in ipairs(tbl) do
-      if v == value then
-        return true
-      end
-    end
-    return false
-end
-
-local function StrToTable(str)
-    if str == nil or type(str) ~= "string" then
-        return
-    end
-    
-    return loadstring("return " .. str)()
-end
 
 local function OnPray(inst, prayers)
     if prayers and not prayers:HasTag("playerghost") then 

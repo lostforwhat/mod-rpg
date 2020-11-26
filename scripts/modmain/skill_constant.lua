@@ -7,7 +7,7 @@ local function areahitcheck(target, attacker)
 	end
 	if not TheNet:GetPVPEnabled() then
 		for k,v in pairs(NO_PVP_TAGS) do
-			if target:HasTag(v) and (leader ~= nil and leader:HasTag(v)) then
+			if target:HasTag(v) or (leader ~= nil and leader:HasTag(v)) then
 				return false
 			end
 		end
@@ -534,8 +534,8 @@ skill_constant = {
 			local max = level >= max_level and " (Max)" or ""
 			desc_str = desc_str.."\n Lv:"..level..max.."\n"
 			.."种子就是我最大的武器，上吧我的伙伴\n"
-			.."投掷伤害: " + (level * 2 + 10).."\n"
-			.."生成生物: " + (level + 5)
+			.."投掷伤害: " .. (level * 2 + 10).."\n"
+			.."生成生物: " .. (level + 5)
 			return desc_str
 		end,
 		effect_fn=function(self, owner)

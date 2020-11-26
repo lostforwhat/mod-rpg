@@ -508,6 +508,11 @@ local function Divide(a, b)
     return a / b
 end
 
+function PlayerDetail:SetTitlesData()
+    self.content:KillAllChildren()
+    
+end
+
 function PlayerDetail:Layout()
     self.frame = self.proot:AddChild(TEMPLATES.CurlyWindow(130, 540, .6, .6, 39, -25))
     self.frame:SetPosition(0, 20)
@@ -575,7 +580,8 @@ function PlayerDetail:Layout()
 
     local options = {
         { text = "个人信息", data = 1 },
-        { text = "我的技能", data = 2 }
+        { text = "我的技能", data = 2 },
+        { text = "我的称号", data = 3 }
     }
     self.top_nav = self.proot:AddChild(TEMPLATES.LabelSpinner("", options, 0, 160, 50, 20, NEWFONT, 30, -10))
     self.top_nav:SetPosition(100, 288)
@@ -584,9 +590,12 @@ function PlayerDetail:Layout()
         if selected == 1 then
             self.top_nav.spinner:SetTextColour(1,0.4,0.35,1)
             self:SetPlayerData()
-        else
+        elseif selected == 2 then
             self.top_nav.spinner:SetTextColour(0.5,0.35,0.18,1)
             self:SetSkillData()
+        else
+            self.top_nav.spinner:SetTextColour(0,0.78,1,1)
+            self:SetTitlesData()
         end
     end)
     self:SetPlayerData()

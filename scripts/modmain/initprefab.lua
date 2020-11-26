@@ -512,7 +512,7 @@ local function areahitcheck(target, attacker)
 	end
 	if not TheNet:GetPVPEnabled() then
 		for k,v in pairs(NO_PVP_TAGS) do
-			if target:HasTag(v) and (leader ~= nil and leader:HasTag(v)) then
+			if target:HasTag(v) or (leader ~= nil and leader:HasTag(v)) then
 				return false
 			end
 		end

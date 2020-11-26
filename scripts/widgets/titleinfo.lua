@@ -14,7 +14,11 @@ local TitleInfo = Class(Widget, function(self, owner)
 end)
 
 function TitleInfo:OpenTitle()
-
+	if self.owner.HUD.titlesdetail == nil then
+        self.owner.HUD:ShowTitlesDetail()
+    else
+        self.owner.HUD:CloseTitlesDetail()
+    end
 end
 
 return TitleInfo

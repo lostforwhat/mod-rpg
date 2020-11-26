@@ -159,7 +159,7 @@ titles_data = {
 			{
 				condition="完成所有成就任务",
 				fn=function(player)
-					return return player.components.taskdata.all > 0
+					return player.components.taskdata.all > 0
 				end
 			},
 			{
@@ -187,7 +187,7 @@ titles_data = {
 			{
 				condition="获得尊贵的客人凭证",
 				fn=function(player)
-					return return player.components.vip.level > 0
+					return player.components.vip.level > 0
 				end
 			},
 		},

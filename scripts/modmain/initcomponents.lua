@@ -35,7 +35,7 @@ end)
 
 AddComponentPostInit("follower", function(self) 
 	self.inst:ListenForEvent("killed", function(inst, data) 
-		local leader = self:GetLeader
+		local leader = self:GetLeader()
 		if leader ~= nil and leader:HasTag("player") then
 			leader:PushEvent("killed", data)
 		end

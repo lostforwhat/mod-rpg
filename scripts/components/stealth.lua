@@ -47,13 +47,22 @@ nil,
 
 function Stealth:ClientInit()
 	--if not TheWorld.ismastersim then
-		TheInput:AddKeyUpHandler(self.handle_key, function() 
-			if not self.inst:HasTag("player") or self.inst:HasTag("playerghost") or
-				(self.inst and self.inst.HUD and self.inst.HUD.IsChatInputScreenOpen()) then return end
-			if not self.net_data.enabled:value() or self.net_data.cd_time:value() > 0 then return end
-			SendModRPCToServer(MOD_RPC.RPG_skill.stealth)
-		end)
+		
 	--end
+    if not self.inst:HasTag("player") then
+        self.inst:ListenForEvent("attacked", function()
+            if self.enabled and self.cd_time == 0 then
+                self:Effect()
+            end
+        end)
+    else
+        TheInput:AddKeyUpHandler(self.handle_key, function() 
+            if not self.inst:HasTag("player") or self.inst:HasTag("playerghost") or
+                (self.inst and self.inst.HUD and self.inst.HUD.IsChatInputScreenOpen()) then return end
+            if not self.net_data.enabled:value() or self.net_data.cd_time:value() > 0 then return end
+            SendModRPCToServer(MOD_RPC.RPG_skill.stealth)
+        end)
+    end
 end
 
 function Stealth:Enabled(enabled)

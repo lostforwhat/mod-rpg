@@ -37,6 +37,7 @@ end
 
 function Clone:AbigailClone(data)
 	if math.random() < self.chance then
+		local inst = self.inst
     	local x, y, z = inst.Transform:GetWorldPosition()
 		local player = inst._playerlink
 		if player.abigail_clone == nil or GetAbigailNum(player) < self.maxclone then
