@@ -11,6 +11,19 @@ local function updateLight(inst)
     end
 end
 
+local function Equipped(inst, owner, offset)
+    if type(offset) ~= "number" then 
+        offset = 0 
+    end
+    if owner._titles ~= nil then
+        owner._titles:Remove()
+        owner._titles = nil
+    end
+    owner._titles = inst
+    owner._titles.entity:SetParent(owner.entity)
+    owner._titles.Transform:SetPosition(0, 3.2 + offset, 0)
+end
+
 
 local function common_fn(id, postinit)
     return function()
@@ -35,6 +48,12 @@ local function common_fn(id, postinit)
         if postinit ~= nil then
             postinit(inst)
         end
+
+        if not TheWorld.ismastersim then
+            return inst
+        end
+
+        inst.Equipped = Equipped
         
         return inst
     end

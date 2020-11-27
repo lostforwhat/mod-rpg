@@ -4,6 +4,7 @@ local TUNING = _G.TUNING
 local AllRecipes = _G.AllRecipes
 local SpawnPrefab = _G.SpawnPrefab
 local PI = _G.PI
+local DEGREES = _G.DEGREES
 local Vector3 = _G.Vector3
 local FRAMES = _G.FRAMES
 local TimeEvent = _G.TimeEvent
@@ -44,6 +45,7 @@ AddPlayerPostInit(function(inst)
 	inst:AddComponent("extrameta")
 	inst:AddComponent("stealth")
 	--inst:AddComponent("revenge")
+	inst:AddComponent("titles")
 	local prefab = inst.prefab
 	if prefab == "wilson" then
 
@@ -541,9 +543,11 @@ local function SeedsOnHit(inst, attacker, target)
         local angle = k * 2 * PI / num
         local item = SpawnAtGround("deciduous_root", 2*math.cos(angle)+x, y, 2*math.sin(angle)+z)
         if item ~= nil then
-        	item.components.combat:SetAreaDamage(TUNING.DECID_MONSTER_ROOT_ATTACK_RADIUS, 2, areahitcheck)
+        	item.components.combat:SetAreaDamage(TUNING.DECID_MONSTER_ROOT_ATTACK_RADIUS, 1.4, areahitcheck)
     		item.components.combat:SetDefaultDamage(TUNING.DECID_MONSTER_DAMAGE)
-        	item:PushEvent("givetarget", { target = target, targetpos = Vector3(x,y,z), targetangle = angle, owner = inst })
+    		local pos = Vector3(x,y,z)
+    		local targetangle = item:GetAngleToPoint(rootpos) * DEGREES
+        	item:PushEvent("givetarget", { target = target, targetpos = pos, targetangle = targetangle, owner = inst })
     		--击杀的话转移事件到玩家
     		item:ListenForEvent("killed", function(item, data) attacker:PushEvent("killed", data) end)
     	end

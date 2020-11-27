@@ -1,4 +1,4 @@
-
+--召唤组件
 local Caller = Class(function(self, inst) 
     self.inst = inst
 end)
@@ -6,6 +6,7 @@ end)
 
 function Caller:CallStart(player)
 	if player~=nil and player:HasTag("player") then
+		local pos = player:GetPosition()
 		for k, v in pairs(AllPlayers) do
 			if v and v.components.reciever ~= nil and v ~= player
 				and v.components.reciever:CanRecieved() then

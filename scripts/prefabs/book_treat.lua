@@ -47,23 +47,6 @@ local function Onread(inst, reader)
     end
     local item = SpawnPrefab("magic_circle_treat")
     item.Transform:SetPosition(x, y, z)
-    if reader.prefab == "wickerbottom" then
-        local num = math.random(2, 6)
-        for k=1,num do
-            local angle = k * 2 * PI / num
-            if TheWorld.Map:IsPassableAtPoint(3*math.cos(angle)+x, y, 3*math.sin(angle)+z) then
-                local follower = SpawnPrefab("pigman")
-                follower.Transform:SetPosition(3*math.cos(angle)+x, y, 3*math.sin(angle)+z)
-                reader.components.leader:AddFollower(follower)
-                follower.components.follower:AddLoyaltyTime(30)
-                follower:AddTag("cloned")
-                follower.components.lootdropper.numrandomloot = 0
-                follower:DoTaskInTime(30, function(follower)
-                    if follower:IsValid() then follower:Remove() end
-                end)
-            end
-        end
-    end
     return true
 end
 

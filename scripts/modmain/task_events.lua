@@ -661,6 +661,12 @@ local function OnMinHealth(inst, data)
 
 end
 
+local function OnTaskCompleted(inst, data)
+    if inst.components.titles then
+        inst.components.titles:CheckAll()
+    end
+end
+
 --玩家事件
 AddPlayerPostInit(function(inst)
 	--只进行服务端事件监听
@@ -731,8 +737,11 @@ AddPlayerPostInit(function(inst)
         --潮湿度
         inst:ListenForEvent("moisturedelta", OnMoisture)
 
-        --空血事件
-        inst:ListenForEvent("minhealth", OnMinHealth)
+        --空血事件(回光返照已有组件代替)
+        --inst:ListenForEvent("minhealth", OnMinHealth)
+
+        --监听任务完成事件
+        inst:ListenForEvent("taskcompleted", OnTaskCompleted)
     end
 	
 end)

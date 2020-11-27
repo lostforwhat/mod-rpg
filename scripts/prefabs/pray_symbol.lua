@@ -26,9 +26,9 @@ local function spawnPackageAtGround(name, x,y,z)
     end
 end
 
-local function DoPlant(prayers, inst)
+local function DoPlant(prayer, inst)
     --添加多世界宣告支持
-    local picker_name = prayers and prayers:GetDisplayName() or "???"
+    local picker_name = prayer and prayer:GetDisplayName() or "???"
     local function resetNotice(...)
         local worldShardId = TheShard:GetShardId()
         local serverName = ""
@@ -41,7 +41,7 @@ local function DoPlant(prayers, inst)
         end
         TheNet:Announce(serverName .. msg)
     end
-    local px,py,pz= prayers.Transform:GetWorldPosition()
+    local px,py,pz= prayer.Transform:GetWorldPosition()
     local names = {
         "flower",
         "carrot_planted",
@@ -65,6 +65,9 @@ local function DoPlant(prayers, inst)
     if math.random() < 0.05 then
         table.insert(names, "little_walrus")
     end
+    if PrefabExists("coffeebush") then
+        table.insert(names, "coffeebush")
+    end
     local num_prefabs=math.random(8,16)
     local prefab_name = names[math.random(#names)]
     local true_luck = inst.is_rare
@@ -80,7 +83,7 @@ local function DoPlant(prayers, inst)
             if item2 ~= nil then item = item2 end
         end
     end
-    prayers:PushEvent("prayed", {item=item,num=num_prefabs})
+    prayer:PushEvent("prayed", {item=item,num=num_prefabs})
     if item ~= nil then
         resetNotice(item:GetDisplayName())
     end
@@ -88,10 +91,10 @@ local function DoPlant(prayers, inst)
 end
 
 --使用祈祷函数
-local function OnPray(inst, prayers)
-	if prayers:HasTag("player") then
-		if DoPlant(prayers, inst) then
-    		prayers.components.sanity:DoDelta(-20)
+local function OnPray(inst, prayer)
+	if prayer:HasTag("player") then
+		if DoPlant(prayer, inst) then
+    		prayer.components.sanity:DoDelta(-20)
             return true
         end
 	end
@@ -154,7 +157,7 @@ local function OnLoad(inst, data)
         if inst.components.colourtweener == nil then
             inst:AddComponent("colourtweener")
         end
-        inst.components.colourtweener:StartTween({0.7,0,0.5}, 0)
+        inst.components.colourtweener:StartTween({0.7,0,0.6,1}, 0)
     end
 end
 
@@ -208,4 +211,4 @@ local function fn()
     return inst
 end
 
-return Prefab("prayer_symbol", fn, assets)
+return Prefab("pray_symbol", fn, assets)

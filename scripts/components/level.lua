@@ -108,6 +108,13 @@ local function WillowLevelUp(inst, level)
 	end
 end
 
+local function WendyLevelUp(inst, level)
+	DefaultLevelUp(inst, level)
+	if inst.components.skilldata then
+		inst.components.skilldata:SetLevel("revengebody", math.clamp(math.ceil(level * 0.5), 1, 20))
+	end
+end
+
 local level_fn_data = {
 	wilson = DefaultLevelUp,
 	wendy = DefaultLevelUp,

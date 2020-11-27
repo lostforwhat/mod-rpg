@@ -212,6 +212,27 @@ skill_constant = {
 		end,
 	},
 	{
+		id="revengebody",
+		name="复仇",
+		max_level=20,
+		exclusive={"wendy"},
+		desc_fn=function(self, owner)
+			local desc_str = self.name
+			local level = self:level_fn(owner)
+			local max_level = self.max_level or 1
+			local max = level >= max_level and " (Max)" or ""
+			desc_str = desc_str.."\n Lv:"..level..max.."\n"
+			.."伤害我们的人，都去死吧\n"
+			.."伤害温蒂和阿比盖尔的单位会受到更多的伤害\n"
+			.."每次提升伤害"..(5 + level).."%"
+			return desc_str
+		end,
+		effect_fn=function(self, owner)
+			local level = self:level_fn(owner)
+			owner.components.revenge:SetPercent(level>0 and (5 + level) or 0)
+		end
+	},
+	{
 		id="metalbody",
 		name="A处理器",
 		max_level=1,
@@ -534,7 +555,7 @@ skill_constant = {
 			local max = level >= max_level and " (Max)" or ""
 			desc_str = desc_str.."\n Lv:"..level..max.."\n"
 			.."种子就是我最大的武器，上吧我的伙伴\n"
-			.."投掷伤害: " .. (level * 2 + 10).."\n"
+			.."投掷伤害: " .. (level * 2 + 5).."\n"
 			.."生成生物: " .. (level + 5)
 			return desc_str
 		end,

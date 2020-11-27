@@ -508,9 +508,26 @@ local function Divide(a, b)
     return a / b
 end
 
+function PlayerDetail:LoadTitles()
+    
+end
+
 function PlayerDetail:SetTitlesData()
     self.content:KillAllChildren()
     
+    self.desc = self.content:AddChild(Widget("desc"))
+    self.desc:SetPosition(0, -165)
+    self.desc.backing = self.desc:AddChild(TEMPLATES2.ListItemBackground(330, 130))
+    self.desc.backing:SetClickable(false)
+    self.desc.text = self.desc:AddChild(Text(NUMBERFONT, 26, "", {0, 1, 0, 1}))
+    self.desc.text:SetRegionSize(300, 110)
+    self.desc.text:SetHAlign(ANCHOR_LEFT)
+    self.desc.text:SetVAlign(ANCHOR_TOP)
+
+    self.skills = self.content:AddChild(Widget("skills"))
+    self.skills:SetPosition(0, 65)
+    
+    self:LoadTitles()
 end
 
 function PlayerDetail:Layout()

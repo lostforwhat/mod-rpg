@@ -217,7 +217,7 @@ local function needNotice(goods)
         "deerclops",
         "spiderqueen",
         "package_staff",
-        "prayer_symbol",
+        "pray_symbol",
         "minotaurhorn",
         "yellowstaff",
         "greenstaff",

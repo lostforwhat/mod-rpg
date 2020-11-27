@@ -13,8 +13,6 @@ Assets = {
 	Asset("ANIM", "anim/coffee.zip"),
 	Asset("ATLAS", "images/hud/email.xml"),
     Asset("IMAGE", "images/hud/email.tex"),
-    Asset("ATLAS", "images/hud/levelbadge.xml"),
-    Asset("IMAGE", "images/hud/levelbadge.tex"),
 }
 
 PrefabFiles = {}
@@ -22,13 +20,14 @@ PrefabFiles = {}
 --添加mod新物品
 table.insert(PrefabFiles, "package_ball")
 table.insert(PrefabFiles, "package_staff")
-table.insert(PrefabFiles, "prayer_symbol")
+table.insert(PrefabFiles, "pray_symbol")
 table.insert(PrefabFiles, "seffc")
 table.insert(PrefabFiles, "abigail_clone")
 table.insert(PrefabFiles, "book_treat")
 table.insert(PrefabFiles, "book_kill")
 table.insert(PrefabFiles, "book_season")
 table.insert(PrefabFiles, "magic_circle")
+table.insert(PrefabFiles, "shadowtentacle_player")
 --table.insert(PrefabFiles, "potion_achiv")
 table.insert(PrefabFiles, "potions")
 table.insert(PrefabFiles, "deadbone")
@@ -136,6 +135,9 @@ modimport("scripts/modmain/modrecipes.lua")
 modimport("scripts/modmain/extra_slots.lua")
 modimport("scripts/modmain/monster_enhancement.lua")
 modimport("scripts/modmain/worldregrowth.lua")
+--可在设置中关闭
 modimport("scripts/modmain/asyncworld.lua")
+--modimport("scripts/modmain/save.lua")
+modimport("scripts/modmain/clean.lua")
 --debug
 modimport("scripts/modmain/debug.lua")

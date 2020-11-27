@@ -268,3 +268,25 @@ AddPrefabPostInitAny(function(inst)
     	end
     end
 end)
+
+--尝试给怪物添加组件
+AddPrefabPostInitAny(function(inst) 
+    if inst.prefab == "bat" then
+       inst:AddComponent("lifesteal") 
+       if IsServer then
+            inst.components.lifesteal:SetPercent(50)
+       end
+    end
+    if inst.prefab == "krampus" then
+        inst:AddComponent("stealer")
+        if IsServer then
+            inst.components.stealer.chance = 0.1
+        end
+    end
+    if inst.prefab == "merm" then
+        inst:AddComponent("dodge")
+        if IsServer then
+            inst.components.dodge:SetChance(0.2)
+        end
+    end
+end)

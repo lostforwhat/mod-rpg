@@ -145,6 +145,7 @@ local function fn()
 		end
 		inst:Remove()
 	end) --这里是播放多长时间后，移除它
+    inst.persist = false
 	return inst
 end
 
@@ -191,6 +192,8 @@ local function kill_fn()
     inst.starthit = starthit
     inst:DoTaskInTime(0.1, dofrozen)
     inst:DoTaskInTime(5, inst.starthit)
+
+    inst.persist = false
     
     return inst
 end
@@ -219,6 +222,8 @@ local function fire_fn()
 
     inst.entity:SetPristine()
     inst:AddTag("FX")
+
+    inst.persist = false
     
     return inst
 end
@@ -242,6 +247,8 @@ local function treat_fx_fn()
     inst.entity:SetPristine()
     inst:AddTag("FX")
     inst:DoTaskInTime(1, inst.Remove)
+
+    inst.persist = false
     
     return inst
 end

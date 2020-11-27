@@ -77,9 +77,8 @@ local potions_type = {
 		hunger = 1,
 		fn = function(inst, eater)
 			if eater and eater.components.locomotor and eater:HasTag("player") then
-				
+				eater.components.debuffable:AddDebuff("waterwalk", "waterwalk")
 			end
-			
 		end
 	},
 	green = {
@@ -87,30 +86,12 @@ local potions_type = {
 		sanity = 20,
 		hunger = 10,
 		fn = function(inst, eater)
-			if eater and eater.components.health then
-				eater.potion_green_task_time = 15
-				eater.potion_green_task = eater:DoPeriodicTask(1, function() 
-					eater.potion_green_task_time = eater.potion_green_task_time - 1
-					if eater.potion_green_task_time <= 0 then
-						eater.potion_green_task_time = 0
-						if eater.potion_green_task ~= nil then
-							eater.potion_green_task:Cancel()
-							eater.potion_green_task = nil
-						end
-					else
-						local x, y, z = eater.Transform:GetWorldPosition()
-	    				local ents = TheSim:FindEntities(x,y,z, 20, nil,nil, {"monster", "animal", "flying", "pig", "merm"})
-						for k,v in pairs(ents) do
-					        if v.components.combat and v:IsValid() then
-					        	v.components.combat:SetTarget(eater)
-					        end
-					    end
-					end
-				end)
-			end
-			if eater:HasTag("potionbuilder") then
-				dobackperish(eater)
-			end
+			if eater ~= nil and eater.components.debuffable ~= nil and eater.components.debuffable:IsEnabled() and
+		        not (eater.components.health ~= nil and eater.components.health:IsDead()) and
+		        not eater:HasTag("playerghost") then
+		        eater.components.debuffable:AddDebuff("taunt", "taunt")
+		        dobackperish(eater)
+		    end
 		end
 	},
 	luck = {
@@ -119,8 +100,7 @@ local potions_type = {
 		hunger = 10,
 		fn = function(inst, eater)
 			if eater and eater.components.luck then
-				local num = math.random(5,20)
-				eater.components.luck:DoDelta(num)
+				eater.components.luck:DoDelta(GetRandomWithVariance(5, 10))
 			end
 			create_light(eater, "wormlight_light")
 			if eater:HasTag("potionbuilder") then
@@ -133,26 +113,11 @@ local potions_type = {
 		sanity = 5,
 		hunger = 1,
 		fn = function(inst, eater)
-			if eater and eater:HasTag("player") and not eater:HasTag("playerghost") then
-				if eater.potion_red_task ~= nil then
-					eater.potion_red_task:Cancel()
-					eater.potion_red_task = nil
-				end
-				--local currentscale = eater.Transform:GetScale()
-				local scale = 1.5
-				if eater:HasTag("potionbuilder") then
-					scale = 2
-				end
-				eater:ApplyScale("potion", scale)
-				
-				if eater.components.combat then
-					eater.components.combat.externaldamagemultipliers:SetModifier("potiondamageup", scale)
-				end
-				eater.potion_red_task = eater:DoTaskInTime(30, function() 
-					eater:ApplyScale("potion", 1)
-					eater.components.combat.externaldamagemultipliers:RemoveModifier("potiondamageup")
-				end)
-			end
+			if eater ~= nil and eater.components.debuffable ~= nil and eater.components.debuffable:IsEnabled() and
+		        not (eater.components.health ~= nil and eater.components.health:IsDead()) and
+		        not eater:HasTag("playerghost") then
+		        eater.components.debuffable:AddDebuff("super_attack", "super_attack")
+		    end
 		end
 	}
 }

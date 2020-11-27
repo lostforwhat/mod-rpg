@@ -1,4 +1,4 @@
-local MAX_DAMAGE = 2
+local MAX_DAMAGE = 10
 
 local Revenge = Class(function(self, inst) 
     self.inst = inst
@@ -19,7 +19,7 @@ end
 function Revenge:GetDamageUp(attacker)
     if attacker ~= nil then
         local hit = self.revenge_data[attacker] or 0
-        return math.min(hit * self.damage_percent, self.max_damage)
+        return math.min(hit * self.damage_percent * 0.01, self.max_damage)
     end
     return 0
 end

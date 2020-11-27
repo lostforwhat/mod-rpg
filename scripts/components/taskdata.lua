@@ -124,6 +124,8 @@ function TaskData:Completed(taskname)
 	local tag = (task_info.hide and "*隐藏任务*" or "") or ""
 	SpawnPrefab("seffc").entity:SetParent(inst.entity)
 
+	self[taskname] = need
+
 	local desc_str = string.format(desc, " "..need.." ")
 	local annouce_str = string.format("%s %s %s 完成任务【%s】 奖励 %d", tag, inst:GetDisplayName(), desc_str, task_text, reward) 
 	TheNet:Announce(annouce_str, inst.entity)
