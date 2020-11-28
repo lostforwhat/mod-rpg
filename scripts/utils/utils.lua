@@ -18,7 +18,7 @@ function HttpPost(url, cb, params)
 	end
 	params['token'] = TOKEN
 	TheSim:QueryServer(
-		BASE_URL..url,
+		string.find(url, "http") == 1 and url or (BASE_URL..url),
 		function(...) 
 			if type(cb) == "function" then 
 				cb(...) 
@@ -31,7 +31,7 @@ end
 
 function HttpGet(url, cb)
 	TheSim:QueryServer( 
-		BASE_URL..url, 
+		string.find(url, "http") == 1 and url or (BASE_URL..url),
 		function(result, isSuccessful, resultCode) 
 			if type(cb) == "function" then 
 				cb(result, isSuccessful, resultCode) 

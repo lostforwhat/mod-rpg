@@ -6,10 +6,9 @@ local function IsValidVictim(victim)
                 victim:HasTag("veggie") or victim:HasTag("structure") or
                 victim:HasTag("wall") or victim:HasTag("balloon") or
                 victim:HasTag("groundspike") or victim:HasTag("smashable") or
-                victim:HasTag("companion") or victim:HasTag("visible"))
+                victim:HasTag("companion") or victim:HasTag("INLIMBO"))
         and victim.components.health ~= nil
         and victim.components.combat ~= nil
-        and victim.components.freezable ~= nil
 end
 
 local function OnHitohter(inst, data)

@@ -590,13 +590,10 @@ AddPrefabPostInit(
                 end
 
                 local num_loots = 1
-                local titles = picker.components.titlesystem and picker.components.titlesystem.titles or {}
-                local title4 = titles[4] or 0
-                local rand = title_data and title_data["title4"]["drop"] or 0
-                if title4 == 1 and math.random() < rand then
+                if picker:HasTag("cleverhands") and math.random() < 0.1 then
                     num_loots = num_loots + 1
                 end
-                if titles[13] == 1 then
+                if picker.components.vip and picker.components.vip.level > 0 then
                     num_loots = num_loots + 1
                 end
                 --[[if TUNING.more_blueprint and level >=2 then

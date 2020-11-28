@@ -77,7 +77,7 @@ local potions_type = {
 		hunger = 1,
 		fn = function(inst, eater)
 			if eater and eater.components.locomotor and eater:HasTag("player") then
-				eater.components.debuffable:AddDebuff("waterwalk", "waterwalk")
+				eater.components.debuffable:AddDebuff("buff_waterwalk", "buff_waterwalk")
 			end
 		end
 	},
@@ -89,7 +89,7 @@ local potions_type = {
 			if eater ~= nil and eater.components.debuffable ~= nil and eater.components.debuffable:IsEnabled() and
 		        not (eater.components.health ~= nil and eater.components.health:IsDead()) and
 		        not eater:HasTag("playerghost") then
-		        eater.components.debuffable:AddDebuff("taunt", "taunt")
+		        eater.components.debuffable:AddDebuff("buff_taunt", "buff_taunt")
 		        dobackperish(eater)
 		    end
 		end
@@ -116,7 +116,7 @@ local potions_type = {
 			if eater ~= nil and eater.components.debuffable ~= nil and eater.components.debuffable:IsEnabled() and
 		        not (eater.components.health ~= nil and eater.components.health:IsDead()) and
 		        not eater:HasTag("playerghost") then
-		        eater.components.debuffable:AddDebuff("super_attack", "super_attack")
+		        eater.components.debuffable:AddDebuff("buff_super_attack", "buff_super_attack")
 		    end
 		end
 	}

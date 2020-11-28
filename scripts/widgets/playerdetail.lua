@@ -509,24 +509,183 @@ local function Divide(a, b)
 end
 
 function PlayerDetail:LoadTitles()
-    
+    local item_width, item_height = 320, 160
+    local function TitlesItem(index)
+        local titles_item = Widget("TitlesItem-"..index)
+
+        titles_item.backing = titles_item:AddChild(TEMPLATES2.ListItemBackground_Static(item_width, item_height))
+        titles_item.backing.move_on_click = true
+        local item_backing = titles_item.backing
+
+        titles_item.conditions = item_backing:AddChild(Text(BODYTEXTFONT, 24, "", {1, 0.9, 0.55, 1}))
+        titles_item.conditions:SetPosition(-20, 0)
+        titles_item.conditions:SetRegionSize(240, 150)
+        titles_item.conditions:SetHAlign(ANCHOR_LEFT)
+        titles_item.conditions:SetVAlign(ANCHOR_MIDDLE)
+        titles_item.SetInfo = function(_, data)
+            if titles_item.image ~= nil then
+                titles_item.image:Kill()
+                titles_item.image = nil
+            end
+            if titles_item.btn ~= nil then
+                titles_item.btn:Kill()
+                titles_item.btn = nil
+            end
+            if titles_item.vip ~= nil then
+                titles_item.vip:Kill()
+                titles_item.vip = nil
+            end
+
+            local item = data.title
+            local name = item.id
+            local conditions = item.conditions
+
+            local player_conditions = self.owner.components.titles.net_data[name]:value() or {}
+            local player_equip = self.owner.components.titles.net_data.equip:value() or ""
+            local condition_str = ""
+            local get = true
+            for k, v in pairs(conditions) do
+                condition_str = condition_str.."【需】"..v.condition..(player_conditions[k] ~= nil and player_conditions[k] > 0 and "【完成】" or "").."\n"
+                get = player_conditions[k] ~= nil and player_conditions[k] > 0 and get or false
+            end
+            condition_str = condition_str..item.desc
+            titles_item.conditions:SetMultilineTruncatedString(condition_str, 7, 240, 18, "", false)
+            titles_item.conditions:SetColour(get and {0, 1, 0, 1} or {1,0.9,0.55,1})
+
+            local atlas_name = "images/titles/"..name..".xml"
+            local tex_name = name..".tex"
+            titles_item.image = item_backing:AddChild(Image(atlas_name, tex_name))
+            titles_item.image:SetPosition(0, 0)
+            if get then
+                titles_item.image:SetTint(1, 1, 1, 1)
+                titles_item.btn = item_backing:AddChild(TEMPLATES2.LabelCheckbox(function(w)
+                    w.checked = not w.checked
+                    if w.checked then
+                        SendModRPCToServer(MOD_RPC.RPG_titles.equip, name)
+                    else
+                        SendModRPCToServer(MOD_RPC.RPG_titles.unequip, name)
+                    end
+                    w:Refresh()
+                end, player_equip == name, "佩戴"))
+                titles_item.btn:SetPosition(90, 55)
+                titles_item.btn.inst:ListenForEvent("titlesequipdirty", function(owner) 
+                    titles_item.btn.checked = self.owner.components.titles.net_data.equip:value() == name
+                    titles_item.btn:Refresh()
+                end, self.owner)
+            else
+                titles_item.image:SetTint(0.7, 0.7, 0.7, 0.7)
+            end
+            if name == "vip" then
+                titles_item.vip = item_backing:AddChild(TEMPLATES2.StandardButton(function() 
+                    SendModRPCToServer(MOD_RPC.RPG_vip.refresh)
+                    VisitURL("http://vip.tumbleweedofall.xyz:8008?userid="..self.owner.userid)
+                end, "获取", {60, 40}))
+                titles_item.vip:SetPosition(110, -55)
+                if get then
+                    titles_item.vip:SetText("升级")
+                end
+            end
+            titles_item.conditions:MoveToFront()
+            --titles_item.image:MoveToBack()
+
+            --[[titles_item.backing:SetOnClick(function()
+                --此处做宣告使用
+                if TheInput:IsKeyDown(KEY_ALT) and TheInput:IsKeyDown(KEY_SHIFT) then
+                    if not self.cooldown then
+                        --TheNet:Say(name..":"..level_str, false)
+                        
+                        self.cooldown = true
+                        self.inst:DoTaskInTime(3, function() self.cooldown = nil end)
+                    end
+                end
+                --local str = item.desc_fn and item:desc_fn(self.owner) or name..""
+                --self.desc.text:SetMultilineTruncatedString(str, 5, 300, 15, "", false)
+
+            end)]]
+
+            titles_item.image.inst:ListenForEvent("titles"..name.."dirty", function(owner) 
+                titles_item:SetInfo(data)
+            end, self.owner)
+        end
+
+        titles_item.focus_forward = titles_item.backing
+        return titles_item
+    end
+    local function ScrollWidgetsCtor(context, index)
+        local widget = Widget("widget-" .. index)
+
+        widget:SetOnGainFocus(function()
+            self.titles_scroll_list:OnWidgetFocus(widget)
+        end)
+
+        widget.item = widget:AddChild(TitlesItem(index))
+        local item = widget.item
+
+        widget.focus_forward = item
+
+        return widget
+    end
+
+    local function ApplyDataToWidget(context, widget, data, index)
+        widget.data = data
+        widget.item:Hide()
+        if not data then
+            widget.focus_forward = nil
+            return
+        end
+
+        widget.focus_forward = widget.item
+        widget.item:Show()
+
+        local item = widget.item
+
+        item:SetInfo(data)
+    end
+
+    self.titles_data = {}
+    if titles_data then
+        for k, v in pairs(titles_data) do
+            if v.id and not v.hide then
+                if v.exclusive == nil or
+                    (type(v.exclusive) == "table" and table.contains(v.exclusive, self.owner.prefab)) or
+                    (type(v.exclusive) == "string" and v.exclusive == self.owner.prefab) then
+                    table.insert(self.titles_data, {index=v.id, title=v})
+                end
+            end
+        end
+    end
+
+    if not self.titles_scroll_list then
+        self.titles_scroll_list = self.titles:AddChild(
+                                     TEMPLATES2.ScrollingGrid(self.titles_data, {
+                context = {},
+                widget_width = item_width,
+                widget_height = item_height,
+                num_visible_rows = 3,
+                num_columns = 1,
+                item_ctor_fn = ScrollWidgetsCtor,
+                apply_fn = ApplyDataToWidget,
+                scrollbar_offset = 15,
+                scrollbar_height_offset = -10,
+                peek_percent = 0, -- may init with few clientmods, but have many servermods.
+                allow_bottom_empty_row = true -- it's hidden anyway
+            }))
+
+        self.titles_scroll_list:SetPosition(0, 0)
+
+        --self.titles_scroll_list:SetFocusChangeDir(MOVE_DOWN, self.close_button)
+        --self.close_button:SetFocusChangeDir(MOVE_UP, self.titles_scroll_list)
+    end
 end
 
 function PlayerDetail:SetTitlesData()
     self.content:KillAllChildren()
-    
-    self.desc = self.content:AddChild(Widget("desc"))
-    self.desc:SetPosition(0, -165)
-    self.desc.backing = self.desc:AddChild(TEMPLATES2.ListItemBackground(330, 130))
-    self.desc.backing:SetClickable(false)
-    self.desc.text = self.desc:AddChild(Text(NUMBERFONT, 26, "", {0, 1, 0, 1}))
-    self.desc.text:SetRegionSize(300, 110)
-    self.desc.text:SetHAlign(ANCHOR_LEFT)
-    self.desc.text:SetVAlign(ANCHOR_TOP)
+    self.titles_scroll_list = nil
 
-    self.skills = self.content:AddChild(Widget("skills"))
-    self.skills:SetPosition(0, 65)
+    self.titles = self.content:AddChild(Widget("titles"))
+    self.titles:SetPosition(0, 0)
     
+    SendModRPCToServer(MOD_RPC.RPG_titles.check)
     self:LoadTitles()
 end
 

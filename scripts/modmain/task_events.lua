@@ -1,11 +1,20 @@
 require "utils/utils"
 local _G = GLOBAL
+local TheNet = _G.TheNet
 local ExistInTable = _G.ExistInTable
 local ACTIONS = _G.ACTIONS
 local SpawnPrefab = _G.SpawnPrefab
 
 local function GiveExp(inst, exp)
     --预留插槽，用于提升或减少额外经验等
+    if inst:HasTag("leisurely") then
+        exp = exp * 1.1
+    end
+
+    local vip = inst.components.vip and inst.components.vip.level > 0 or false
+    if vip then
+        exp = exp * 1.4
+    end
 
     exp = math.floor(exp)
     if exp > 0 and inst.components.level then
@@ -119,22 +128,21 @@ local function IsValidVictim(victim)
                 victim:HasTag("veggie") or victim:HasTag("structure") or
                 victim:HasTag("wall") or victim:HasTag("balloon") or
                 victim:HasTag("groundspike") or victim:HasTag("smashable") or
-                victim:HasTag("companion") or victim:HasTag("visible"))
+                victim:HasTag("companion") or victim:HasTag("INLIMBO"))
         and victim.components.health ~= nil
         and victim.components.combat ~= nil
-        and victim.components.freezable ~= nil
 end
 
 local function OnKilled(inst, data)
 	local victim = data.victim
     if not IsValidVictim(victim) then return end
     local taskdata = inst.components.taskdata
-    if taskdata.killed_temp[victim.GUID] then
+    if taskdata.killed_temp[victim] then
     	return
     end
-    taskdata.killed_temp[victim.GUID] = true
+    taskdata.killed_temp[victim] = true
     inst:DoTaskInTime(1, function()
-        taskdata.killed_temp[victim.GUID] = nil
+        taskdata.killed_temp[victim] = nil
     end)
 
     if victim:HasTag("monster") then
@@ -341,6 +349,27 @@ local function OnKilled(inst, data)
         GiveExp(inst, math.floor(health*0.01))
     end
     
+    --击杀掉落事件
+    if inst:HasTag("cleverhands") and math.random() < 0.05 then
+        if not (prefab == "stalker" 
+            or prefab == "stalker_atrium" 
+            or prefab == "stalker_forest")
+            and victim.components.lootdropper ~= nil then
+                victim.components.lootdropper:DropLoot()
+        end
+    end
+
+    --非pvp击杀玩家，给予惩罚
+    if not TheNet:GetPVPEnabled() and victim:HasTag("player") then
+        inst.components.luck:SetLuck(0)
+        inst.components.level:ReduceXp(100)
+        inst.components.level:AddKillPlayer()
+    end
+
+    if inst:HasTag("lifeforever") then
+        local health = victim.components.health and victim.components.health.maxhealth or 0
+        inst.components.health:DoDelta(health * 0.02)
+    end
 end	
 
 local function OnWakeup(inst, data)

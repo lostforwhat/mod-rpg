@@ -25,7 +25,9 @@ local FOLLOWER_SANITY_THRESHOLD = .5
 local function SetLevel(self, leader)
     if leader ~= nil then
         local level = leader.components.skilldata and leader.components.skilldata:GetLevel("angrybernie") or 0
-        self.inst.components.health:SetMaxHealth(TUNING.BERNIE_BIG_HEALTH + level*10)
+        local health_percent = self.inst.components.health:GetPercent()
+        self.inst.components.health.maxhealth = TUNING.BERNIE_BIG_HEALTH + level*10
+        self.inst.components.health:SetPercent(health_percent)
         self.inst.components.combat:SetDefaultDamage(TUNING.BERNIE_BIG_DAMAGE + level + 20)
     end
 end
@@ -46,6 +48,7 @@ local function SetLeader(self, leader)
             end
         end
         self._leader = leader
+        self.inst._leader = leader
         SetLevel(self, leader)
     end
 end

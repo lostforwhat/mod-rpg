@@ -40,7 +40,8 @@ local Vip = Class(function(self, inst)
 	self.level = 0
 
 	if self.inst:HasTag("player") then
-		self:Get()
+		self.inst:DoTaskInTime(1, function() self:Get() end)
+		--self:Get()
 	end
 end,
 nil,
@@ -52,7 +53,8 @@ function Vip:Get()
 	local inst = self.inst
 	local userid = inst.userid or ""
 	local displayname = inst:GetDisplayName() or ""
-	HttpGet("/getVip?userid="..inst.userid.."&displayname="..displayname, 
+	print("userid:"..userid)
+	HttpGet("/public/getVip?userid="..userid.."&displayname="..displayname, 
 		function(result, isSuccessful, resultCode) 
 			if isSuccessful and string.len(result) > 1 and resultCode == 200 then 
 				local status, data = pcall( function() return json.decode(result) end )
@@ -65,7 +67,7 @@ function Vip:Get()
 					end
 				end
 			else
-				print("获取vip列表失败,将从github获取数据,code:"..tostring(resultCode))
+				print("获取vip列表失败,将从github获取数据,code:"..tostring(resultCode)..result)
 				tryAgainVip(self, inst)
 			end
 	end)

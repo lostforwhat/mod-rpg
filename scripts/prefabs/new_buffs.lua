@@ -4,13 +4,15 @@
 
 local function attack_attach(inst, target)
     if target.components.combat ~= nil then
-        target.components.combat.externaldamagemultipliers:SetModifier(inst, 2)
+        target:ApplyScale("potion", 1.5)
+        target.components.combat.externaldamagemultipliers:SetModifier("potion", 2)
     end
 end
 
 local function attack_detach(inst, target)
     if target.components.combat ~= nil then
-        target.components.combat.externaldamagemultipliers:RemoveModifier(inst)
+        target:ApplyScale("potion", 1)
+        target.components.combat.externaldamagemultipliers:RemoveModifier("potion")
     end
 end
 
@@ -52,16 +54,16 @@ local function waterwalk_attack(inst, target)
 end
 
 local function waterwalk_detach(inst, target)
-    if inst.components.drownable and inst.components.drownable.enabled == false then
-        inst.components.drownable.enabled = true
-        if not inst:HasTag("playerghost") then
-            inst.Physics:ClearCollisionMask()
-            inst.Physics:CollidesWith(COLLISION.WORLD)
-            inst.Physics:CollidesWith(COLLISION.OBSTACLES)
-            inst.Physics:CollidesWith(COLLISION.SMALLOBSTACLES)
-            inst.Physics:CollidesWith(COLLISION.CHARACTERS)
-            inst.Physics:CollidesWith(COLLISION.GIANTS)
-            inst.Physics:Teleport(inst.Transform:GetWorldPosition())
+    if target.components.drownable and target.components.drownable.enabled == false then
+        target.components.drownable.enabled = true
+        if not target:HasTag("playerghost") then
+            target.Physics:ClearCollisionMask()
+            target.Physics:CollidesWith(COLLISION.WORLD)
+            target.Physics:CollidesWith(COLLISION.OBSTACLES)
+            target.Physics:CollidesWith(COLLISION.SMALLOBSTACLES)
+            target.Physics:CollidesWith(COLLISION.CHARACTERS)
+            target.Physics:CollidesWith(COLLISION.GIANTS)
+            target.Physics:Teleport(target.Transform:GetWorldPosition())
         end
     end
 end
@@ -147,4 +149,4 @@ end
 return MakeBuff("super_attack", attack_attach, nil, attack_detach, 10, 1),
     MakeBuff("speedup", speed_attach, nil, speed_detach, TUNING.BUFF_ATTACK_DURATION, 1),
     MakeBuff("taunt", taunt_attach, nil, nil, 15, 1),
-    MakeBuff("waterwalk", waterwalk_attack, nil waterwalk_detach, TUNING.BUFF_ATTACK_DURATION, 1)
+    MakeBuff("waterwalk", waterwalk_attack, nil, waterwalk_detach, TUNING.BUFF_ATTACK_DURATION, 1)

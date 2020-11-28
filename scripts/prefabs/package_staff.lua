@@ -23,10 +23,7 @@ end
 
 local function canpacker(target)
 	if target and not target:HasTag("chester") and not target:HasTag("player") and not target:HasTag("FX") then
-	--	print("test packer " .. ((not target.components.combat or target.components.combat.defaultdamage == 0) and "true" or "false"))
-		return true
-	--elseif target and not target:HasTag("chester") then
-	--	return not target:HasTag("epic")
+return true
 	end
     return false
 end
@@ -35,9 +32,8 @@ local function checkLevel(doer, target)
     if not target.components or not target.components.combat or not target.components.health then
         return true
     end
-    if doer and doer.components.titlesystem then
-        local vip_level = doer.components.titlesystem.vip_level or 0
-        --print("vip_level:"..vip_level)
+    if doer then
+        local vip_level = doer.components.vip and doer.components.vip.level or 0
         if target.components.health.maxhealth <= vip_level*1000 then
             return true
         end
@@ -65,9 +61,6 @@ local function startpacker(staff, target)
 	end    
 end
 
-local function onhauntpackage()
-
-end
 
 local function CanCastFn(doer, target, pos)
 	return target ~= nil and (not target:HasTag("unpackage"))
@@ -105,13 +98,12 @@ local function fn()
     --inst:AddTag("irreplaceable")
     inst:AddComponent("inspectable")
     inst:AddComponent("equippable")
-    inst.components.equippable:SetOnEquip( package_staffequip )
-    inst.components.equippable:SetOnUnequip( package_staffunequip )
+    inst.components.equippable:SetOnEquip(package_staffequip)
+    inst.components.equippable:SetOnUnequip(package_staffunequip)
 
 	
     inst:AddComponent("spellcaster")
     inst.components.spellcaster:SetSpellFn(startpacker)
-    --inst.components.spellcaster:SetSpellTestFn(packertest)
     inst.components.spellcaster.CanCast = CanCastFn
     inst.components.spellcaster.canuseontargets = true
     inst.components.spellcaster.canusefrominventory = false

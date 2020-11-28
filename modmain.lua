@@ -13,6 +13,27 @@ Assets = {
 	Asset("ANIM", "anim/coffee.zip"),
 	Asset("ATLAS", "images/hud/email.xml"),
     Asset("IMAGE", "images/hud/email.tex"),
+
+    Asset("ATLAS", "images/titles/cleverhands.xml"),
+    Asset("IMAGE", "images/titles/cleverhands.tex"),
+    Asset("ATLAS", "images/titles/deathbody.xml"),
+    Asset("IMAGE", "images/titles/deathbody.tex"),
+    Asset("ATLAS", "images/titles/fly.xml"),
+    Asset("IMAGE", "images/titles/fly.tex"),
+    Asset("ATLAS", "images/titles/foodexpert.xml"),
+    Asset("IMAGE", "images/titles/foodexpert.tex"),
+    Asset("ATLAS", "images/titles/killingheart.xml"),
+    Asset("IMAGE", "images/titles/killingheart.tex"),
+    Asset("ATLAS", "images/titles/king.xml"),
+    Asset("IMAGE", "images/titles/king.tex"),
+    Asset("ATLAS", "images/titles/leisurely.xml"),
+    Asset("IMAGE", "images/titles/leisurely.tex"),
+    Asset("ATLAS", "images/titles/lifeforever.xml"),
+    Asset("IMAGE", "images/titles/lifeforever.tex"),
+    Asset("ATLAS", "images/titles/luckbody.xml"),
+    Asset("IMAGE", "images/titles/luckbody.tex"),
+    Asset("ATLAS", "images/titles/vip.xml"),
+    Asset("IMAGE", "images/titles/vip.tex"),
 }
 
 PrefabFiles = {}
@@ -56,6 +77,13 @@ local function AddPlayerStatus(self)
 	self.player_status:SetHAnchor(_G.ANCHOR_LEFT)
     self.player_status:SetVAnchor(_G.ANCHOR_TOP)
     self.player_status:MoveToFront()
+
+    --快捷键换称号
+	_G.TheInput:AddKeyUpHandler(_G.KEY_L, function() 
+		--print("---------")
+		if self.owner and self.owner.HUD and self.owner.HUD.IsChatInputScreenOpen() then return end
+		SendModRPCToServer(MOD_RPC["RPG_titles"]["change"])
+	end)
 end
 
 AddClassPostConstruct("widgets/controls", AddPlayerStatus)

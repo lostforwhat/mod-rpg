@@ -74,7 +74,8 @@ local function GetLeader(self)
     if self._leader ~= nil and
         not (self._leader:IsValid() and
             self._leader.entity:IsVisible() and
-            self._leader.components.sanity:IsCrazy()) then
+            (self._leader.components.sanity:IsCrazy() or 
+            self._leader.components.sanity:GetPercent() < 0.5)) then
         self._leader = nil
     end
     return self._leader

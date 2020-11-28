@@ -170,6 +170,7 @@ local Level = Class(function(self, inst)
     self.xp = 0
 	self.totalxp = 0
 	self.deathtimes = 0
+	self.killplayers = 0
 end,
 nil,
 {
@@ -183,7 +184,8 @@ function Level:OnSave()
 		level = self.level or 1,
 		xp = self.xp or 0,
 		totalxp = self.totalxp or self.xp or 0,
-		deathtimes = self.deathtimes or 0
+		deathtimes = self.deathtimes or 0,
+		killplayers = self.killplayers or 0
 	}
 end
 
@@ -193,6 +195,7 @@ function Level:OnLoad(data)
 		self.xp = data.xp or 0
 		self.totalxp = data.totalxp or data.xp or 0
 		self.deathtimes = data.deathtimes or 0
+		self.killplayers = data.killplayers or 0
 	end
 end
 
@@ -209,6 +212,10 @@ function Level:ReduceXp(value)
 	else
 		self.xp = 0
 	end
+end
+
+function Level:AddKillPlayer()
+	self.killplayers = self.killplayers + 1
 end
 
 function Level:ReduceXpOnDeath()

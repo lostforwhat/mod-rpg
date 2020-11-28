@@ -50,10 +50,9 @@ AddComponentPostInit("combat", function(self)
 	                victim:HasTag("veggie") or victim:HasTag("structure") or
 	                victim:HasTag("wall") or victim:HasTag("balloon") or
 	                victim:HasTag("groundspike") or victim:HasTag("smashable") or
-	                victim:HasTag("companion") or victim:HasTag("visible"))
+	                victim:HasTag("companion") or victim:HasTag("INLIMBO"))
 	        and victim.components.health ~= nil
 	        and victim.components.combat ~= nil
-	        and victim.components.freezable ~= nil
 	end
 	local OldGetAttacked = self.GetAttacked
 	function self:GetAttacked(attacker, damage, weapon, stimuli)
@@ -73,6 +72,19 @@ AddComponentPostInit("combat", function(self)
 					end
 				end)
 				return OldGetAttacked(self, attacker, 0, weapon, stimuli)
+			end
+
+			--王者之巅秒杀
+			if attacker:HasTag("player") and 
+				not attacker:HasTag("playerghost") 
+				and IsValidVictim(target)
+				and attacker:HasTag("titles_king") then
+				local player_health = attacker.components.health.maxhealth or 0
+				local target_health = target.components.health.maxhealth or 0
+				if player_health > target_health then
+					target.components.health.currenthealth = 0.01
+					return OldGetAttacked(self, attacker, 1, weapon, stimuli)
+				end
 			end
 
 			--先计算闪避
@@ -98,6 +110,10 @@ AddComponentPostInit("combat", function(self)
 			            	return OldGetAttacked(self, attacker, damage + extra_damage, weapon, stimuli)
 			            end
 					end
+				end
+				--如果有悠然自得，先计算悠然自得
+				if attacker:HasTag("leisurely") then
+					damage = math.random() * 3 * damage
 				end
 				--弱点攻击为附加伤害不参与暴击
 				if attacker.components.attackbroken ~= nil then

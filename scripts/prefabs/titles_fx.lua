@@ -21,7 +21,7 @@ local function Equipped(inst, owner, offset)
     end
     owner._titles = inst
     owner._titles.entity:SetParent(owner.entity)
-    owner._titles.Transform:SetPosition(0, 3.2 + offset, 0)
+    owner._titles.Transform:SetPosition(0, 3.5 + offset, 0)
 end
 
 

@@ -18,3 +18,25 @@ end)
 AddModRPCHandler("RPG_skill", "stealth", function(player) 
 	player.components.stealth:Effect()
 end)
+
+--titles rpc
+AddModRPCHandler("RPG_titles", "check", function(player) 
+	player.components.titles:CheckAll()
+end)
+
+AddModRPCHandler("RPG_titles", "equip", function(player, name) 
+	player.components.titles:Equip(name)
+end)
+
+AddModRPCHandler("RPG_titles", "unequip", function(player, name) 
+	player.components.titles:UnEquip(name)
+end)
+
+AddModRPCHandler("RPG_titles", "change", function(player) 
+	player.components.titles:Change()
+end)
+
+--vip rpc
+AddModRPCHandler("RPG_vip", "refresh", function(player) 
+	player.components.vip:Get()
+end)

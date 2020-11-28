@@ -1,3 +1,4 @@
+local SourceModifierList = require("util/sourcemodifierlist")
 local MIN_CHANCE = 0
 local MAX_CHANCE = 1
 local MAX_HIT = 4
@@ -47,6 +48,7 @@ local Crit = Class(function(self, inst)
     --self.next_must_crit = false
     --self.extra_source_map = nil
     --self.luck_crit = false
+    self.multipliers = SourceModifierList(self.inst)
 end,
 nil,
 {
@@ -72,6 +74,16 @@ function Crit:OnLoad(data)
 		self.max_hit = data.max_hit or MAX_HIT
 	end
 end]]
+
+function Crit:AddMultipliers(source, val)
+	self.multipliers:SetModifier(source, val)
+	self:CalcRealChance()
+end
+
+function Crit:RemoveMultipliers(source)
+	self.multipliers:RemoveModifier(source)
+	self:CalcRealChance()
+end
 
 function Crit:CalcRealChance()
 	if TheWorld.ismastersim then
@@ -125,7 +137,7 @@ function Crit:GetExtra()
 end
 
 function Crit:GetFinalChance()
-	return self.chance + self.extra_chance
+	return (self.chance + self.extra_chance) * (self.multipliers:Get() or 1)
 end
 
 function Crit:Effect()

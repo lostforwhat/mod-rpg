@@ -18,7 +18,25 @@ local function RedirectDamageFn(inst, attacker, damage, weapon, stimuli)
 		end
 		if redirect_tagert == nil then
 			--此处写所有角色伤害转移策略
-
+			if inst:HasTag("lifeforever") and math.random() < 0.15 then
+				return FindEntity(
+			        inst,
+			        15,
+			        function(guy) 
+			            return guy ~= inst
+			                and guy ~= inst.owner
+			                and guy.entity:IsVisible()
+			                and not guy.components.health:IsDead()
+			                and (guy.components.combat.target == inst or
+			                    guy:HasTag("character") or
+			                    guy:HasTag("monster") or
+			                    guy:HasTag("animal") or 
+			                    guy:HasTag("fly"))
+			        end,
+			        { "_combat", "_health" },
+			        { "prey", "INLIMBO" })
+			end
+			
 		end
 	end
 	return redirect_tagert
@@ -283,13 +301,15 @@ AddPrefabPostInit("waxwell", function(inst)
 end)
 
 --伯尼添加击杀事件
-AddPrefabPostInit("berniebig", function(inst) 
-	inst:ListenForEvent("killed", function(inst, data) 
-		if inst.brain ~= nil and inst.brain._leader ~= nil then
-			local player = inst.brain._leader
-			player:PushEvent("killed", data)
-		end
-	end)
+AddPrefabPostInit("bernie_big", function(inst) 
+	if _G.TheWorld.ismastersim then
+		inst:ListenForEvent("killed", function(inst, data) 
+			if (inst.brain ~= nil and inst.brain._leader ~= nil) or inst._leader ~= nil then
+				local player = inst.brain._leader or inst._leader
+				player:PushEvent("killed", data)
+			end
+		end)
+	end
 end)
 
 --abigail添加复仇属性
