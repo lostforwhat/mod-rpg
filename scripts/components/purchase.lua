@@ -75,7 +75,7 @@ function Purchase:Refresh(force)
     end
 
     local serversession = TheWorld.net.components.shardstate:GetMasterSessionId()
-    HttpGet("/public/getgoods?server="..serversession.."&userid="..self.inst.userid, function(result, isSuccessful, resultCode)
+    HttpGet("/public/getGoods?serversession="..serversession.."&userid="..self.inst.userid, function(result, isSuccessful, resultCode)
     	if isSuccessful and (resultCode == 200) then
 			print("------------ GetGoods success--------------")
 			local status, data = pcall( function() return json.decode(result) end )

@@ -696,6 +696,12 @@ local function OnTaskCompleted(inst, data)
     end
 end
 
+local function OnCycles(inst)
+    if inst.components.titles then
+        inst.components.titles:CheckAll()
+    end
+end
+
 --玩家事件
 AddPlayerPostInit(function(inst)
 	--只进行服务端事件监听
@@ -771,6 +777,9 @@ AddPlayerPostInit(function(inst)
 
         --监听任务完成事件
         inst:ListenForEvent("taskcompleted", OnTaskCompleted)
+
+        --世界天数改变
+        inst:WatchWorldState("cycles", OnCycles)
     end
 	
 end)

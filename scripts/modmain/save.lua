@@ -2,9 +2,9 @@ local _G = GLOBAL
 local TheNet = _G.TheNet
 --local TheWorld = _G.TheWorld
 local TUNING = _G.TUNING
-local BASE_URL = "http://api.tumbleweedofall.xyz:8888"
+--local BASE_URL = "http://api.tumbleweedofall.xyz:8888"
 local TOKEN = "0874689771c44c1e1828df13716801f5"
---local BASE_URL = "http://127.0.0.1:8888"
+local BASE_URL = "http://127.0.0.1:8888"
 
 local function GetWorldSession()
 	--world session

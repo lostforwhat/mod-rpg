@@ -165,7 +165,7 @@ modimport("scripts/modmain/monster_enhancement.lua")
 modimport("scripts/modmain/worldregrowth.lua")
 --可在设置中关闭
 modimport("scripts/modmain/asyncworld.lua")
---modimport("scripts/modmain/save.lua")
+modimport("scripts/modmain/save.lua")
 modimport("scripts/modmain/clean.lua")
 --debug
 modimport("scripts/modmain/debug.lua")
