@@ -11,7 +11,8 @@ local TEMPLATES = require "widgets/templates"
 local TEMPLATES2 = require "widgets/redux/templates"
 local EquipSlot = require("equipslotutil")
 
-local DEFAULT_ATLAS = "images/inventoryimages.xml"
+local DEFAULT_ATLAS = "images/inventoryimages1.xml"
+local DEFAULT_ATLAS2 = "images/inventoryimages2.xml"
 
 local function GetDescriptionString(name)
 
@@ -194,6 +195,7 @@ function ShopDetail:ShopItem()
         local atlas = softresolvefilepath("images/inventoryimages/"..name..".xml") 
             or softresolvefilepath("images/"..name..".xml") or DEFAULT_ATLAS
         local image = name .. ".tex"
+        atlas = TheSim:AtlasContains(atlas, image) and atlas or (TheSim:AtlasContains(DEFAULT_ATLAS2, image) and DEFAULT_ATLAS2)
 
         shop_item.image = shop_backing:AddChild(Image(atlas, image, "chesspiece_anchor_sketch.tex"))
         shop_item.image:SetScale(0.7, 0.7)
@@ -326,6 +328,7 @@ function ShopDetail:RefreshCart()
             local atlas = softresolvefilepath("images/inventoryimages/"..name..".xml") 
                 or softresolvefilepath("images/"..name..".xml") or DEFAULT_ATLAS
             local image = name .. ".tex"
+            atlas = TheSim:AtlasContains(atlas, image) and atlas or (TheSim:AtlasContains(DEFAULT_ATLAS2, image) and DEFAULT_ATLAS2)
             self.cart.slot[k].good = self.cart.slot[k]:AddChild(Image(atlas, image, "chesspiece_anchor_sketch.tex"))
             self.cart.slot[k].good:SetScale(0.7, 0.7)
 

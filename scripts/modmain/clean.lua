@@ -2,6 +2,7 @@ local _G = GLOBAL
 local TheNet = _G.TheNet
 --local TheWorld = _G.TheWorld
 local TUNING = _G.TUNING
+local tonumber = _G.tonumber
 
 if TheNet:GetIsServer() or TheNet:IsDedicated() then
 
@@ -163,8 +164,8 @@ if TheNet:GetIsServer() or TheNet:IsDedicated() then
 		--注册消息驱动器
 		_G.AddShardRule("clean", function(msg) 
 			local param = string.sub(msg, 6)
-			if param == nil or tonumber(param) ~= nil then
-				delayclean(_G.TheWorld, tonumber(param))
+			if param == nil or _G.tonumber(param) ~= nil then
+				delayclean(_G.TheWorld, _G.tonumber(param))
 			else
 				if IsMainWorld() then
 					if param == "start" then
@@ -189,23 +190,25 @@ if TheNet:GetIsServer() or TheNet:IsDedicated() then
 	    end
 	    _G.TheWorld:ListenForEvent("entity_droploot", OnEntityDropLoot)
 
-        --注册全局函数
-		_G.x_clean = function()
-			print("--草服清理工具：手动清理--")
-			local msg = _G.SHARD_KEY.."clean0"
-	        TheNet:SystemMessage(msg)
-		end
-
-		_G.x_start = function(interval)
-			local msg = _G.SHARD_KEY.."cleanstart"
-	        TheNet:SystemMessage(msg)
-		end
-
-		_G.x_stop = function()
-			print("--草服清理工具：停止自动清理任务--")
-			local msg = _G.SHARD_KEY.."cleanstop"
-	        TheNet:SystemMessage(msg)
-		end
+        
 	end)
+
+	--注册全局函数
+	_G.x_clean = function()
+		print("--草服清理工具：手动清理--")
+		local msg = _G.SHARD_KEY.."clean0"
+        TheNet:SystemMessage(msg)
+	end
+
+	_G.x_start = function(interval)
+		local msg = _G.SHARD_KEY.."cleanstart"
+        TheNet:SystemMessage(msg)
+	end
+
+	_G.x_stop = function()
+		print("--草服清理工具：停止自动清理任务--")
+		local msg = _G.SHARD_KEY.."cleanstop"
+        TheNet:SystemMessage(msg)
+	end
 
 end

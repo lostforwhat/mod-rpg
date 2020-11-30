@@ -786,4 +786,8 @@ function PlayerDetail:Close()
     self:MoveTo(self.in_pos, self.out_pos, .33, function() self:Kill() end)
 end
 
+function PlayerDetail:OnControl(control, down)
+    if PlayerDetail._base.OnControl(self, control, down) then return true end
+end
+
 return PlayerDetail

@@ -1,7 +1,7 @@
 require 'json'
 
---local BASE_URL = "http://api.tumbleweedofall.xyz:8888"
-local BASE_URL = "http://localhost:8888"
+local BASE_URL = "http://api.tumbleweedofall.xyz:8888"
+--local BASE_URL = "http://localhost:8888"
 local TOKEN = "0874689771c44c1e1828df13716801f5"
 
 function ExistInTable(tab, val)

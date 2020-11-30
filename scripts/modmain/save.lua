@@ -2,9 +2,9 @@ local _G = GLOBAL
 local TheNet = _G.TheNet
 --local TheWorld = _G.TheWorld
 local TUNING = _G.TUNING
---local BASE_URL = "http://api.tumbleweedofall.xyz:8888"
+local BASE_URL = "http://api.tumbleweedofall.xyz:8888"
 local TOKEN = "0874689771c44c1e1828df13716801f5"
-local BASE_URL = "http://127.0.0.1:8888"
+--local BASE_URL = "http://127.0.0.1:8888"
 
 local function GetWorldSession()
 	--world session
@@ -133,11 +133,14 @@ local function SavePlayerInfo(player)
 		serversession = GetSession()
 	}
 	params["level"] = player.components.level and player.components.level.level or 0
-	params["xp"] = player.components.level and player.components.level.totalxp or 0
+	params["totalxp"] = player.components.level and player.components.level.totalxp or 0
+	params["xp"] = player.components.level and player.components.level.xp or 0
 
 	local coin = player.components.purchase and player.components.purchase.coin or 0
 	local purchase_used = player.components.purchase and player.components.purchase.coin_used or 0
 	local skill_used = player.components.skilldata and player.components.skilldata.coin_used or 0
+	params["purchase_used"] = purchase_used
+	params["skill_used"] = skill_used
 	params["coin_used"] = math.ceil(coin + purchase_used + skill_used)
 	params["coin"] = math.ceil(coin)
 	params["age"] = player.components.age:GetAgeInDays()
@@ -215,13 +218,13 @@ local function loadGift(player, data)
 		}
 		
 	 ]]
-	if player.components.titlesystem.giftdata == nil or #player.components.titlesystem.giftdata==0 then 
-		player.components.titlesystem.giftdata = data
+	if player.components.email.list == nil or #player.components.email.list==0 then 
+		player.components.email.list = data
 		return
 	end
 	for k, v in pairs(data) do
 		if v then
-			table.insert(player.components.titlesystem.giftdata, v)
+			table.insert(player.components.email.list, v)
 		end
 	end
 end
@@ -259,28 +262,31 @@ local function RecoveryPlayer(player, data)
 		print("角色不一致，无法恢复")
 		return
 	end
-	if player.components.allachivevent ~= nil then
-		for k,v in pairs(_G.allachiv_eventdata or {}) do
+	if player.components.taskdata ~= nil then
+		for k,v in pairs(_G.task_data or {}) do
 	        if type(v) == "number" then
-	            player.components.allachivevent[k] = data[k] or 0
+	            player.components.taskdata[k] = data[k] or 0
 	        end
 	    end
-	    player.components.allachivevent.killboss = data["killboss"] or 0
-	    if player.components.allachivevent.all > 0 then
-	    	player.components.allachivevent.complete_time = data["complete_time"] or nil
+	    player.components.taskdata.killboss = data["killboss"] or 0
+	    if player.components.taskdata.all > 0 then
+	    	player.components.taskdata.complete_time = data["complete_time"] or nil
 	    end
-	    player.components.allachivevent.temp_total = data["temp_total"] or 0
-	    player.components.allachivevent.tumbleweednum = data["tumbleweednum"] or 0
+	    player.components.taskdata.temp_total = data["temp_total"] or 0
+	    player.components.taskdata.tumbleweednum = data["tumbleweednum"] or 0
 	end
-	if player.components.allachivcoin ~= nil then
-		for k,v in pairs(_G.allachiv_coinuse) do
-			player.components.allachivcoin[k] = data[k] or 0
+	if player.components.skilldata ~= nil then
+		for k,v in pairs(_G.skill_constant) do
+			player.components.skilldata[v.id] = data[k] or 0
 		end
-		player.components.allachivcoin.coinamount = data["coin"] or 0
+		player.components.skilldata.skill_used = data["skill_used"] or 0
 	end
-	if player.components.levelsystem ~= nil then
-		player.components.levelsystem.overallxp = data["xp"] or 0
-		player.components.levelsystem.level = data["level"] or 1
+	player.components.purchase.coin = data["coin"] or 0
+	player.components.purchase.coin_used = data["purchase_used"] or 0
+	if player.components.level ~= nil then
+		player.components.level.xp = data["xp"] or 0
+		player.components.level.totalxp = data["totalxp"] or 0
+		player.components.level.level = data["level"] or 1
 	end
 	--[[SaveAchieve["killboss"] = self.killboss or 0
     SaveAchieve["complete_time"] = self.complete_time or nil
@@ -331,25 +337,23 @@ end
 
 _G.GetGiftFromWeb = function(player)
 	print("--------------同步奖励信息--------------")
-	if player and player.components.titlesystem then
+	if player and player.components.email then
 		GetPlayerGift(player)
 	end
 end
 
-AddPrefabPostInit(
-    "world",
-    function(inst)
-        inst.save_task = inst:DoPeriodicTask(TUNING.TOTAL_DAY_TIME, _G.SaveAllPlayers)
-        inst:DoTaskInTime(10, _G.SaveServer)
-
-        inst:ListenForEvent("ms_playerdespawnandmigrate", function(inst, data)
-        	local player = data.player
-        	SaveOnePlayer(player)
-    	end)
-    end
-)
-
 AddPlayerPostInit(function(inst)
 	--定时获取玩家礼包信息
 	inst.gift_task = inst:DoPeriodicTask(TUNING.TOTAL_DAY_TIME*0.25, _G.GetGiftFromWeb)
+end)
+
+AddSimPostInit(function() 
+	if _G.TheWorld.ismastershard then
+		_G.TheWorld.save_task = _G.TheWorld:DoPeriodicTask(TUNING.TOTAL_DAY_TIME, _G.SaveAllPlayers)
+	    _G.TheWorld:DoTaskInTime(10, _G.SaveServer)
+	end
+    _G.TheWorld:ListenForEvent("ms_playerdespawnandmigrate", function(inst, data)
+    	local player = data.player
+    	SaveOnePlayer(player)
+	end)
 end)
