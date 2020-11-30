@@ -152,6 +152,7 @@ end)
 --end
 
 --引入mod文件
+modimport("scripts/modmain/worldshard.lua")
 modimport("scripts/modmain/stacksize.lua")
 modimport("scripts/modmain/initcomponents.lua")
 modimport("scripts/modmain/initprefab.lua")
