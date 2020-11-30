@@ -428,14 +428,12 @@ function ShopDetail:Close()
 end
 
 function ShopDetail:OnGainFocus()
-    --此处需要控制鼠标滑动不影响游戏缩放(未完成)
-    local controller = TheInput:ControllerAttached()
-    TheInput:EnableMouse(not controller)
-    --self:SetFocus()
+    self.camera_controllable_reset = TheCamera:IsControllable()
+    TheCamera:SetControllable(false)
 end
 
 function ShopDetail:OnLoseFocus()
-    TheInput:EnableMouse(true)
+    TheCamera:SetControllable(self.camera_controllable_reset == true)
 end
 
 return ShopDetail

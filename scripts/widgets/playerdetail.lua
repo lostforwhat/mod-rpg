@@ -25,6 +25,7 @@ local PlayerDetail = Class(Widget, function(self, owner)
 
     self:Layout()
     
+    self.scrolldir = true
 end)
 
 function PlayerDetail:SetPlayerData()
@@ -788,6 +789,15 @@ end
 
 function PlayerDetail:OnControl(control, down)
     if PlayerDetail._base.OnControl(self, control, down) then return true end
+end
+
+function PlayerDetail:OnGainFocus()
+    self.camera_controllable_reset = TheCamera:IsControllable()
+    TheCamera:SetControllable(false)
+end
+
+function PlayerDetail:OnLoseFocus()
+    TheCamera:SetControllable(self.camera_controllable_reset == true)
 end
 
 return PlayerDetail
