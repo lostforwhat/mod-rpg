@@ -88,7 +88,7 @@ end
 
 AddClassPostConstruct("widgets/controls", AddPlayerStatus)
 
-AddClassPostConstruct("screens/playerhud", function(self, anim, owner)
+AddClassPostConstruct("screens/playerhud", function(self)
     self.ShowTaskScreen = function(_)
         
         self.taskscreen = TaskScreen(self.owner)
@@ -168,5 +168,6 @@ modimport("scripts/modmain/worldregrowth.lua")
 modimport("scripts/modmain/asyncworld.lua")
 modimport("scripts/modmain/save.lua")
 modimport("scripts/modmain/clean.lua")
+modimport("scripts/modmain/multiworld.lua")
 --debug
 modimport("scripts/modmain/debug.lua")

@@ -97,28 +97,38 @@ function Titles:CheckAll()
 end
 
 function Titles:CheckTitles(id)
-	local title = self.titles[id]
-	if title ~= nil then
-		local conditions = title.conditions
-		if conditions ~= nil then
-			local get = true
-			local cons = {}
-			for _, v in pairs(conditions) do
-				if v and v.fn then
-					if v.fn(self.inst) then
-						cons[_] = 1
-					else
-						cons[_] = 0
-						get = false
+	if TheWorld.ismastersim then
+		local title = self.titles[id]
+		if title ~= nil then
+			local conditions = title.conditions
+			if conditions ~= nil then
+				local get = true
+				local cons = {}
+				for _, v in pairs(conditions) do
+					if v and v.fn then
+						if v.fn(self.inst) then
+							cons[_] = 1
+						else
+							cons[_] = 0
+							get = false
+						end
 					end
 				end
+				self[id] = cons
+				if not table.contains(self.titles_id_has, id) then
+					table.insert(self.titles_id_has, id)
+				end
+				return get
 			end
-			self[id] = cons
-			if not table.contains(self.titles_id_has, id) then
-				table.insert(self.titles_id_has, id)
-			end
-			return get
 		end
+	else
+		local conditions = self.net_data[id] and self.net_data[id]:value() or nil
+		if conditions == nil then return false end
+		local get = true
+		for _, v in pairs(conditions) do
+			get = v == 1 and get or false
+		end
+		return get
 	end
 end
 

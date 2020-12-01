@@ -646,7 +646,7 @@ function PlayerDetail:LoadTitles()
     self.titles_data = {}
     if titles_data then
         for k, v in pairs(titles_data) do
-            if v.id and not v.hide then
+            if v.id and (not v.hide or self.owner.components.titles:CheckTitles(v.id)) then
                 if v.exclusive == nil or
                     (type(v.exclusive) == "table" and table.contains(v.exclusive, self.owner.prefab)) or
                     (type(v.exclusive) == "string" and v.exclusive == self.owner.prefab) then
