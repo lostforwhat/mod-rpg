@@ -64,9 +64,11 @@ function Titles:Init()
 			end
 		end
 	end
-	inst:DoTaskInTime(0, function()
-		self:CheckAll()
-	end)
+	if TheWorld.ismastersim then
+		inst:DoTaskInTime(0, function()
+			self:CheckAll()
+		end)
+	end
 end
 
 function Titles:CheckAll()

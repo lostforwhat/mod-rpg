@@ -3,8 +3,8 @@ require "modmain/skill_constant"
 local assets =
 {
     Asset("ANIM", "anim/skillbook.zip"),
-    Asset("IMAGE", "images/inventory/skillbook.tex"),
-    Asset("ATLAS", "images/inventory/skillbook.xml"),
+    Asset("IMAGE", "images/inventoryimages/skillbook.tex"),
+    Asset("ATLAS", "images/inventoryimages/skillbook.xml"),
 }
 
 local function OnPray(inst, prayer)
@@ -69,7 +69,7 @@ local function fn()
 
     inst:AddComponent("inventoryitem")
     inst.components.inventoryitem.imagename = "skillbook"
-    inst.components.inventoryitem.atlasname = "images/inventory/skillbook.xml"
+    inst.components.inventoryitem.atlasname = "images/inventoryimages/skillbook.xml"
 
     inst:AddComponent("fuel")
     inst.components.fuel.fuelvalue = TUNING.MED_FUEL

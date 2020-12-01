@@ -1,4 +1,6 @@
 local _G = GLOBAL
+local unpack = _G.unpack
+
 local key = "##MODRPG#(%d+)#"
 _G.SHARD_KEY = string.gsub(key, "%(%%d%+%)", _G.TheShard:GetShardId()); --当前世界则把key替换为具体值
 _G.shards_data = {} -- {rules , fn}
@@ -16,10 +18,14 @@ end
 local OldNetworking_SystemMessage = _G.Networking_SystemMessage
 _G.Networking_SystemMessage = function(message)
 	local st, ed, id = string.find(message, key)
+--	print("st", st)
 	if st == 1 then
-		local content = string.sub(message, ed)
+		local content = string.sub(message, ed + 1)
+		--print("content", content)
 		for rule, fns in pairs(_G.shards_data) do
+			--print("rule", rule)
 			local res = {string.find(content, rule)} --pack
+			--print("res", unpack(res))
 			if res ~= nil and res[1] == 1 then
 				for _, fn in ipairs(fns) do
 					fn(content, id, unpack(res))
