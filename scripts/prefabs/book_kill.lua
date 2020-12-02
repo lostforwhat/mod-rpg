@@ -16,16 +16,17 @@ local function Onread(inst, reader)
     if reader.prefab ~= "wickerbottom" then
         max_rad = 5
     end
-    local pt = owner:GetPosition()
+    local pt = reader:GetPosition()
     for k=1, max_rad do 
         local n = 2*k + 2
         for j=1, n do
-            local offset = FindWalkableOffset(pt, j * 2 * PI, k, 3, false, true, NoHoles)
-            if offset ~= nil then
+            local angle = j * 2 * PI / n
+            local pos = Vector3(k*math.cos(angle)+pt.x, 0, k*math.sin(angle)+pt.z)
+            if pos ~= nil and TheWorld.Map:IsPassableAtPoint(pos:Get()) then
                 local tentacle = SpawnPrefab("shadowtentacle_player")
                 if tentacle ~= nil then
                     tentacle:SetOwner(reader)
-                    tentacle.Transform:SetPosition(pt.x + offset.x, 0, pt.z + offset.z)
+                    tentacle.Transform:SetPosition(pos:Get())
                 end
             end
         end

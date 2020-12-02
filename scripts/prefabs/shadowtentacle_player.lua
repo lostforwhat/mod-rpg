@@ -9,9 +9,14 @@ local RETARGET_MUST_TAGS = { "_combat", "_health" }
 local RETARGET_CANT_TAGS = { "prey" }
 local NO_PVP_TAGS = {"prey", "player"}
 local function retargetfn(inst)
+    local target = inst.components.combat.target
+    if target ~= nil and
+       not target.components.health:IsDead() then
+        return target
+    end
     return FindEntity(
         inst,
-        2,
+        2.5,
         function(guy) 
             return guy.prefab ~= inst.prefab
                 and guy ~= inst.owner
@@ -38,7 +43,7 @@ local function shouldKeepTarget(inst, target)
         and target.entity:IsVisible()
         and target.components.health ~= nil
         and not target.components.health:IsDead()
-        and target:IsNear(inst, TUNING.TENTACLE_STOPATTACK_DIST)
+        and target:IsNear(inst, 2.5)
 end
 
 local function SetOwner(inst, owner)
@@ -52,7 +57,7 @@ end
 --转移击杀事件
 local function OnKilled(inst, data)
     if inst.owner ~= nil then
-        inst:PushEvent("killed", data)
+        inst.owner:PushEvent("killed", data)
     end
 end
 
@@ -73,7 +78,7 @@ local function fn()
 
     inst.AnimState:SetBank("tentacle_arm")
     inst.AnimState:SetBuild("tentacle_arm_black_build")
-    inst.AnimState:PlayAnimation("idle", true)
+    inst.AnimState:PlayAnimation("atk_loop", true)
 
     inst:AddTag("shadow")
     inst:AddTag("notarget")
@@ -88,26 +93,27 @@ local function fn()
     inst.components.health:SetMaxHealth(TUNING.TENTACLE_HEALTH)
 
     inst:AddComponent("combat")
-    inst.components.combat:SetRange(2)
+    inst.components.combat:SetRange(2.5)
     inst.components.combat:SetDefaultDamage(TUNING.TENTACLE_DAMAGE)
-    inst.components.combat:SetAttackPeriod(TUNING.TENTACLE_ATTACK_PERIOD)
-    inst.components.combat:SetRetargetFunction(GetRandomWithVariance(2, 0.5), retargetfn)
+    inst.components.combat:SetAttackPeriod(TUNING.TENTACLE_ATTACK_PERIOD*.25)
+    inst.components.combat:SetRetargetFunction(GetRandomWithVariance(1, 0.5), retargetfn)
     inst.components.combat:SetKeepTargetFunction(shouldKeepTarget)
    
     MakeLargeFreezableCharacter(inst)
 
     inst:AddComponent("sanityaura")
-    inst.components.sanityaura.aura = -TUNING.SANITYAURA_MED
+    inst.components.sanityaura.aura = -TUNING.SANITYAURA_TINY
 
     inst:AddComponent("lootdropper")
     inst.components.lootdropper:SetLoot({})
 
-    inst:SetStateGraph("SGshadowtentacle")
+    inst:SetStateGraph("SGshadowtentacle_player")
 
     inst:DoTaskInTime(30, inst.Remove)
     inst.persists = false
 
     inst:ListenForEvent("killed", OnKilled)
+    inst.SetOwner = SetOwner
 
     return inst
 end

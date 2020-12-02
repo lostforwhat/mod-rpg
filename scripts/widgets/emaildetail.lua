@@ -78,7 +78,7 @@ function EmailDetail:LoadEmails()
             self.shop_scroll_list:OnWidgetFocus(widget)
         end)
 
-        widget.item = widget:AddChild(self:ShopItem())
+        widget.item = widget:AddChild(BuildEmail())
         local item = widget.item
 
         widget.focus_forward = item

@@ -1,6 +1,7 @@
 --多世界信息
 local _G = GLOBAL
 local TheNet = _G.TheNet
+local tonumber = _G.tonumber
 --local TheWorld = _G.TheWorld
 
 local DEFAULT_MAX_PLAYERS = 99
@@ -16,42 +17,47 @@ local function GetLength(tab)
     return count
 end
 
+local function GetWorldNum()
+	local worldnum = 1
+	if _G.TheWorld ~= nil and _G.TheWorld.ShardList ~= nil then
+		worldnum = #_G.TheWorld.ShardList + 1
+	end
+	return worldnum
+end
+
+local function GetMaxPlayers()
+	local server_max_players = TheNet:GetServerMaxPlayers()
+	local worldnum = GetWorldNum()
+	return GetModConfigData("max_players") 
+		or math.ceil(server_max_players/worldnum) 
+		or DEFAULT_MAX_PLAYERS
+end
+
+local function ShardMax()
+	local max_players = GetMaxPlayers()
+	local msg = _G.SHARD_KEY.."maxplayers"..max_players
+    TheNet:SystemMessage(msg)
+end
+
+local function ShardPlayer()
+	local msg = _G.SHARD_KEY.."players"..(_G.AllPlayers ~= nil and #_G.AllPlayers or 0)
+    TheNet:SystemMessage(msg)
+end
+
+local function ShardPlayerAndMax()
+	local max_players = GetMaxPlayers()
+	local msg = _G.SHARD_KEY.."players"..(_G.AllPlayers ~= nil and #_G.AllPlayers or 0).."-"..max_players
+    TheNet:SystemMessage(msg)
+end
+
 if TheNet:GetIsServer() or TheNet:IsDedicated() then
-	local function GetWorldNum()
-		local worldnum = 1
-		if _G.TheWorld ~= nil and _G.TheWorld.ShardList ~= nil then
-			worldnum = #_G.TheWorld.ShardList + 1
-		end
-		return worldnum
-	end
-
-	local function GetMaxPlayers()
-		local server_max_players = TheNet:GetServerMaxPlayers()
-		local worldnum = GetWorldNum()
-		return GetModConfigData("max_players") 
-			or math.ceil(server_max_players/worldnum) 
-			or DEFAULT_MAX_PLAYERS
-	end
-
-	local function ShardMax()
-		local max_players = GetMaxPlayers()
-		local msg = _G.SHARD_KEY.."maxplayers"..max_players
-	    TheNet:SystemMessage(msg)
-	end
-
-	local function ShardPlayer()
-		local msg = _G.SHARD_KEY.."players"..(_G.AllPlayers ~= nil and #_G.AllPlayers or 0)
-	    TheNet:SystemMessage(msg)
-	end
-
-	local function ShardPlayerAndMax()
-		local max_players = GetMaxPlayers()
-		local msg = _G.SHARD_KEY.."players"..(_G.AllPlayers ~= nil and #_G.AllPlayers or 0).."-"..max_players
-	    TheNet:SystemMessage(msg)
-	end
-
 	local function SetWorldData(worldId, players, maxplayers)
 		if _G.TheWorld == nil then return end
+		--处理数据，将string转数字
+		worldId = worldId ~= nil and tonumber(worldId) or worldId
+		players = players ~= nil and tonumber(players) or players
+		maxplayers = maxplayers ~= nil and tonumber(maxplayers) or maxplayers
+
 		if _G.TheWorld.sharddata == nil then
 			_G.TheWorld.sharddata = {}
 		end

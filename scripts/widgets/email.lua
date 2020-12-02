@@ -21,7 +21,7 @@ local Email = Class(Widget, function(self, owner)
         end
     end, TheWorld)
 
-    self:Hide()
+    --self:Hide()
     self:CheckEmail()
     
 end)
