@@ -71,6 +71,7 @@ table.insert(PrefabFiles, "new_buffs")
 local PlayerStatus = require('widgets/playerstatus')
 local PlayerDetail = require('widgets/playerdetail')
 local ShopDetail = require('widgets/shopdetail')
+local EmailDetail = require('widgets/emaildetail')
 local TaskScreen = require('screens/taskscreen')
 local function AddPlayerStatus(self)
 	self.player_status = self.top_root:AddChild(PlayerStatus(self.owner))
@@ -103,8 +104,17 @@ AddClassPostConstruct("screens/playerhud", function(self)
         end
     end
 
+    self.CloseDefaultPlayerInfo = function(_)
+    	if self.playeravatarpopup ~= nil and
+	        self.playeravatarpopup.started and
+	        self.playeravatarpopup.inst:IsValid() then
+	        self.playeravatarpopup:Close()
+	    end
+	end
+
     self.ShowPlayerDetail = function(_)
     	if self.playerdetail == nil then
+    		self:CloseDefaultPlayerInfo()
     		self.playerdetail = self.controls.right_root:AddChild(PlayerDetail(self.owner))
     	end
 	end
@@ -113,6 +123,12 @@ AddClassPostConstruct("screens/playerhud", function(self)
 			self.playerdetail:Close()
 			self.playerdetail = nil
 		end
+	end
+
+	local OldTogglePlayerAvatarPopup = self.TogglePlayerAvatarPopup
+	self.TogglePlayerAvatarPopup = function(...)
+		self:ClosePlayerDetail()
+		OldTogglePlayerAvatarPopup(...)
 	end
 
 	self.ShowShopDetail = function(_)
@@ -127,15 +143,15 @@ AddClassPostConstruct("screens/playerhud", function(self)
 		end
 	end
 
-	self.ShowTitlesDetail = function(_)
-		if self.titlesdetail == nil then
-			self.titlesdetail = self.controls.topleft_root:AddChild(TitlesDetail(self.owner))
+	self.ShowEmailDetail = function(_)
+		if self.emaildetail == nil then
+			self.emaildetail = self.controls.topleft_root:AddChild(EmailDetail(self.owner))
 		end
 	end
-	self.CloseTitlesDetail = function(_)
-		if self.titlesdetail then
-			self.titlesdetail:Close()
-			self.titlesdetail = nil
+	self.CloseEmailDetail = function(_)
+		if self.emaildetail then
+			self.emaildetail:Close()
+			self.emaildetail = nil
 		end
 	end
 
@@ -145,6 +161,7 @@ AddClassPostConstruct("screens/playerhud", function(self)
 		if not down and control == _G.CONTROL_CANCEL then
 			self:ClosePlayerDetail()
 			self:CloseShopDetail()
+			self:CloseEmailDetail()
 		end
 		return OldOnControl(self, control, down)
 	end

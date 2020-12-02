@@ -40,3 +40,11 @@ end)
 AddModRPCHandler("RPG_vip", "refresh", function(player) 
 	player.components.vip:Get()
 end)
+
+--worldpicker
+AddModRPCHandler("RPG_worldpicker", "migrate", function(player, id)
+	if player ~= nil and player:HasTag("player") 
+		and not player:HasTag("playerghost") then
+		player.components.migrater:StartMigrate(id)
+	end
+end)

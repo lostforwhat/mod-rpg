@@ -1,21 +1,24 @@
+local function CheckWorldId(worldid)
+	if worldid == TheShard:GetShardId() then
+		return false
+	end
+	local shards = Shard_GetConnectedShards()
+	return shards[worldid] ~= nil
+end
 
 local Migrater = Class(function(self, inst) 
     self.inst = inst
 end)
 
-function Migrater:SetFn(fn)
-    self.fn = fn
+function Migrater:SetCheckFn(fn)
+    self.checkfn = fn
 end
 
-function Migrater:StartMigrate(player)
-	if player~=nil and player:HasTag("player") then
-		
-		
-		if self.inst.components.stackable ~= nil then
-			self.inst.components.stackable:Get():Remove()
-		else
-			self.inst:Remove()
-		end
+function Migrater:StartMigrate(worldid)
+	if CheckWorldId(worldid) and 
+		(self.checkfn == nil or self.checkfn(self.inst)) then
+
+		TheWorld:PushEvent("ms_playerdespawnandmigrate", { player = self.inst, portalid = 1, worldid = worldid })
 	end
 end
 

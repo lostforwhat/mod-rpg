@@ -42,6 +42,19 @@ local function RedirectDamageFn(inst, attacker, damage, weapon, stimuli)
 	return redirect_tagert
 end
 
+local function PlayerMigrateCheck(player)
+	if player.components.vip ~= nil and player.components.vip.level > 0 then
+		return true
+	end
+	return FindEntity(
+	        player,
+	        5,
+	        function(guy) 
+	            return guy:HasTag("migrator")
+	            	or guy:HasTag("multiplayer_portal")
+	        end) ~= nil
+end
+
 --角色初始化
 AddPlayerPostInit(function(inst) 
 	inst:AddComponent("vip")
@@ -75,7 +88,7 @@ AddPlayerPostInit(function(inst)
 
 	end
 	if prefab == "wathgrithr" then
-		--inst:AddComponent("fighting") --新版本使用女武神自带的舞蹈组件代替
+		--inst:AddComponent("fighting") --新版本使用女武神自带的sing组件代替
 	end
 	if prefab == "wolfgang" then
 		
@@ -125,6 +138,8 @@ AddPlayerPostInit(function(inst)
 	if _G.TheWorld.ismastersim then
 		inst:AddComponent("stealer")
 		inst:AddComponent("timer")
+		inst:AddComponent("migrater")
+		inst.components.migrater:SetCheckFn(PlayerMigrateCheck)
 		--inst:DoTaskInTime(0.1, function() 
 	        local prefab = inst.prefab
 			if prefab == "wilson" then

@@ -9,7 +9,7 @@ local Email = Class(Widget, function(self, owner)
 
     self.button = self:AddChild(ImageButton("images/hud/email.xml", "email.tex"))
     self.button:SetHoverText("邮件",{ size = 9, offset_x = 40, offset_y = -45, colour = {1,1,1,1}})
-    self.button:SetOnClick(function() self:DoRecievedEmail() end)
+    self.button:SetOnClick(function() self:ToggleEmailDetail() end)
 
     self.text = self:AddChild(Text(TALKINGFONT, 28))
     self.text:SetPosition(0, -85, 0)
@@ -32,12 +32,12 @@ function Email:CheckEmail()
     end, self.owner)
 end
 
-function Email:DoRecievedEmail()
-
-end
-
-function Email:OnShow()
-    self:Show()
+function Email:ToggleEmailDetail()
+    if self.owner.HUD.emaildetail ~= nil then
+        self.owner.HUD:CloseEmailDetail()
+    else
+        self.owner.HUD:ShowEmailDetail()
+    end
 end
 
 

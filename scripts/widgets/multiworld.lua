@@ -1,8 +1,23 @@
+require 'util'
+
 local Widget = require "widgets/widget"
 local UIAnim = require "widgets/uianim"
 local ImageButton = require "widgets/imagebutton"
 local Text = require "widgets/text"
+local TEMPLATES2 = require "widgets/redux/templates"
 
+local function GetLength(tab)
+    local count = 0
+    if type( tab ) ~= "table" then
+        return 0
+    end
+    for k, v in pairs( tab ) do
+        count = count + 1
+    end
+    return count
+end
+
+local TIMEOUT = 5
 
 local MultiWorld = Class(Widget, function(self)
     Widget._ctor(self, "MultiWorld")
@@ -24,6 +39,7 @@ local MultiWorld = Class(Widget, function(self)
     self.info_out_pos = Vector3(0, 0, 0)
     self.info_in_pos = Vector3(0, 0, 0)
     
+    self.timeout = TIMEOUT
     --self:Hide()
 end)
 
@@ -45,6 +61,7 @@ function MultiWorld:ToggleInfo()
 end
 
 function MultiWorld:CloseInfo()
+    self:StopUpdating()
     self.info:Kill()
     self.info = nil
 end
@@ -56,12 +73,44 @@ function MultiWorld:ShowInfo()
     end, TheWorld.net)
     self:SetWorldList()
     self.info:MoveTo(self.info_out_pos, self.info_in_pos, .33, function() end)
+    self.timeout = TIMEOUT
+    self:StartUpdating()
 end
 
 function MultiWorld:SetWorldList()
+    local btn_width, btn_height = 30, 30
+    local offset = 5
     local sharddata = TheWorld.net.components.sharddata:Get() or {}
-    for _id, data in pairs(sharddata) do
-        
+    local total = GetLength(sharddata) - 1
+    self.worldlist = {}
+
+    local panel_width, panel_height = (btn_width + offset) * total, btn_height
+    self.worldpanel = self.info:AddChild(TEMPLATES2.RectangleWindow(panel_width, panel_height))
+    
+    local index = 1
+    for _id, data in orderedPairs(sharddata) do
+        if _id ~= TheShard:GetShardId() then
+            local str = (data.name or ("世界".._id)).."\n"..(data.players or 0).."/"..(data.maxplayers or 0)
+            self.worldlist[_id] = self.worldpanel:AddChild(TEMPLATES2.StandardButton(function() 
+                SendModRPCToServer(MOD_RPC.RPG_worldpicker.migrate, _id)
+            end, str, {btn_width, btn_height}))
+            self.worldlist[_id]:SetPosition(btn_width * 0.5 - panel_width * 0.5 + (btn_width + offset) * (index - 1), 0)
+            index = index + 1
+        end
+    end
+
+    self.info_out_pos = Vector3(panel_width * 0.5 + 100, 50, 0)
+    self.info_in_pos = Vector3(-panel_width, 50, 0)
+end
+
+function MultiWorld:OnUpdate(dt)
+    if self.focus then
+        self.timeout = TIMEOUT
+    else
+        self.timeout = self.timeout - dt
+    end
+    if self.timeout <= 0 then
+        self:CloseInfo()
     end
 end
 
