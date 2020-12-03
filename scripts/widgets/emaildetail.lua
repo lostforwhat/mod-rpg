@@ -21,6 +21,7 @@ local EmailDetail = Class(Widget, function(self, owner)
     self.proot:SetPosition(335, 0)
 
     self.emails = {}
+    self:GetEmailFromServer()
     self:Layout()
 
     self.inst:ListenForEvent("emaildirty", function()
@@ -30,10 +31,11 @@ local EmailDetail = Class(Widget, function(self, owner)
 end)
 
 function EmailDetail:GetEmailFromServer()
+    self.emails = {}
     local emails = deepcopy(self.owner.components.email:GetEmail() or {})
     for k, v in pairs(emails) do
         if v ~= nil and next(v) ~= nil then --排除空数据
-            tabale.insert(self.emails, {index=k, item=v})
+            table.insert(self.emails, {index=k, item=v})
         end
     end
     if self.email_scroll_list ~= nil then
@@ -51,7 +53,7 @@ function EmailDetail:Layout()
     self.frame:SetTint(0.8, 0.8, 0.8, 0.8)
     self.frame_bg:SetTint(0.8, 0.8, 0.8, 0.8)
 
-    self.close_button = self.proot:AddChild(TEMPLATES.SmallButton("关闭", 26, .5, function() self.owner.HUD:CloseShopDetail() end))
+    self.close_button = self.proot:AddChild(TEMPLATES.SmallButton("关闭", 26, .5, function() self.owner.HUD:CloseEmailDetail() end))
     self.close_button:SetPosition(0, -295)
 
     self:LoadEmails()
@@ -65,26 +67,28 @@ function EmailDetail:Layout()
 end
 
 function EmailDetail:LoadEmails()
-    local item_width, item_height = 420, 84
+    local item_width, item_height = 440, 140
 
     local function BuildEmail()
         local email_item = Widget("EmailItem")
 
-        email_item.backing = email_item:AddChild(TEMPLATES2.ListItemBackground(item_width, item_height, function() end))
+        email_item.backing = email_item:AddChild(TEMPLATES2.ListItemBackground_Static(item_width, item_height))
         email_item.backing.move_on_click = true
         local backing = email_item.backing
 
         email_item.title = backing:AddChild(Text(NUMBERFONT, 28))
-        email_item.title:SetPosition(0, 30)
-        email_item.title:SetRegionSize(item_width * .8, 20)
+        email_item.title:SetPosition(0, 50)
+        email_item.title:SetRegionSize(item_width * .9, 30)
         email_item.title:SetColour(0, 1, 0, 1)
+        email_item.title:SetHAlign(ANCHOR_LEFT)
 
-        email_item.content = backing:AddChild(Text(NUMBERFONT, 20))
+        email_item.content = backing:AddChild(Text(NUMBERFONT, 22))
         email_item.content:SetPosition(0, 10)
-        email_item.content:SetRegionSize(item_width * .8, 20)
+        email_item.content:SetRegionSize(item_width * .9, 40)
+        email_item.content:SetHAlign(ANCHOR_LEFT)
 
         email_item.prefab = backing:AddChild(Widget("EmailPrefab"))
-        email_item.prefab:SetPosition(0, -15)
+        email_item.prefab:SetPosition(0, -40)
 
         email_item.SetInfo = function(_, data)
             email_item.prefab:KillAllChildren()
@@ -103,12 +107,12 @@ function EmailDetail:LoadEmails()
 
             email_item.title:SetString("["..time.." "..sender.."] "..title)
 
-            email_item.content:SetMultilineTruncatedString(content, 3, 420, 30, "", false)
+            email_item.content:SetMultilineTruncatedString(content, 3, item_width * .9, 60, "", false)
 
-            email_item.get = item_backing:AddChild(TEMPLATES2.StandardButton(function() 
+            email_item.get = backing:AddChild(TEMPLATES2.StandardButton(function() 
                 SendModRPCToServer(MOD_RPC.RPG_email.received, id)
-            end, "接收", {60, 40}))
-            email_item.get:SetPosition(200, 30)
+            end, "接收", {50, 40}))
+            email_item.get:SetPosition(180, 45)
 
             local prefabs = item.prefabs or {}
             local slot_max_num = #prefabs
@@ -120,21 +124,21 @@ function EmailDetail:LoadEmails()
                     local use_left = prefabs[k].use_left or 1
                     email_item.slot[k] = email_item.prefab:AddChild(GoodsSlot(self.owner, name, num, use_left))
                     email_item.slot[k]:SetTile(GoodsTile(name))
-
-                    email_item.slot[k]:SetPosition(-210 + 38 + (k -1) * 76, 0)
+                    email_item.slot[k]:SetScale(0.6)
+                    email_item.slot[k]:SetPosition(-198 + 21 + (k -1) * 42, 0)
                 end
             end
         end
 
-        shop_item.focus_forward = shop_item.backing
-        return shop_item
+        email_item.focus_forward = email_item.backing
+        return email_item
     end
 
     local function ScrollWidgetsCtor(context, index)
         local widget = Widget("widget-" .. index)
 
         widget:SetOnGainFocus(function()
-            self.shop_scroll_list:OnWidgetFocus(widget)
+            self.email_scroll_list:OnWidgetFocus(widget)
         end)
 
         widget.item = widget:AddChild(BuildEmail())
@@ -167,7 +171,7 @@ function EmailDetail:LoadEmails()
                 context = {},
                 widget_width = item_width,
                 widget_height = item_height,
-                num_visible_rows = 5,
+                num_visible_rows = 4,
                 num_columns = 1,
                 item_ctor_fn = ScrollWidgetsCtor,
                 apply_fn = ApplyDataToWidget,

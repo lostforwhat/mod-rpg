@@ -77,6 +77,7 @@ AddPlayerPostInit(function(inst)
 	inst:AddComponent("stealth")
 	--inst:AddComponent("revenge")
 	inst:AddComponent("titles")
+	inst:AddComponent("email")
 	local prefab = inst.prefab
 	if prefab == "wilson" then
 
@@ -194,6 +195,9 @@ AddPlayerPostInit(function(inst)
 			if prefab == "warly" then
 				inst.components.combat:SetRange(2.5)
 				inst.components.skilldata:SetLevel("memorykill", 1)
+			end
+			if prefab == "webber" then
+				inst.components.skilldata:SetLevel("spiderbody", 1)
 			end
 		--end)
 		--全局注册伤害转移方法

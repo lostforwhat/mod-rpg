@@ -21,14 +21,18 @@ local Email = Class(Widget, function(self, owner)
         end
     end, TheWorld)
 
-    --self:Hide()
+    self:Hide()
     self:CheckEmail()
     
 end)
 
 function Email:CheckEmail()
-    self.inst:ListenForEvent("emaildirty", function() 
-        
+    self.inst:ListenForEvent("hasemaildirty", function() 
+        if self.owner.components.email:HasEmail() then
+            self:Show()
+        else
+            self:Hide()
+        end
     end, self.owner)
 end
 

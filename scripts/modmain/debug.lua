@@ -1,5 +1,6 @@
 --debug
 local _G = GLOBAL
+local os = _G.os
 local GetDebugEntity = GetDebugEntity or _G.GetDebugEntity or nil
 
 local function ConsoleCommandPlayer()
@@ -29,5 +30,25 @@ _G.x_addcoin = function(val)
 		val = type(val) == "number" and val or 1000
 		player.components.purchase:CoinDoDelta(val)
 		print("x_addcoin: "..val)
+	end
+end
+
+_G.x_addemail = function()
+	local player = ConsoleCommandPlayer()
+	if player and player.components.email then
+		local email = {
+			_id = math.random(999999),
+			title = "感谢支持",
+			content = "感谢您支持本mod，祝您游戏愉快！",
+			prefabs = {
+				{
+					prefab = "ash",
+					num = 2,
+				}
+			},
+			sender = "system",
+			time = tostring(os.date())
+		}
+		player.components.email:AddEmail(email)
 	end
 end

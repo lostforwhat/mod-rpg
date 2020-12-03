@@ -42,12 +42,12 @@ local Email = Class(function(self, inst)
     	has = net_bool(inst.GUID, "email.has", "hasemaildirty")
     }
     --eg. self.list
-	--[[
-	self.list = {
+	
+	--[[self.list = {
 		{
 			_id = "1",
-			title = "title",
-			content = "content",
+			title = "无标题",
+			content = "恭喜您获得奖励！",
 			prefabs = {
 				{
 					prefab = "achiv_clear",
@@ -59,20 +59,40 @@ local Email = Class(function(self, inst)
 				}
 			},
 			sender = "system",
-			time = tostring(os.data())
+			time = tostring(os.date())
 		},
 		{
 			_id = "2",
-			title = "title",
-			content = "content",
+			title = "感谢支持",
+			content = "感谢您支持本mod，祝您游戏愉快！",
 			prefabs = {
 
 			},
 			sender = "system",
-			time = tostring(os.data())
+			time = tostring(os.date())
+		},
+		{
+			_id = "3",
+			title = "感谢支持",
+			content = "感谢您支持本mod，祝您游戏愉快！",
+			prefabs = {
+
+			},
+			sender = "system",
+			time = tostring(os.date())
+		},
+		{
+			_id = "3",
+			title = "感谢支持",
+			content = "感谢您支持本mod，祝您游戏愉快！",
+			prefabs = {
+
+			},
+			sender = "system",
+			time = tostring(os.date())
 		}
-	}
-	]]
+	}]]
+	
 
     self.list = {}
     self.has = false
@@ -97,6 +117,14 @@ function Email:OnSave()
 	}
 end
 
+function Email:AddEmail(email)
+	if email ~= nil and self:GetEmailForId(email._id) == nil then
+		table.insert(self.list, email)
+		self.net_data.list:set(Table2String(self.list))
+		self.has = true
+	end
+end
+
 function Email:HasEmail()
 	if TheWorld.ismastersim then
 		return self.has or false
@@ -114,10 +142,11 @@ function Email:GetEmail()
 end
 
 function Email:GetEmailForId(id, remove)
+	if #self.list == 0 then return nil end 
 	local temp = {}
 	local target
 	for k,v in pairs(self.list) do
-		if v._id = id then
+		if v._id == id then
 			if not remove then
 				return v
 			end
@@ -126,7 +155,12 @@ function Email:GetEmailForId(id, remove)
 			table.insert(temp, v)
 		end
 	end
-	self.list = temp
+	if target ~= nil then
+		self.list = temp
+		if #self.list == 0 then
+			self.has = false
+		end
+	end
 	return target
 end
 

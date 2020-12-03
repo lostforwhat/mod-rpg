@@ -6,7 +6,7 @@ local assets =
 
 
 local function OnPray(inst, prayer)
-    if prayers and not prayers:HasTag("playerghost") and 
+    if prayer ~= nil and not prayer:HasTag("playerghost") and 
         task_data ~= nil and prayer.components.taskdata ~= nil then 
         local tasks = {}
         for k, v in pairs(task_data) do

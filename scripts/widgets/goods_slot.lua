@@ -20,14 +20,14 @@ local GoodsSlot = Class(ItemSlot, function(self, owner, prefab, num, use_left, v
 
 	self.clickfn = nil
 
-	self.label_num = self:AddChild(Text(NUMBERFONT, 20, msg, {1, 0, 1, 1}))
-	self.label_num:SetPosition(36, -36)
+	self.label_num = self:AddChild(Text(NUMBERFONT, 22, "", {1, 0, 1, 1}))
+	self.label_num:SetPosition(20, -20)
 
-	self.label_use = self:AddChild(Text(NUMBERFONT, 20, msg, {0, 1, 1, 1}))
-	self.label_use:SetPosition(36, 36)
+	self.label_use = self:AddChild(Text(NUMBERFONT, 22, "", {0, 1, 1, 1}))
+	self.label_use:SetPosition(20, 20)
 
-	self.label_value = self:AddChild(Text(NUMBERFONT, 20, msg, {0, 1, 1, 1}))
-	self.label_value:SetPosition(-36, 36)
+	self.label_value = self:AddChild(Text(NUMBERFONT, 22, "", {0, 1, 1, 1}))
+	self.label_value:SetPosition(-20, 20)
 
 	self:SetMeta({
 		prefab = prefab,
@@ -86,15 +86,15 @@ function GoodsSlot:SetMeta(meta)
 end
 
 function GoodsSlot:UpdateTooltip()
-	local str = GetDescriptionString(self.name)
+	local str = GetDescriptionString(self.prefab)
 	if self.value ~= nil then
-		str = str.."\n 价格："..value
+		str = str.."\n 价格："..self.value
 	end
 	if self.num > 0 then
-		str = str.."\n 数量："..num
+		str = str.."\n 数量："..self.num
 	end
 	if self.use_left < 1 then
-		str = str.."\n 耐久："..(use_left*100).."%"
+		str = str.."\n 耐久："..(self.use_left*100).."%"
 	end
 	self:SetTooltip(str)
 end

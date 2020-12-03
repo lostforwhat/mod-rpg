@@ -121,6 +121,9 @@ function Purchase:Purchase(goods)
 		self.spend_temp = self:GetCoinFromGoods(shop_goods)
 		if self.coin < spend then
 			--钱不够
+			if self.inst.components.talker ~= nil then
+				self.inst.components.talker:Say("我得再攒攒钱...")
+			end
 			return
 		end
 		self:CoinDoDelta(-self.spend_temp)

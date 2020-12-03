@@ -3,6 +3,8 @@ local TheNet = _G.TheNet
 local TUNING = _G.TUNING
 env.require = GLOBAL.require
 
+TUNING.token = GetModConfigData("token")
+
 require 'modmain/loot_table'
 require 'modmain/task_constant'
 require 'modmain/skill_constant'
@@ -133,6 +135,7 @@ AddClassPostConstruct("screens/playerhud", function(self)
 
 	self.ShowShopDetail = function(_)
 		if self.shopdetail == nil then
+			self:CloseEmailDetail()
 			self.shopdetail = self.controls.topleft_root:AddChild(ShopDetail(self.owner))
 		end
 	end
@@ -145,6 +148,7 @@ AddClassPostConstruct("screens/playerhud", function(self)
 
 	self.ShowEmailDetail = function(_)
 		if self.emaildetail == nil then
+			self:CloseShopDetail()
 			self.emaildetail = self.controls.topleft_root:AddChild(EmailDetail(self.owner))
 		end
 	end
@@ -184,7 +188,9 @@ modimport("scripts/modmain/worldregrowth.lua")
 --可在设置中关闭
 modimport("scripts/modmain/asyncworld.lua")
 modimport("scripts/modmain/save.lua")
-modimport("scripts/modmain/clean.lua")
+if GetModConfigData("clean") then
+	modimport("scripts/modmain/clean.lua")
+end
 modimport("scripts/modmain/multiworld.lua")
 --debug
 modimport("scripts/modmain/debug.lua")
