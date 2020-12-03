@@ -141,7 +141,7 @@ local function AddMultiWorldPicker(self)
 
 	self.inst:ListenForEvent("worldsharddatadirty", function() 
 		local sharddata = _G.TheWorld.net.components.sharddata:Get() or {}
-		if GetLength(sharddata) < 1 then
+		if GetLength(sharddata) < 2 then
 			self:ReLayout(false)
 		else
 			self:ReLayout(true)

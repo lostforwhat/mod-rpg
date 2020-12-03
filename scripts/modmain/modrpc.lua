@@ -48,3 +48,10 @@ AddModRPCHandler("RPG_worldpicker", "migrate", function(player, id)
 		player.components.migrater:StartMigrate(id)
 	end
 end)
+
+--email
+AddModRPCHandler("RPG_email", "received", function(player, id)
+	if player ~= nil and player.components.email ~= nil then
+		player.components.email:ReceivedEmail(id)
+	end
+end)

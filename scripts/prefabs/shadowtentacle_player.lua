@@ -98,6 +98,9 @@ local function fn()
     inst.components.combat:SetAttackPeriod(TUNING.TENTACLE_ATTACK_PERIOD*.25)
     inst.components.combat:SetRetargetFunction(GetRandomWithVariance(1, 0.5), retargetfn)
     inst.components.combat:SetKeepTargetFunction(shouldKeepTarget)
+
+    inst:AddComponent("attackfrozen")
+    inst.components.attackfrozen.force_frozen = true
    
     MakeLargeFreezableCharacter(inst)
 

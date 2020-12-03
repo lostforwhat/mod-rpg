@@ -40,7 +40,7 @@ local Vip = Class(function(self, inst)
 	self.level = 0
 
 	if TheWorld.ismastersim and self.inst:HasTag("player") then
-		self.inst:DoTaskInTime(1, function() self:Get() end)
+		self.inst:DoTaskInTime(.4, function() self:Get() end)
 		--self:Get()
 	end
 end,

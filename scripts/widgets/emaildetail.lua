@@ -9,11 +9,8 @@ local Widget = require "widgets/widget"
 local ImageButton = require "widgets/imagebutton"
 local TEMPLATES = require "widgets/templates"
 local TEMPLATES2 = require "widgets/redux/templates"
-local EquipSlot = require("equipslotutil")
-
-local DEFAULT_ATLAS = "images/inventoryimages1.xml"
-local DEFAULT_ATLAS2 = "images/inventoryimages2.xml"
-
+local GoodsSlot = require "widgets/goods_slot"
+local GoodsTile = require "widgets/goods_tile"
 
 local EmailDetail = Class(Widget, function(self, owner)
     Widget._ctor(self, "EmailDetail")
@@ -23,11 +20,26 @@ local EmailDetail = Class(Widget, function(self, owner)
     self.proot = self:AddChild(Widget("ROOT"))
     self.proot:SetPosition(335, 0)
 
+    self.emails = {}
     self:Layout()
+
+    self.inst:ListenForEvent("emaildirty", function()
+        self:GetEmailFromServer()
+    end, self.owner)
     
 end)
 
-
+function EmailDetail:GetEmailFromServer()
+    local emails = deepcopy(self.owner.components.email:GetEmail() or {})
+    for k, v in pairs(emails) do
+        if v ~= nil and next(v) ~= nil then --排除空数据
+            tabale.insert(self.emails, {index=k, item=v})
+        end
+    end
+    if self.email_scroll_list ~= nil then
+        self.email_scroll_list:SetItemsData(self.emails)
+    end
+end
 
 function EmailDetail:Layout()
     self.frame = self.proot:AddChild(TEMPLATES.CurlyWindow(260, 560, .6, .6, 39, -25))
@@ -62,9 +74,56 @@ function EmailDetail:LoadEmails()
         email_item.backing.move_on_click = true
         local backing = email_item.backing
 
+        email_item.title = backing:AddChild(Text(NUMBERFONT, 28))
+        email_item.title:SetPosition(0, 30)
+        email_item.title:SetRegionSize(item_width * .8, 20)
+        email_item.title:SetColour(0, 1, 0, 1)
+
+        email_item.content = backing:AddChild(Text(NUMBERFONT, 20))
+        email_item.content:SetPosition(0, 10)
+        email_item.content:SetRegionSize(item_width * .8, 20)
+
+        email_item.prefab = backing:AddChild(Widget("EmailPrefab"))
+        email_item.prefab:SetPosition(0, -15)
 
         email_item.SetInfo = function(_, data)
-            
+            email_item.prefab:KillAllChildren()
+            email_item.slot = nil
+            if email_item.get ~= nil then
+                email_item.get:Kill()
+                email_item.get = nil
+            end
+
+            local item = data.item
+            local id = item._id
+            local title = item.title or ""
+            local content = item.content or "无"
+            local sender = item.sender or "system"
+            local time = item.time or ""
+
+            email_item.title:SetString("["..time.." "..sender.."] "..title)
+
+            email_item.content:SetMultilineTruncatedString(content, 3, 420, 30, "", false)
+
+            email_item.get = item_backing:AddChild(TEMPLATES2.StandardButton(function() 
+                SendModRPCToServer(MOD_RPC.RPG_email.received, id)
+            end, "接收", {60, 40}))
+            email_item.get:SetPosition(200, 30)
+
+            local prefabs = item.prefabs or {}
+            local slot_max_num = #prefabs
+            if slot_max_num > 0 then
+                email_item.slot = {}
+                for k=1, slot_max_num do
+                    local name = prefabs[k].prefab
+                    local num = prefabs[k].num or 1
+                    local use_left = prefabs[k].use_left or 1
+                    email_item.slot[k] = email_item.prefab:AddChild(GoodsSlot(self.owner, name, num, use_left))
+                    email_item.slot[k]:SetTile(GoodsTile(name))
+
+                    email_item.slot[k]:SetPosition(-210 + 38 + (k -1) * 76, 0)
+                end
+            end
         end
 
         shop_item.focus_forward = shop_item.backing
@@ -101,7 +160,6 @@ function EmailDetail:LoadEmails()
 
         item:SetInfo(data)
     end
-    self.emails = {}
 
     if not self.email_scroll_list then
         self.email_scroll_list = self.frame:AddChild(

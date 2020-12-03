@@ -71,7 +71,7 @@ function Stealer:RandomItem(target)
 	local prefab = items[math.random(#items)]
 	if PrefabExists(item) then
 		local item = SpawnPrefab(item)
-		if item.components.inventory == nil then
+		if item.components.inventoryitem == nil then
 			local pack_item = SpawnPrefab("package_ball")
 			pack_item.components.packer:Pack(item)
 			return pack_item

@@ -1,5 +1,31 @@
 require "utils/utils"
 
+local function SpawnItem(prefab, use_left)
+	local item = SpawnPrefab(prefab)
+	if item.components.inventoryitem == nil then --不能放物品栏
+		local real_item = item
+		item = SpawnPrefab("package_ball")
+		item.components.packer:Pack(real_item)
+	end
+	if use_left < 1 then
+		if item.components.perishable ~= nil then
+			item.components.perishable:SetPercent(use_left)
+		end
+		if item.components.finiteuses ~= nil then
+			item.components.finiteuses:SetPercent(use_left)
+		end
+	end
+	return item
+end
+
+local function GiveItem(inst, item)
+	if inst.components.inventory ~= nil then
+		inst.components.inventory:GiveItem(item)
+	else
+		item.Transform:SetPosition(inst:GetPosition():Get())
+	end
+end
+
 local function onhas(self, val)
 	self.net_data.has:set(val)
 end
@@ -19,6 +45,7 @@ local Email = Class(function(self, inst)
 	--[[
 	self.list = {
 		{
+			_id = "1",
 			title = "title",
 			content = "content",
 			prefabs = {
@@ -35,6 +62,7 @@ local Email = Class(function(self, inst)
 			time = tostring(os.data())
 		},
 		{
+			_id = "2",
 			title = "title",
 			content = "content",
 			prefabs = {
@@ -85,8 +113,57 @@ function Email:GetEmail()
 	end
 end
 
-function Email:RecievedEmail()
+function Email:GetEmailForId(id, remove)
+	local temp = {}
+	local target
+	for k,v in pairs(self.list) do
+		if v._id = id then
+			if not remove then
+				return v
+			end
+			target = v
+		else
+			table.insert(temp, v)
+		end
+	end
+	self.list = temp
+	return target
+end
 
+--接收附件并删除邮件
+function Email:ReceivedEmail(id)
+	if TheWorld.ismastersim then
+		local inst = self.inst
+		local email = self:GetEmailForId(id, true)
+		if email ~= nil and email.prefabs ~= nil and next(email.prefabs) ~= nil then
+			for _, v in pairs(email.prefabs) do
+				local prefab = v.prefab
+				local num = v.num or 1
+				local use_left = v.use_left or 1
+				if PrefabExists(prefab) then
+					local item = SpawnItem(prefab, use_left)
+					--可否堆叠
+					if num > 1 and
+						item.components.stackable ~= nil and 
+						item.components.stackable.maxsize >= num then
+						item.components.stackable:SetStackSize(num)
+						GiveItem(inst, item)
+					else
+						while(num > 0) do
+							GiveItem(inst, item)
+							num = num - 1
+						end
+					end
+				end
+			end
+		end
+	else
+		SendModRPCToServer(MOD_RPC.RPG_email.received, id)
+	end
+end
+
+--只接受附件，不删除邮件
+function Email:ReceivedPrefabs(id)
 
 end
 

@@ -271,7 +271,7 @@ end)
 
 --尝试给怪物添加组件
 AddPrefabPostInitAny(function(inst) 
-    if inst.prefab == "bat" then
+    if inst.prefab == "bat" or inst.prefab == "mosquito" then
        inst:AddComponent("lifesteal") 
        if IsServer then
             inst.components.lifesteal:SetPercent(50)
