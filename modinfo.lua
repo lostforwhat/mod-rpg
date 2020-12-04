@@ -48,5 +48,15 @@ configuration_options =
 			{description = "无", data = "", hover = "请直接在服务器的mod设置中配置值"},
 		},
 		default = "",
+	},
+	{
+		name = "save",
+		label = "云存档",
+		hover = "搭建专服时备份服务器数据及人物数据至云服务器\n 此选项需要配置正确的服务器令牌",
+		options = {
+			{description = "开启", data = true, hover = "开启"},
+			{description = "关闭", data = false, hover = "关闭"},
+		}
+		default = false,
 	}
 }

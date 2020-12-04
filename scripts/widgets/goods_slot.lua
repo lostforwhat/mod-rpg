@@ -103,4 +103,11 @@ function GoodsSlot:OnGainFocus()
 	self:UpdateTooltip()
 end
 
+function GoodsSlot:SetTile(...)
+	self._base.SetTile(self, ...)
+	self.label_value:MoveToFront()
+	self.label_use:MoveToFront()
+	self.label_num:MoveToFront()
+end
+
 return GoodsSlot

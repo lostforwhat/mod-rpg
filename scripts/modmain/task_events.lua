@@ -23,9 +23,10 @@ local function GiveExp(inst, exp)
 end
 
 local function OnTumbleweedDroped(inst, data)
+    local taskdata = inst.components.taskdata   
 	local item = data.item
     if not item:HasTag("monster") and item.components.combat == nil then
-        
+        taskdata:AddOne("pick_tumbleweed_gift_50")
 
         if inst.components.luck then
             inst.components.luck:DoDelta(math.random(0,5)-4)
@@ -49,7 +50,7 @@ local function OnTumbleweedPicked(inst, data)
         elseif lucky_level == 2 then
             taskdata:AddOne("pick_tumbleweed_yellow_60")
         elseif lucky_level == 3 then
-            taskdata:AddOne("pick_tumbleweed_light_20")
+            taskdata:AddOne("pick_tumbleweed_light_30")
         elseif lucky_level == -1 then
             taskdata:AddOne("pick_tumbleweed_green_120")
         elseif lucky_level == -2 then

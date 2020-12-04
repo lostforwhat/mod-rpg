@@ -429,7 +429,7 @@ local function doSpawnItem(it, target, picker)
             end
         end
         if name == "pond_gift" then
-            local names = {"pond","pond_cave"}
+            local names = {"pond","pond_cave","lava_pond"}
             local item = spawnAtGround(names[math.random(#names)], x,y,z)
             resetNotice(item:GetDisplayName())
             picker:PushEvent("tumbleweeddropped", {item = item})

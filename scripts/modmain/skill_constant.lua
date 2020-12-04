@@ -105,6 +105,9 @@ local function RedirectToBalloon(inst, attacker, ...)
     end
 end
 
+--保持和task_constant一致
+local rate = 6
+
 -- skill constant
 skill_constant = {
 	--专属
@@ -587,7 +590,7 @@ skill_constant = {
 	{
 		id="extra_hunger",
 		name="额外饱腹",
-		cost=5,
+		cost=5*rate,
 		max_level=100,
 		desc_fn=function(self, owner)
 			local desc_str = self.name
@@ -609,7 +612,7 @@ skill_constant = {
 	{
 		id="extra_sanity",
 		name="额外精神",
-		cost=5,
+		cost=5*rate,
 		max_level=100,
 		desc_fn=function(self, owner)
 			local desc_str = self.name
@@ -631,7 +634,7 @@ skill_constant = {
 	{
 		id="extra_health",
 		name="额外生命",
-		cost=6,
+		cost=6*rate,
 		max_level=100,
 		desc_fn=function(self, owner)
 			local desc_str = self.name
@@ -653,7 +656,7 @@ skill_constant = {
 	{
 		id="extra_damage",
 		name="附加伤害",
-		cost=12,
+		cost=12*rate,
 		max_level=100,
 		desc_fn=function(self, owner)
 			local desc_str = self.name
@@ -675,7 +678,7 @@ skill_constant = {
 	{
 		id="extra_speed",
 		name="额外移速",
-		cost=10,
+		cost=10*rate,
 		step=0.01,
 		max_level=10,
 		desc_fn=function(self, owner)
@@ -698,7 +701,7 @@ skill_constant = {
 	{
 		id="crit",
 		name="暴击",
-		cost=5,
+		cost=5*rate,
 		step=0.01,
 		max_level=60,
 		desc_fn=function(self, owner)
@@ -721,7 +724,7 @@ skill_constant = {
 	{
 		id="lifesteal",
 		name="生命偷取",
-		cost=10,
+		cost=10*rate,
 		step=1,
 		max_level=20,
 		desc_fn=function(self, owner)
@@ -744,7 +747,7 @@ skill_constant = {
 	{
 		id="damageup",
 		name="力量",
-		cost=10,
+		cost=10*rate,
 		max_level=20,
 		desc_fn=function(self, owner)
 			local desc_str = self.name
@@ -766,7 +769,7 @@ skill_constant = {
 	{
 		id="miss",
 		name="闪避",
-		cost=20,
+		cost=20*rate,
 		step=0.01,
 		max_level=10,
 		desc_fn=function(self, owner)
@@ -789,7 +792,7 @@ skill_constant = {
 	{
 		id="attackback",
 		name="伤害反弹",
-		cost=5,
+		cost=5*rate,
 		step=1,
 		max_level=100,
 		desc_fn=function(self, owner)
@@ -859,7 +862,7 @@ skill_constant = {
 	{
 		id="attackfrozen",
 		name="冰霜攻击",
-		cost=20,
+		cost=20*rate,
 		max_level=5,
 		step=0.05,
 		desc_fn=function(self, owner)
@@ -935,7 +938,7 @@ skill_constant = {
 	{
 		id="fishmaster",
 		name="快速垂钓",
-		cost=40,
+		cost=40*rate,
 		desc_fn=function(self, owner)
 			local desc_str = self.name
 			local level = self:level_fn(owner)
@@ -957,7 +960,7 @@ skill_constant = {
 	{
 		id="chopmaster",
 		name="一刀伐木",
-		cost=40,
+		cost=40*rate,
 		desc_fn=function(self, owner)
 			local desc_str = self.name
 			local level = self:level_fn(owner)
@@ -979,7 +982,7 @@ skill_constant = {
 	{
 		id="minemaster",
 		name="快速采矿",
-		cost=40,
+		cost=40*rate,
 		desc_fn=function(self, owner)
 			local desc_str = self.name
 			local level = self:level_fn(owner)

@@ -1,9 +1,10 @@
+--shop rpc
 AddModRPCHandler("RPG_shop", "purchase", function(player, goods)
 	player.components.purchase:Purchase(goods)
 end)
 
-AddModRPCHandler("RPG_shop", "refresh", function(player)
-	player.components.purchase:Refresh()
+AddModRPCHandler("RPG_shop", "refresh", function(player, force)
+	player.components.purchase:Refresh(force)
 end)
 
 --skill rpc

@@ -396,7 +396,8 @@ local states=
 				hole.Transform:SetPosition(inst.Transform:GetWorldPosition())
 				local scale = hole.components.unevenground.radius*0.5/TUNING.ANTLION_SINKHOLE.UNEVENGROUND_RADIUS
 				hole.Transform:SetScale(scale, scale, scale)
-				hole:DoTaskInTime(2, function() hole:Remove() end)
+				hole.persists = false
+				hole:DoTaskInTime(5, function() hole:Remove() end)
 			end),
 		},
 

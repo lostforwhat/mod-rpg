@@ -125,6 +125,20 @@ function Email:AddEmail(email)
 	end
 end
 
+function Email:AddEmails(emails)
+	if emails ~= nil and next(emails) ~= nil then
+		for _, email in pairs(emails) do
+			if self:GetEmailForId(email._id) == nil then
+				table.insert(self.list, email)
+			end
+		end
+		if #self.list > 0 then
+			self.has = true
+			self.net_data.list:set(Table2String(self.list))
+		end
+	end
+end
+
 function Email:HasEmail()
 	if TheWorld.ismastersim then
 		return self.has or false
@@ -199,6 +213,26 @@ end
 --只接受附件，不删除邮件
 function Email:ReceivedPrefabs(id)
 
+end
+
+function Email:GetEmailsFromServer()
+	if TheWorld.ismastersim then
+		local serversession = TheWorld.net.components.shardstate:GetMasterSessionId()
+	    HttpGet("/public/getEmail?serversession="..serversession.."&userid="..self.inst.userid, function(result, isSuccessful, resultCode)
+	    	if isSuccessful and (resultCode == 200) then
+				print("-- getEmail success--")
+				local status, data = pcall( function() return json.decode(result) end )
+				if not status or not data then
+			 		print("解析getEmail失败! ", tostring(status), tostring(data))
+				else
+					--成功
+					self:AddEmails(data)
+				end
+			else
+				print("-- getEmail failed! ERROR:"..result.."--")
+			end
+		end)
+	end
 end
 
 return Email

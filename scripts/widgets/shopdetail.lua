@@ -15,16 +15,13 @@ local DEFAULT_ATLAS = "images/inventoryimages1.xml"
 local DEFAULT_ATLAS2 = "images/inventoryimages2.xml"
 
 local function GetDescriptionString(name)
-
     local str = ""
-
     if name ~= nil and name ~= "" then
-        local itemtip = string.upper(TrimString( name ))
+        local itemtip = string.upper(TrimString(name))
         if STRINGS.NAMES[itemtip] ~= nil and STRINGS.NAMES[itemtip] ~= "" then
             str = STRINGS.NAMES[itemtip]
         end
     end
-
     return str
 end
 
@@ -42,7 +39,7 @@ local ShopDetail = Class(Widget, function(self, owner)
 
     self.shop_goods = {}
     --self:LoadShopFromServer()
-    SendModRPCToServer(MOD_RPC.RPG_shop.refresh)
+    --SendModRPCToServer(MOD_RPC.RPG_shop.refresh)
     self.inst:DoTaskInTime(1, function() 
         --self:LoadShopFromServer() 
     end)
@@ -66,7 +63,7 @@ end)
 function ShopDetail:LoadShopFromServer()
     self.shop_goods = {}
     if self.owner.components.purchase then
-        local shop_goods = deepcopy(self.owner.components.purchase:GetGoods())
+        local shop_goods = deepcopy(TheWorld.net.components.worldshop:GetGoods())
         for k, v in pairs(shop_goods) do
             if PrefabExists(v.prefab) then
                 table.insert(self.shop_goods, {index=k, item=v})

@@ -640,6 +640,13 @@ AddPrefabPostInit("slingshot", function(inst)
 	end
 end)
 
+--world添加网络商店
+local function InitShop(inst)
+	inst:AddComponent("worldshop")
+end
+AddPrefabPostInit("forest_network", InitShop)
+AddPrefabPostInit("cave_network", InitShop)
+
 --为所有武器添加等级
 AddPrefabPostInitAny(function(inst) 
 	if inst.components.weapon ~= nil then
