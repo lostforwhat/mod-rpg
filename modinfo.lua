@@ -20,6 +20,11 @@ local world_name_options = {}
 for i = 1, #world_names do
 	world_name_options[i] = {description=world_names[i], data=world_names[i], hover=world_names[i]}
 end
+local nums = {}
+nums[1] = {description="自动", data=nil, hover="自动使用服务器总人数/世界数作为当前世界人数上限"}
+for i = 1, 60 do
+	nums[i+1] = {description=i, data=i, hover="当前世界人数上限"..i}
+end
 
 configuration_options =
 {
@@ -39,6 +44,13 @@ configuration_options =
 		hover = "多世界选项，若需要命名其他名称，可直接设置其他值",
 		options = world_name_options,
 		default = world_names[1],
+	},
+	{
+		name = "max_players",
+		label = "人数上限",
+		hover = "多世界选项，若需要设置其他数值，可直接设置其他值",
+		options = nums,
+		default = nil,
 	},
 	{
 		name = "token",

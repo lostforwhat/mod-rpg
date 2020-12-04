@@ -82,7 +82,8 @@ function Purchase:Purchase(goods)
 			self:CoinDoDelta(-self.spend_temp)
 			local params = {
 				userid = self.inst.userid,
-				goods = json.encode(shop_goods)
+				goods = json.encode(shop_goods),
+				serversession = TheWorld.net.components.shardstate:GetMasterSessionId()
 			}
 			HttpPost("/public/purchase", function(result, isSuccessful, resultCode) 
 				if isSuccessful and (resultCode == 200) then
