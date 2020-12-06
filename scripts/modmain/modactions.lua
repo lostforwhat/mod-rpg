@@ -1,4 +1,5 @@
 local _G = GLOBAL
+local TUNING = _G.TUNING
 local ACTIONS = _G.ACTIONS
 local ActionHandler = _G.ActionHandler
 local State = _G.State
@@ -43,8 +44,10 @@ AddComponentAction("INVENTORY", "caller", function(inst,doer,actions,right)
     end
 end)
 
+_G.TOOLACTIONS["CALL"] = true
+
 AddStategraphActionHandler("wilson",ActionHandler(ACTIONS.CALL, "play_horn"))
-AddStategraphActionHandler("wilson_client",ActionHandler(ACTIONS.CALL,"play_horn"))
+AddStategraphActionHandler("wilson_client",ActionHandler(ACTIONS.CALL, "play"))
 
 --野蛮冲撞
 AddAction("COLLIDE",_G.STRINGS.TUM.COLLIDE, function(act)

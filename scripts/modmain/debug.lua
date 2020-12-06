@@ -52,3 +52,16 @@ _G.x_addemail = function()
 		player.components.email:AddEmail(email)
 	end
 end
+
+_G.x_refreshshop = function()
+	if _G.TheWorld and _G.TheWorld.net and _G.TheWorld.net.components.worldshop ~= nil then
+		_G.TheWorld.net.components.worldshop:ResetShop()
+	end
+end
+
+_G.x_printworlds = function() 
+	if _G.TheWorld and _G.TheWorld.net then
+		local sharddata = _G.TheWorld.net.components.sharddata._sharddata:value()
+		print("sharddata:", sharddata)
+	end
+end

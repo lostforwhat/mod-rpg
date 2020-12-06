@@ -39,7 +39,7 @@ local ShopDetail = Class(Widget, function(self, owner)
 
     self.shop_goods = {}
     --self:LoadShopFromServer()
-    --SendModRPCToServer(MOD_RPC.RPG_shop.refresh)
+    SendModRPCToServer(MOD_RPC.RPG_shop.refresh)
     self.inst:DoTaskInTime(1, function() 
         --self:LoadShopFromServer() 
     end)
@@ -54,9 +54,9 @@ local ShopDetail = Class(Widget, function(self, owner)
         self.menu.coin:SetTooltip("小店消费："..self:GetCoinUsed())
     end, self.owner)
 
-    self.inst:ListenForEvent("goodsdirty", function(inst) 
+    self.inst:ListenForEvent("shopdatadirty", function(inst) 
         self:LoadShopFromServer()
-    end, self.owner)
+    end, TheWorld.net)
     
 end)
 
@@ -121,7 +121,7 @@ function ShopDetail:LoadMenus()
     self.menu.coin:SetScale(0.34, 0.34)
     self.menu.coin.value = self.menu.coin:AddChild(Text(NUMBERFONT, 85))
     self.menu.coin.value:SetColour(0, 1, 1, 1)
-    self.menu.coin.value:SetPosition(100, 0)
+    self.menu.coin.value:SetPosition(120, 0)
     self.menu.coin.value:SetString(self:GetCoin())
     self.menu.coin:SetOnClick(function() 
         --此处做宣告使用
@@ -142,7 +142,7 @@ function ShopDetail:LoadMenus()
     self.menu.use:SetScale(0.6, 0.6)
     self.menu.use.value = self.menu.use:AddChild(Text(NUMBERFONT, 50))
     self.menu.use.value:SetColour(0, 0.6, 0.6, 1)
-    self.menu.use.value:SetPosition(50, 0)
+    self.menu.use.value:SetPosition(60, 0)
     self.menu.use.value:SetString(self:GetCoinUsed())
     self.menu.use:SetOnClick(function() 
         --此处做宣告使用
@@ -378,7 +378,7 @@ function ShopDetail:LoadCart()
     self.cart.buy:SetTooltip("购买")
     self.cart.buy:SetOnClick(function()
         SendModRPCToServer(MOD_RPC.RPG_shop.purchase, Table2String(self.cart_goods))
-        self:RefreshCart()
+        --self:RefreshCart()
         self.cart.buy:Disable()
         --self.cart.buy:SetClickable(false)
         self.cart.buy.inst:DoTaskInTime(5, function() 
@@ -394,12 +394,12 @@ function ShopDetail:LoadCart()
         self:RefreshCart()
     end, "清空", nil, 0.5))
     self.cart.back:SetPosition(110, 0)
-    self.cart.inst:ListenForEvent("goodsdirty", function() 
+    self.cart.inst:ListenForEvent("shopdatadirty", function() 
         if #self.cart_goods > 0 then
             self.cart_goods = {}
-            self.RefreshCart()
+            self:RefreshCart()
         end
-    end, self.owner)
+    end, TheWorld.net)
 end
 
 function ShopDetail:Layout()

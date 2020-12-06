@@ -13,7 +13,7 @@ function Caller:CallStart(player)
 					v.components.reciever:RecievedCall(pos, player)
 			end
 		end
-		if #AllPlayers > 1 then
+		if #AllPlayers > 0 then
 			self:CallEnd()
 			return true
 		end

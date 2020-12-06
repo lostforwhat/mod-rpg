@@ -6,6 +6,17 @@ local BASE_URL = "http://api.tumbleweedofall.xyz:8888"
 local TOKEN = TUNING.token or "0874689771c44c1e1828df13716801f5"
 --local BASE_URL = "http://127.0.0.1:8888"
 
+local function GetLength(tab)
+    local count = 0
+    if type( tab ) ~= "table" then
+        return 0
+    end
+    for k, v in pairs( tab ) do
+        count = count + 1
+    end
+    return count
+end
+
 local function GetWorldSession()
 	--world session
 	return TheNet:GetSessionIdentifier()
@@ -62,8 +73,8 @@ end
 
 local function SaveServerInfo()
 	local worldnum = 1
-	if _G.TheWorld.ShardList then
-		worldnum = #_G.TheWorld.ShardList + 1
+	if _G.TheWorld.ShardList ~= nil then
+		worldnum = GetLength(_G.TheWorld.ShardList) + 1
 	end
 
 	local url = BASE_URL.."/public/saveServer"
@@ -335,7 +346,7 @@ _G.DownPlayer = function(userid)
 end
 --DownPlayer("KU_lMqc62PN")
 
-_G.GetGiftFromWeb = function(player)
+--[[_G.GetGiftFromWeb = function(player)
 	print("--------------同步奖励信息--------------")
 	if player and player.components.email then
 		GetPlayerGift(player)
@@ -345,15 +356,16 @@ end
 AddPlayerPostInit(function(inst)
 	--定时获取玩家礼包信息
 	inst.gift_task = inst:DoPeriodicTask(TUNING.TOTAL_DAY_TIME*0.25, _G.GetGiftFromWeb)
-end)
-
-AddSimPostInit(function() 
-	if _G.TheWorld.ismastershard then
-		_G.TheWorld.save_task = _G.TheWorld:DoPeriodicTask(TUNING.TOTAL_DAY_TIME, _G.SaveAllPlayers)
-	    _G.TheWorld:DoTaskInTime(10, _G.SaveServer)
-	end
-    _G.TheWorld:ListenForEvent("ms_playerdespawnandmigrate", function(inst, data)
-    	local player = data.player
-    	SaveOnePlayer(player)
+end)]]
+if TheNet:GetIsServer() then
+	AddSimPostInit(function() 
+		if _G.TheWorld.ismastershard then
+			_G.TheWorld.save_task = _G.TheWorld:DoPeriodicTask(TUNING.TOTAL_DAY_TIME, _G.SaveAllPlayers)
+		    _G.TheWorld:DoTaskInTime(10, _G.SaveServer)
+		end
+	    _G.TheWorld:ListenForEvent("ms_playerdespawnandmigrate", function(inst, data)
+	    	local player = data.player
+	    	SaveOnePlayer(player)
+		end)
 	end)
-end)
+end

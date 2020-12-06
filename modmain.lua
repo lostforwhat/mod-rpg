@@ -3,7 +3,10 @@ local TheNet = _G.TheNet
 local TUNING = _G.TUNING
 env.require = GLOBAL.require
 
-TUNING.token = GetModConfigData("token")
+TUNING.token = GetModConfigData("token") and 
+			#GetModConfigData("token") > 10 and 
+			GetModConfigData("token") or 
+			nil
 
 require 'modmain/loot_table'
 require 'modmain/task_constant'
@@ -57,6 +60,8 @@ table.insert(PrefabFiles, "deadbone")
 table.insert(PrefabFiles, "wes_clone")
 table.insert(PrefabFiles, "achiv_clear")
 table.insert(PrefabFiles, "skillbook")
+table.insert(PrefabFiles, "skillbookpage")
+table.insert(PrefabFiles, "callerhorn")
 
 table.insert(PrefabFiles, "electronic_ball")
 table.insert(PrefabFiles, "titles_fx")

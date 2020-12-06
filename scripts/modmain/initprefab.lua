@@ -43,6 +43,7 @@ local function RedirectDamageFn(inst, attacker, damage, weapon, stimuli)
 end
 
 local function PlayerMigrateCheck(player)
+	print("check")
 	if player.components.vip ~= nil and player.components.vip.level > 0 then
 		return true
 	end

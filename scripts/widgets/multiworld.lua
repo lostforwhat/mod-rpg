@@ -46,7 +46,7 @@ local MultiWorld = Class(Widget, function(self)
     self.info_in_pos = Vector3(0, 0, 0)
     
     self.timeout = TIMEOUT
-    --self:Hide()
+    self:Hide()
 end)
 
 function MultiWorld:SetCurrentWorld()

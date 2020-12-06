@@ -145,3 +145,18 @@ AddPrefabPostInitAny(function(inst)
     end
 end)
 
+AddStategraphPostInit("wilson", function(sg) 
+    local amulet_rebirth = sg.states.amulet_rebirth
+    local old_enter_fn = amulet_rebirth.onenter
+    amulet_rebirth.onenter = function(inst) 
+        old_enter_fn(inst)
+        local item = inst.components.inventory:GetEquippedItem(_G.EQUIPSLOTS.NECK)
+        if item ~= nil and item.prefab == "amulet" then
+            item = inst.components.inventory:RemoveItem(item)
+            if item ~= nil then
+                item:Remove()
+                inst.sg.statemem.usedamulet = true
+            end
+        end
+    end
+end)

@@ -20,7 +20,7 @@ end
 local function GetWorldNum()
 	local worldnum = 1
 	if _G.TheWorld ~= nil and _G.TheWorld.ShardList ~= nil then
-		worldnum = #_G.TheWorld.ShardList + 1
+		worldnum = GetLength(_G.TheWorld.ShardList) + 1
 	end
 	return worldnum
 end
@@ -147,5 +147,6 @@ local function AddMultiWorldPicker(self)
 			self:ReLayout(true)
 		end
 	end, _G.TheWorld.net)
+	self:ReLayout(false)
 end
 AddClassPostConstruct("widgets/mapcontrols", AddMultiWorldPicker)

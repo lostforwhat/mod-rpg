@@ -71,7 +71,7 @@ function Purchase:Purchase(goods)
 		if #shop_goods > 0 then
 			--先扣除钻石
 			self.spend_temp = self:GetCoinFromGoods(shop_goods)
-			if self.coin < spend then
+			if self.coin < self.spend_temp then
 				--钱不够
 				if self.inst.components.talker ~= nil then
 					self.inst.components.talker:Say("我得再攒攒钱...")
@@ -87,10 +87,18 @@ function Purchase:Purchase(goods)
 			}
 			HttpPost("/public/purchase", function(result, isSuccessful, resultCode) 
 				if isSuccessful and (resultCode == 200) then
+					local status, data = pcall( function() return json.decode(result) end )
 					print("------------"..(self.inst.userid).." Purchase success--------------")
 					--最后需要重新获取商店列表,购买后必须拿最新数据，不能取world的缓存
 					TheWorld.net.components.worldshop:Refresh(true)
 					--成功后扣除
+					local used = data ~= nil and data.used or 0
+					self.coin_used = self.coin_used + used
+					--返还多消费的部分
+					self:CoinDoDelta(self.spend_temp - used)
+					if self.inst.components.email ~= nil then
+						self.inst.components.email:GetEmailsFromServer()
+					end
 				else
 					print("------------"..(self.inst.userid).." Purchase failed! ERROR:"..result.."--------------")
 					--失败后返还
