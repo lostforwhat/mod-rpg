@@ -146,7 +146,6 @@ end
 
 local function OnLevel(self, level)
 	self.net_data.level:set(level)
-	RecalcMeta(self.inst, level)
 end
 
 local function OnXp(self, xp)
@@ -197,6 +196,7 @@ function Level:OnLoad(data)
 		self.deathtimes = data.deathtimes or 0
 		self.killplayers = data.killplayers or 0
 	end
+	self:LevelUp() -- trigger RecalcMeta(self.inst, level)
 end
 
 function Level:ReduceXp(value)
@@ -262,6 +262,7 @@ function Level:LevelUp()
 		self.level = self.level + 1
 		self.inst.SoundEmitter:PlaySound("dontstarve/HUD/research_available")
 	end
+	RecalcMeta(self.inst, self.level)
 end
 
 return Level

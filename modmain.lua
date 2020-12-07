@@ -80,6 +80,7 @@ local PlayerDetail = require('widgets/playerdetail')
 local ShopDetail = require('widgets/shopdetail')
 local EmailDetail = require('widgets/emaildetail')
 local TaskScreen = require('screens/taskscreen')
+local ReceiveDialog = require('widgets/receivedialog')
 local function AddPlayerStatus(self)
 	self.player_status = self.top_root:AddChild(PlayerStatus(self.owner))
 	self.player_status:SetHAnchor(_G.ANCHOR_LEFT)
@@ -89,7 +90,7 @@ local function AddPlayerStatus(self)
     --快捷键换称号
 	_G.TheInput:AddKeyUpHandler(_G.KEY_L, function() 
 		--print("---------")
-		if self.owner and self.owner.HUD and self.owner.HUD.IsChatInputScreenOpen() then return end
+		if self.owner and self.owner.HUD and self.owner.HUD:HasInputFocus() then return end
 		SendModRPCToServer(MOD_RPC["RPG_titles"]["change"])
 	end)
 end

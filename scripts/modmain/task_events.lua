@@ -343,11 +343,11 @@ local function OnKilled(inst, data)
         local health = victim.components.health.maxhealth or 0
         local num = #ents
         for k, v in pairs(ents) do
-            GiveExp(v, math.floor((health/num)*0.01))
+            GiveExp(v, math.floor((health/num)*0.02))
         end
     else
         local health = victim.components.health.maxhealth or 0
-        GiveExp(inst, math.floor(health*0.01))
+        GiveExp(inst, math.floor(health*0.02))
     end
     
     --击杀掉落事件

@@ -5,7 +5,8 @@ end)
 
 
 function Caller:CallStart(player)
-	if player~=nil and player:HasTag("player") then
+	if not TheWorld.calling and
+		player ~= nil and player:HasTag("player") then
 		local pos = player:GetPosition()
 		for k, v in pairs(AllPlayers) do
 			if v and v.components.reciever ~= nil and v ~= player
@@ -24,6 +25,10 @@ function Caller:CallEnd()
 	if self.inst.components.finiteuses ~= nil then
 		self.inst.components.finiteuses:Use(1)
 	end
+	TheWorld.calling = true
+	TheWorld:DoTaskInTime(20, function() 
+		TheWorld.calling = nil
+	end)
 end
 
 return Caller

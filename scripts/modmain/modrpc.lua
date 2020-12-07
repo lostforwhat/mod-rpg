@@ -56,3 +56,14 @@ AddModRPCHandler("RPG_email", "received", function(player, id)
 		player.components.email:ReceivedEmail(id)
 	end
 end)
+
+--call & received
+AddModRPCHandler("RPG_Receive", "received", function(player, accept)
+	if player ~= nil and player.components.reciever ~= nil then
+		if accept then
+			player.components.reciever:Accept()
+		else
+			player.components.reciever:Refuse()
+		end
+	end
+end)
