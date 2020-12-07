@@ -1,6 +1,8 @@
 local function onpos(self, pos)
-	self.net_data.x:set(pos.x)
-	self.net_data.z:set(pos.z)
+	if pos ~= nil then
+		self.net_data.x:set(pos.x)
+		self.net_data.z:set(pos.z)
+	end
 end
 
 local function onrecieving(self, recieving)

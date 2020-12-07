@@ -2,6 +2,7 @@ local Widget = require "widgets/widget"
 local Text = require "widgets/text"
 local ImageButton = require "widgets/imagebutton"
 local Image = require "widgets/image"
+local TEMPLATES = require "widgets/redux/templates"
 
 local ReceiveDialog = Class(Widget, function(self, owner)
     Widget._ctor(self, "ReceiveDialog")
@@ -22,7 +23,7 @@ local ReceiveDialog = Class(Widget, function(self, owner)
             	end  
             end,
         },
-        {
+        --[[{
         	text = "拒绝",
         	cb = function()
 				if not self.cd_time then
@@ -31,10 +32,10 @@ local ReceiveDialog = Class(Widget, function(self, owner)
             		self.inst:DoTaskInTime(2, function() self.cd_time = nil end)
             	end    
         	end,
-        }
+        }]]
     }
-    self.dialogroot = self.root:AddChild(TEMPLATES.CurlyWindow(240, 160, "召集", bottom_buttons, 10, ""))
-
+    self.dialogroot = self.root:AddChild(TEMPLATES.CurlyWindow(240, 160, "召集", bottom_buttons, 0, ""))
+    --self.dialogroot:SetScale(0.5)
     self:Hide()
 
     self.inst:ListenForEvent("recievingdirty", function() 
@@ -43,7 +44,7 @@ local ReceiveDialog = Class(Widget, function(self, owner)
 
 	self.inst:ListenForEvent("recievertime_leftdirty", function()
 		self:UpdateTimer()
-	end)
+	end, self.owner)
 
     self.inst:ListenForEvent("continuefrompause", function()
         

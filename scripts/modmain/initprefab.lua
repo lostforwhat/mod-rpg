@@ -79,6 +79,7 @@ AddPlayerPostInit(function(inst)
 	--inst:AddComponent("revenge")
 	inst:AddComponent("titles")
 	inst:AddComponent("email")
+	inst:AddComponent("reciever")
 	local prefab = inst.prefab
 	if prefab == "wilson" then
 

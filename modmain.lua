@@ -94,8 +94,36 @@ local function AddPlayerStatus(self)
 		SendModRPCToServer(MOD_RPC["RPG_titles"]["change"])
 	end)
 end
-
 AddClassPostConstruct("widgets/controls", AddPlayerStatus)
+local function AddDialog(self)
+	self.receivedialog = self.topright_root:AddChild(ReceiveDialog(self.owner))
+	self.receivedialog:SetPosition(-200, -400)
+	self.receivedialog:SetClickable(true)
+	self.receivedialog.OnMouseButton = function(inst, button, down, x, y)
+		if button == _G.MOUSEBUTTON_LEFT then
+			if down then
+				self.receivedialog.dragging = true
+				local mousepos = _G.TheInput:GetScreenPosition()
+				self.receivedialog.dragPosDiff = self.receivedialog:GetPosition() - mousepos
+			else
+				self.receivedialog.dragging = false
+			end
+		end	
+	end
+	_G.TheInput:AddMoveHandler(function(x,y)
+		if self.receivedialog.dragging then
+			local offset = self.receivedialog.dragPosDiff or {0, 0, 0}
+			local pos
+			if type(x) == "number" then
+				pos = _G.Vector3(x, y, 1) + offset
+			else
+				pos = x + offset
+			end
+			self.receivedialog:SetPosition(pos:Get())
+		end
+	end)
+end
+AddClassPostConstruct("widgets/controls", AddDialog)
 
 AddClassPostConstruct("screens/playerhud", function(self)
     self.ShowTaskScreen = function(_)
