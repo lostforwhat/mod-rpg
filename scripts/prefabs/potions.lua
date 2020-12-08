@@ -1,14 +1,14 @@
 local assets =
 {
     Asset("ANIM", "anim/potions.zip"),
-    Asset("IMAGE", "images/potions/potion_blue.tex"),
-    Asset("ATLAS", "images/potions/potion_blue.xml"),
-    Asset("IMAGE", "images/potions/potion_green.tex"),
-    Asset("ATLAS", "images/potions/potion_green.xml"),
-    Asset("IMAGE", "images/potions/potion_luck.tex"),
-    Asset("ATLAS", "images/potions/potion_luck.xml"),
-    Asset("IMAGE", "images/potions/potion_red.tex"),
-    Asset("ATLAS", "images/potions/potion_red.xml"),
+    Asset("IMAGE", "images/inventoryimages/potion_blue.tex"),
+    Asset("ATLAS", "images/inventoryimages/potion_blue.xml"),
+    Asset("IMAGE", "images/inventoryimages/potion_green.tex"),
+    Asset("ATLAS", "images/inventoryimages/potion_green.xml"),
+    Asset("IMAGE", "images/inventoryimages/potion_luck.tex"),
+    Asset("ATLAS", "images/inventoryimages/potion_luck.xml"),
+    Asset("IMAGE", "images/inventoryimages/potion_red.tex"),
+    Asset("ATLAS", "images/inventoryimages/potion_red.xml"),
 }
 
 local function create_light(eater, lightprefab)
@@ -170,7 +170,7 @@ local function MakePotion(type)
 	    inst:AddComponent("inspectable")
 
 	    inst:AddComponent("inventoryitem")
-	    inst.components.inventoryitem.atlasname = "images/potions/potion_"..type..".xml" -- here's the atlas for our tex
+	    inst.components.inventoryitem.atlasname = "images/inventoryimages/potion_"..type..".xml" -- here's the atlas for our tex
 
 	    --inst.OnSave = OnSave
 	    --inst.OnLoad = OnLoad

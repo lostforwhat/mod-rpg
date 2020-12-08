@@ -58,6 +58,13 @@ end
 
 --角色初始化
 AddPlayerPostInit(function(inst) 
+	if _G.TheWorld.ismastersim then
+		inst.player_skills_classified = SpawnPrefab("player_skills_classified")
+    	inst.player_skills_classified.entity:SetParent(inst.entity)
+    	inst:ListenForEvent("onremove", function() 
+    		inst.player_skills_classified = nil 
+    	end, inst.player_skills_classified)
+	end
 	inst:AddComponent("vip")
 	inst:AddComponent("taskdata")
 	inst:AddComponent("skilldata")
@@ -139,6 +146,8 @@ AddPlayerPostInit(function(inst)
 	end
 
 	if _G.TheWorld.ismastersim then
+		inst:AddComponent("resurrect")
+		inst.components.resurrect.level = 1
 		inst:AddComponent("stealer")
 		inst:AddComponent("timer")
 		inst:AddComponent("migrater")

@@ -7,6 +7,18 @@ local function OnMinHealth(inst, data)
     end
 end
 
+local function onlevel(self, level)
+    if self.inst.player_skills_classified ~= nil then
+        self.inst.player_skills_classified:UpdateSkill("rejectdeath", {level=level})
+    end
+end
+
+local function oncd_time(self, cd_time)
+    if self.inst.player_skills_classified ~= nil then
+        self.inst.player_skills_classified:UpdateSkill("rejectdeath", {cd=cd_time})
+    end
+end
+
 --回光返照
 local Rejectdeath = Class(function(self, inst) 
     self.inst = inst
@@ -17,7 +29,12 @@ local Rejectdeath = Class(function(self, inst)
     self.effect = false
 
     self.inst:ListenForEvent("minhealth", OnMinHealth)
-end)
+end,
+nil,
+{
+    level = onlevel,
+    cd_time = oncd_time,
+})
 
 function Rejectdeath:OnSave()
     return {

@@ -70,6 +70,7 @@ table.insert(PrefabFiles, "coffee")
 table.insert(PrefabFiles, "coffeebush")
 --buff
 table.insert(PrefabFiles, "new_buffs")
+table.insert(PrefabFiles, "player_skills_classified")
 --新装备
 
 
@@ -81,6 +82,7 @@ local ShopDetail = require('widgets/shopdetail')
 local EmailDetail = require('widgets/emaildetail')
 local TaskScreen = require('screens/taskscreen')
 local ReceiveDialog = require('widgets/receivedialog')
+local SkillShortCutKey = require('widgets/skillshortcutKey')
 local function AddPlayerStatus(self)
 	self.player_status = self.top_root:AddChild(PlayerStatus(self.owner))
 	self.player_status:SetHAnchor(_G.ANCHOR_LEFT)
@@ -124,6 +126,12 @@ local function AddDialog(self)
 	end)
 end
 AddClassPostConstruct("widgets/controls", AddDialog)
+
+local function AddSkillShortCutKey(self)
+	self.skillskey = self.bottom_root:AddChild(SkillShortCutKey(self.owner))
+	self.skillskey:SetPosition(0, 200)
+end
+AddClassPostConstruct("widgets/controls", AddSkillShortCutKey)
 
 AddClassPostConstruct("screens/playerhud", function(self)
     self.ShowTaskScreen = function(_)

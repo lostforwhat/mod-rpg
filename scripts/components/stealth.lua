@@ -1,17 +1,29 @@
---Stealth 隐身能力组件,主客机同时需要
+--Stealth 隐身能力组件
 local CD_TIME = 25
 local TASK_TIME = 5
 
 local function onlevel(self, level)
-	self.net_data.level:set(level)
+	if self.inst.player_skills_classified ~= nil then
+        self.inst.player_skills_classified:UpdateSkill("stealth", {level=level})
+    end
 end
 
 local function oncd_time(self, val)
-	self.net_data.cd_time:set(val)
+	if self.inst.player_skills_classified ~= nil then
+        self.inst.player_skills_classified:UpdateSkill("stealth", {cd=val})
+    end
 end
 
 local function onenabled(self, val)
-	self.net_data.enabled:set(val)
+	if self.inst.player_skills_classified ~= nil then
+        self.inst.player_skills_classified:UpdateSkill("stealth", {level= val and self.level or 0})
+    end
+end
+
+local function onhandle_key(self, key)
+    if self.inst.player_skills_classified ~= nil then
+        self.inst.player_skills_classified:UpdateSkill("stealth", {key=key})
+    end
 end
 
 local function OnAttackOther(inst, data)
@@ -22,11 +34,11 @@ end
 
 local Stealth = Class(function(self, inst) 
     self.inst = inst
-    self.net_data = {
+    --[[self.net_data = {
     	level = net_byte(inst.GUID, "stealth.level"),
     	cd_time = net_float(inst.GUID, "stealth.cd_time", "stealthdirty"),
     	enabled = net_bool(inst.GUID, "stealth.enabled", "stealthdirty")
-    }
+    }]]
 
     self.level = 1
 
@@ -42,7 +54,8 @@ nil,
 {
 	level = onlevel,
 	cd_time = oncd_time,
-	enabled = onenabled
+	enabled = onenabled,
+    handle_key = onhandle_key,
 })
 
 function Stealth:ClientInit()
