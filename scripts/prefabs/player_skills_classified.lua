@@ -8,10 +8,12 @@ local skills = {
     rejectdeath = {
         level = 0,
         cd = 0,
+        passive = true
     },
     stealth = {
         level = 0,
         cd = 0,
+        key = KEY_R
     },
 }
 
@@ -19,11 +21,11 @@ local function UpdateSkill(inst, name, data)
     if inst._skills[name] ~= nil then
         for k, v in pairs(inst.skills[name]) do
             if data[k] ~= nil then
-                inst.skills[name][k] = data.k
+                inst.skills[name][k] = data[k]
             end
         end
         inst._skills[name]:set(Table2String(inst.skills[name]))
-        inst._skillsupdate:Push()
+        inst._skillsupdate:push()
     end
 end
 
@@ -31,7 +33,7 @@ local function UpdateSkillCd(inst, name, cd)
     if inst._skills[name] ~= nil then
         inst.skills[name].cd = cd
         inst._skills[name]:set(Table2String(inst.skills[name]))
-        inst._skillsupdatecd:Push()
+        inst._skillsupdatecd:push()
     end
 end
 
@@ -43,9 +45,11 @@ end
 
 local function GetSkills(inst)
     if TheWorld.ismastersim then
+        --print("skills:", Table2String(inst.skills))
         return inst.skills
     else
         OnSkillsUpdate(inst)
+        --print("skills:", Table2String(inst.client_skills))
         return inst.client_skills
     end
 end

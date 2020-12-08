@@ -10,7 +10,7 @@ end
 
 local function oncd_time(self, val)
 	if self.inst.player_skills_classified ~= nil then
-        self.inst.player_skills_classified:UpdateSkill("stealth", {cd=val})
+        self.inst.player_skills_classified:UpdateSkillCd("stealth", val)
     end
 end
 
@@ -48,7 +48,7 @@ local Stealth = Class(function(self, inst)
     self.enabled = false
 
     self.handle_key = KEY_R
-    self:ClientInit()
+    self:Init()
 end,
 nil,
 {
@@ -58,7 +58,7 @@ nil,
     handle_key = onhandle_key,
 })
 
-function Stealth:ClientInit()
+function Stealth:Init()
 	--if not TheWorld.ismastersim then
 		
 	--end
@@ -69,14 +69,7 @@ function Stealth:ClientInit()
             end
         end)
     else
-        TheInput:AddKeyUpHandler(self.handle_key, function() 
-            if not self.inst:HasTag("player") or 
-                self.inst:HasTag("playerghost") or
-                (self.inst and self.inst.HUD and 
-                   self.inst.HUD:HasInputFocus()) then return end
-            if not self.net_data.enabled:value() or self.net_data.cd_time:value() > 0 then return end
-            SendModRPCToServer(MOD_RPC.RPG_skill.stealth)
-        end)
+        
     end
 end
 
@@ -85,6 +78,7 @@ function Stealth:Enabled(enabled)
 end
 
 function Stealth:Effect()
+    if not self.enabled or self.cd_time > 0 then return end
 	local inst = self.inst
 	if inst:HasTag("playerghost") or (inst.components.freezable and inst.components.freezable:IsFrozen()) then
 		return

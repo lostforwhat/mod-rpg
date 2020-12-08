@@ -105,6 +105,7 @@ function WorldShop:ResetShop()
 			self.resetting = nil
 			self:Refresh(true)
 		else
+			self.reset_time = 0
 			self.resetting = nil
 		end
 	end, params)

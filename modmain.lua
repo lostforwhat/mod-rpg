@@ -39,6 +39,14 @@ Assets = {
     Asset("IMAGE", "images/titles/luckbody.tex"),
     Asset("ATLAS", "images/titles/vip.xml"),
     Asset("IMAGE", "images/titles/vip.tex"),
+
+    --技能快捷键图标
+    Asset("ATLAS", "images/skills/rejectdeath.xml"),
+    Asset("IMAGE", "images/skills/rejectdeath.tex"),
+    Asset("ATLAS", "images/skills/stealth.xml"),
+    Asset("IMAGE", "images/skills/stealth.tex"),
+    Asset("ATLAS", "images/skills/resurrect.xml"),
+    Asset("IMAGE", "images/skills/resurrect.tex"),
 }
 
 PrefabFiles = {}
@@ -129,7 +137,7 @@ AddClassPostConstruct("widgets/controls", AddDialog)
 
 local function AddSkillShortCutKey(self)
 	self.skillskey = self.bottom_root:AddChild(SkillShortCutKey(self.owner))
-	self.skillskey:SetPosition(0, 200)
+	self.skillskey:SetPosition(0, 100)
 end
 AddClassPostConstruct("widgets/controls", AddSkillShortCutKey)
 

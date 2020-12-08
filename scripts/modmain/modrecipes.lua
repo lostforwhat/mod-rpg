@@ -68,7 +68,7 @@ AddRecipe("potion_luck", {Ingredient("wormlight",2),Ingredient("butter",1),Ingre
 	nil, -- nounlock
 	nil, -- numtogive
 	"potionbuilder", -- builder_tag
-	"images/potions/potion_luck.xml"
+	"images/inventoryimages/potion_luck.xml"
 )
 
 AddRecipe("potion_blue", {Ingredient("bluegem",2),Ingredient("stinger",8),Ingredient("petals",3)}, 
@@ -79,7 +79,7 @@ AddRecipe("potion_blue", {Ingredient("bluegem",2),Ingredient("stinger",8),Ingred
 	nil, -- nounlock
 	nil, -- numtogive
 	"potionbuilder", -- builder_tag
-	"images/potions/potion_blue.xml"
+	"images/inventoryimages/potion_blue.xml"
 )
 
 AddRecipe("potion_green", {Ingredient("green_cap",5),Ingredient("nightmarefuel",5),Ingredient("rottenegg",4)},
@@ -90,7 +90,7 @@ AddRecipe("potion_green", {Ingredient("green_cap",5),Ingredient("nightmarefuel",
 	nil, -- nounlock
 	nil, -- numtogive
 	"potionbuilder", -- builder_tag
-	"images/potions/potion_green.xml"
+	"images/inventoryimages/potion_green.xml"
 )
 
 AddRecipe("potion_red", {Ingredient("glommerfuel",1),Ingredient("petals_evil",5),Ingredient("mosquitosack",3)},
@@ -101,5 +101,5 @@ AddRecipe("potion_red", {Ingredient("glommerfuel",1),Ingredient("petals_evil",5)
 	nil, -- nounlock
 	nil, -- numtogive
 	"potionbuilder", -- builder_tag
-	"images/potions/potion_red.xml"
+	"images/inventoryimages/potion_red.xml"
 )

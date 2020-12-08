@@ -20,6 +20,10 @@ AddModRPCHandler("RPG_skill", "stealth", function(player)
 	player.components.stealth:Effect()
 end)
 
+AddModRPCHandler("RPG_skill", "resurrect", function(player) 
+	player.components.resurrect:Effect()
+end)
+
 --titles rpc
 AddModRPCHandler("RPG_titles", "check", function(player) 
 	player.components.titles:CheckAll()

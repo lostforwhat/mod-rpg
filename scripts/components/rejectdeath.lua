@@ -15,7 +15,7 @@ end
 
 local function oncd_time(self, cd_time)
     if self.inst.player_skills_classified ~= nil then
-        self.inst.player_skills_classified:UpdateSkill("rejectdeath", {cd=cd_time})
+        self.inst.player_skills_classified:UpdateSkillCd("rejectdeath", cd_time)
     end
 end
 
