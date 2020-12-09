@@ -1,3 +1,4 @@
+require "utils/utils"
 local _G = GLOBAL
 local TheNet = _G.TheNet
 local TUNING = _G.TUNING
@@ -56,15 +57,88 @@ local function PlayerMigrateCheck(player)
 	        end) ~= nil
 end
 
+AddPrefabPostInit("player_classified", function(inst)
+	local skills = {
+	    resurrect = {
+	        level = 0,
+	        cd = 0,
+	    },
+	    rejectdeath = {
+	        level = 0,
+	        cd = 0,
+	        passive = true
+	    },
+	    stealth = {
+	        level = 0,
+	        cd = 0,
+	        key = _G.KEY_R
+	    },
+	}
+
+	local function UpdateSkill(inst, name, data)
+	    if inst._skills[name] ~= nil then
+	        for k, v in pairs(inst.skills[name]) do
+	            if data[k] ~= nil then
+	                inst.skills[name][k] = data[k]
+	            end
+	        end
+	        inst._skills[name]:set(_G.Table2String(inst.skills[name]))
+	        inst._skillsupdate:push()
+	    end
+	end
+
+	local function UpdateSkillCd(inst, name, cd)
+	    if inst._skills[name] ~= nil then
+	        inst.skills[name].cd = cd
+	        inst._skills[name]:set(_G.Table2String(inst.skills[name]))
+	        inst._skillsupdatecd:push()
+	    end
+	end
+
+	local function OnSkillsUpdate(inst)
+	    for k, v in pairs(inst._skills) do
+	        inst.client_skills[k] = _G.String2Table(v:value())
+	    end
+	end
+
+	local function GetSkills(inst)
+	    if _G.TheWorld.ismastersim then
+	        --print("skills:", _G.Table2String(inst.skills))
+	        return inst.skills
+	    else
+	        OnSkillsUpdate(inst)
+	        --print("skills:", _G.Table2String(inst.client_skills))
+	        return inst.client_skills
+	    end
+	end
+
+	inst._skills = {
+        resurrect = _G.net_string(inst.GUID, "_skills.resurrect"),
+        rejectdeath = _G.net_string(inst.GUID, "_skills.rejectdeath"),
+        stealth = _G.net_string(inst.GUID, "_skills.stealth"),
+    }
+    inst._skillsupdate = _G.net_event(inst.GUID, "_skillsupdate")
+    inst._skillsupdatecd = _G.net_event(inst.GUID, "_skillsupdatecd")
+
+    if not _G.TheWorld.ismastersim then
+        inst.client_skills = skills
+        inst.GetSkills = GetSkills
+        inst:ListenForEvent("_skillsupdate", function() 
+        	inst._parent:PushEvent("_skillsupdate")
+    	end)
+    	inst:ListenForEvent("_skillsupdatecd", function() 
+        	inst._parent:PushEvent("_skillsupdatecd")
+    	end)
+    else
+    	inst.skills = skills
+	    inst.UpdateSkill = UpdateSkill
+	    inst.UpdateSkillCd = UpdateSkillCd
+	    inst.GetSkills = GetSkills
+    end
+end)
+
 --角色初始化
 AddPlayerPostInit(function(inst) 
-	if _G.TheWorld.ismastersim then
-		inst.player_skills_classified = SpawnPrefab("player_skills_classified")
-    	inst.player_skills_classified.entity:SetParent(inst.entity)
-    	inst:ListenForEvent("onremove", function() 
-    		inst.player_skills_classified = nil 
-    	end, inst.player_skills_classified)
-	end
 	inst:AddComponent("vip")
 	inst:AddComponent("taskdata")
 	inst:AddComponent("skilldata")
@@ -82,7 +156,6 @@ AddPlayerPostInit(function(inst)
 	inst:AddComponent("luck")
 	inst:AddComponent("extradamage")
 	inst:AddComponent("extrameta")
-	inst:AddComponent("stealth")
 	--inst:AddComponent("revenge")
 	inst:AddComponent("titles")
 	inst:AddComponent("email")
@@ -146,6 +219,7 @@ AddPlayerPostInit(function(inst)
 	end
 
 	if _G.TheWorld.ismastersim then
+		inst:AddComponent("stealth")
 		inst:AddComponent("resurrect")
 		inst.components.resurrect.level = 1
 		inst:AddComponent("stealer")
@@ -665,7 +739,18 @@ AddPrefabPostInitAny(function(inst)
 	end
 end)
 
-
+AddPrefabPostInit("pigking", function(inst)
+	inst:AddComponent("talker")
+    inst.components.talker.fontsize = 35
+    inst.components.talker.font = _G.TALKINGFONT
+    --inst.components.talker.colour = Vector3(133/255, 140/255, 167/255)
+    inst.components.talker.offset = _G.Vector3(0, -500, 0)
+    inst.components.talker:MakeChatter()
+	inst:AddTag("npctask")
+	if _G.TheWorld.ismastersim then
+		inst:AddComponent("npctask")
+	end
+end)
 
 ------分割线------------
 ----以下用于初始化状态图

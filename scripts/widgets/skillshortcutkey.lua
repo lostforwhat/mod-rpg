@@ -34,9 +34,12 @@ local SkillShortCutKey = Class(Widget, function(self, owner)
     self.root = self:AddChild(Widget("skillroot"))
 
     self.skills = {}
-    self.inst:ListenForEvent("_skillsupdate", function() self:UpdateSkills() end, self.owner.player_skills_classified)
-    self.inst:ListenForEvent("_skillsupdatecd", function() self:UpdateSkillsCd() end, self.owner.player_skills_classified)
-    self:InitKey()
+
+    self.inst:ListenForEvent("_skillsupdate", function() self:UpdateSkills() end, self.owner)
+    self.inst:ListenForEvent("_skillsupdatecd", function() self:UpdateSkillsCd() end, self.owner)
+    self.inst:DoTaskInTime(.1, function()
+        self:InitKey()
+    end)
 end)
 
 --[[function SkillShortCutKey:UpdateTooltips()
@@ -45,7 +48,7 @@ end)
 end]]
 
 function SkillShortCutKey:InitKey()
-	self.skills = self.owner.player_skills_classified:GetSkills()
+	self.skills = self.owner.player_classified:GetSkills()
 	for k, v in pairs(self.skills) do
 		if v ~= nil and v.key ~= nil then
 			TheInput:AddKeyUpHandler(v.key, function() 
@@ -61,7 +64,7 @@ function SkillShortCutKey:InitKey()
 end
 
 function SkillShortCutKey:UpdateSkillsCd()
-    local skills = self.owner.player_skills_classified:GetSkills()
+    local skills = self.owner.player_classified:GetSkills()
     for k, v in pairs(skills) do
     	if self.skill_btns ~= nil and self.skill_btns[k] ~= nil and self.skill_btns[k].cd ~= nil then
     		if v.cd ~= nil and v.cd > 0 then
@@ -77,7 +80,7 @@ end
 function SkillShortCutKey:UpdateSkills()
     --包含快捷键的技能组件
     --self.inst:DoTaskInTime(0.1, function() 
-        self.skills = self.owner.player_skills_classified:GetSkills()
+        self.skills = self.owner.player_classified:GetSkills()
         self:ReLayout()
     --end)
 end

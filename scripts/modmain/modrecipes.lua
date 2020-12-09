@@ -59,6 +59,18 @@ AddRecipe("book_season",
     "images/book_season.xml"
 )
 
+AddRecipe("skillbook", 
+    {Ingredient("skillbookpage", 25, 'images/inventoryimages/skillbookpage.xml')}, 
+    _G.CUSTOM_RECIPETABS.BOOKS, 
+    TECH.NONE, 
+    nil, 
+    nil, 
+    nil, 
+    nil, 
+    "newbookbuilder", 
+    "images/inventoryimages/skillbook.xml"
+)
+
 --willson
 AddRecipe("potion_luck", {Ingredient("wormlight",2),Ingredient("butter",1),Ingredient("cave_banana",3)},
 	RECIPETABS.MAGIC, 

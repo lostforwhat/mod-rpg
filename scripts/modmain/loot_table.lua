@@ -277,13 +277,13 @@ luck_loot = {
         {chance = 0.03, item = "armorsnurtleshell"},--蜗牛盔甲
         {chance = 0.01, item = "hivehat"},--蜂后头冠
         {chance = 0.002, item = "opalstaff"},--唤月法杖
-        {chance = 0.005, item = "armorskeleton"},--远古骨甲
+        {chance = 0.002, item = "armorskeleton"},--远古骨甲
         {chance = 0.001, item = "ruins_statue_mage"}, --远古雕像
         {chance = 0.0002, item = "moonbase"}, --
         {chance = 0.0003, item = "pigking"}, --
         {chance = 0.001, item="package_staff"}, --空间魔杖
         {chance = 0.004, item="pray_symbol"}, --祈祷符
-        {chance = 0.003, item="skillbookpage"},
+        {chance = 0.008, item="skillbookpage"},
         {chance = 0.0001, item="skillbook"},
     },
 

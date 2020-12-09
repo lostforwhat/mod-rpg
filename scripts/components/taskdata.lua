@@ -30,6 +30,7 @@ local TaskData = Class(function(self, inst)
 
     self.complete_time = nil
     self.killboss = 0
+    self.collect = 0
 end,
 nil,
 onchangefn)
@@ -65,6 +66,7 @@ function TaskData:OnSave()
 	data.shadowboss_killed = self.shadowboss_killed or {}
 	data.complete_time = self.complete_time or nil
 	data.killboss = self.killboss or 0
+	data.collect = self.collect or 0
 	return data
 end
 
@@ -72,6 +74,10 @@ function TaskData:OnLoad(data)
 	for k, v in pairs(data) do
 		self[k] = v or 0
 	end	
+end
+
+function TaskData:AddCollectTask()
+	self.collect = self.collect + 1
 end
 
 function TaskData:AddOne(taskname)

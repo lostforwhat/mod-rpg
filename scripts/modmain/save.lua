@@ -170,7 +170,7 @@ local function SavePlayerInfo(player)
 		end
 		params["task"] = total
 		params["complete_time"] = player.components.taskdata.complete_time
-		--params["temp_total"] = player.components.taskdata.temp_total
+		params["collect"] = player.components.taskdata.collect
 		params["tumbleweednum"] = player.components.taskdata.tumbleweednum
 		params["killboss"] = player.components.taskdata.killboss
 
@@ -283,7 +283,7 @@ local function RecoveryPlayer(player, data)
 	    if player.components.taskdata.all > 0 then
 	    	player.components.taskdata.complete_time = data["complete_time"] or nil
 	    end
-	    player.components.taskdata.temp_total = data["temp_total"] or 0
+	    player.components.taskdata.collect = data["collect"] or 0
 	    player.components.taskdata.tumbleweednum = data["tumbleweednum"] or 0
 	end
 	if player.components.skilldata ~= nil then

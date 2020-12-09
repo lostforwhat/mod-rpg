@@ -3,26 +3,26 @@ local CD_TIME = 25
 local TASK_TIME = 5
 
 local function onlevel(self, level)
-	if self.inst.player_skills_classified ~= nil then
-        self.inst.player_skills_classified:UpdateSkill("stealth", {level=level})
+	if self.inst.player_classified ~= nil then
+        self.inst.player_classified:UpdateSkill("stealth", {level=level})
     end
 end
 
 local function oncd_time(self, val)
-	if self.inst.player_skills_classified ~= nil then
-        self.inst.player_skills_classified:UpdateSkillCd("stealth", val)
+	if self.inst.player_classified ~= nil then
+        self.inst.player_classified:UpdateSkillCd("stealth", val)
     end
 end
 
 local function onenabled(self, val)
-	if self.inst.player_skills_classified ~= nil then
-        self.inst.player_skills_classified:UpdateSkill("stealth", {level= val and self.level or 0})
+	if self.inst.player_classified ~= nil then
+        self.inst.player_classified:UpdateSkill("stealth", {level= val and self.level or 0})
     end
 end
 
 local function onhandle_key(self, key)
-    if self.inst.player_skills_classified ~= nil then
-        self.inst.player_skills_classified:UpdateSkill("stealth", {key=key})
+    if self.inst.player_classified ~= nil then
+        self.inst.player_classified:UpdateSkill("stealth", {key=key})
     end
 end
 

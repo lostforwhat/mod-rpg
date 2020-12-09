@@ -79,7 +79,7 @@ table.insert(PrefabFiles, "coffee")
 table.insert(PrefabFiles, "coffeebush")
 --buff
 table.insert(PrefabFiles, "new_buffs")
-table.insert(PrefabFiles, "player_skills_classified")
+--table.insert(PrefabFiles, "player_skills_classified")
 --新装备
 
 

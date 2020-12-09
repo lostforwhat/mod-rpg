@@ -223,5 +223,5 @@ local collect_task_reward = {
 
 return {
 	tasks = collect_task,
-	reward = collect_task_reward
+	rewards = collect_task_reward
 }

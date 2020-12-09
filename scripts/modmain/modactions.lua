@@ -49,9 +49,11 @@ _G.TOOLACTIONS["CALL"] = true
 AddStategraphActionHandler("wilson",ActionHandler(ACTIONS.CALL, "play_horn"))
 AddStategraphActionHandler("wilson_client",ActionHandler(ACTIONS.CALL, "play"))
 
+--使用钻石
 AddAction("USEDIAMOND", _G.STRINGS.TUM.USEDIAMOND, function(act)
     if act.doer ~= nil and act.invobject ~= nil and act.invobject.components.diamond ~= nil then
-        return act.invobject.components.diamond:Use(act.doer)
+        act.invobject.components.diamond:Use(act.doer)
+        return true
     end
 end)
 AddComponentAction("INVENTORY", "diamond", function(inst, doer, actions, right)
@@ -61,6 +63,21 @@ AddComponentAction("INVENTORY", "diamond", function(inst, doer, actions, right)
 end)
 AddStategraphActionHandler("wilson", ActionHandler(ACTIONS.USEDIAMOND, "dolongaction"))
 AddStategraphActionHandler("wilson_client", ActionHandler(ACTIONS.USEDIAMOND, "dolongaction"))
+
+--task
+AddAction("GETTASK", _G.STRINGS.TUM.GETTASK, function(act)
+    if act.doer ~= nil and act.target ~= nil and act.target.components.npctask ~= nil and not act.target.components.npctask.tasking then
+        act.target.components.npctask:Check(act.doer)
+        return true
+    end
+end)
+AddComponentAction("SCENE", "npctask", function(inst, doer, actions, right) 
+    if right and inst:HasTag("npctask") and doer ~= nil and doer:HasTag("player") and not doer:HasTag("playerghost") then
+        table.insert(actions, ACTIONS.GETTASK)
+    end
+end)
+AddStategraphActionHandler("wilson", ActionHandler(ACTIONS.GETTASK, "give"))
+AddStategraphActionHandler("wilson_client", ActionHandler(ACTIONS.GETTASK, "give"))
 
 --野蛮冲撞
 AddAction("COLLIDE",_G.STRINGS.TUM.COLLIDE, function(act)

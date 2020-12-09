@@ -49,7 +49,7 @@ _G.CHAT_RULES = {
 			end
 		end
 	},
-	["^move%s+(%d),(%d)$"] = {
+	["^move%s?(%d+),(%d+)$"] = {
 		function(player, st, ed, x, z)
 			if player:HasTag("titles_king") and
 				(player._move_cd == nil or _G.GetTime() - player._move_cd >= 30) then
@@ -76,44 +76,49 @@ _G.RemoveChatRules = function(rule)
 end
 --inst.Network:IsServerAdmin()  --判断是否管理员
 --指令信息，亦可作为多世界通信使用
-if _G.TheNet:GetIsServer() or _G.TheNet:IsDedicated() then
-	local function GetPlayerById(playerid)
-	    for _, v in ipairs(_G.AllPlayers) do
-	        if v ~= nil and v.userid and v.userid == playerid then
-	            return v
-	        end
-	    end
-	    return nil
-	end
-    local OldNetworking_Say = _G.Networking_Say
-    _G.Networking_Say = function(guid, userid, name, prefab, message, colour, whisper, isemote, ...)
-        local player = GetPlayerById(userid)
-        if player ~= nil then
-        	local st, ed = string.find(message, _G.CHAT_KEY)
-			--	print("st", st)
-			if st == 1 then
-				local content = string.sub(message, ed + 1)
-				local ordered = false
-				for rule, fns in pairs(_G.CHAT_RULES) do
-					--print("rule", rule)
-					local res = {string.find(content, rule)} --pack
-					--print("res", unpack(res))
-					if res ~= nil and res[1] == 1 then
-						for _, fn in ipairs(fns) do
-							fn(player, unpack(res))
-						end
+--if _G.TheNet:GetIsServer() or _G.TheNet:IsDedicated() then
+local function GetPlayerById(playerid)
+    for _, v in ipairs(_G.AllPlayers) do
+        if v ~= nil and v.userid and v.userid == playerid then
+            return v
+        end
+    end
+    return nil
+end
+local OldNetworking_Say = _G.Networking_Say
+_G.Networking_Say = function(guid, userid, name, prefab, message, colour, whisper, isemote, ...)
+    local player = GetPlayerById(userid)
+    if player ~= nil then
+    	local st, ed = string.find(message, _G.CHAT_KEY)
+		--	print("st", st)
+		if st == 1 then
+			local content = string.sub(message, ed + 1)
+			local ordered = false
+			for rule, fns in pairs(_G.CHAT_RULES) do
+				--print("rule", rule)
+				local res = {string.find(content, rule)} --pack
+				--print("res", unpack(res))
+				if res ~= nil and res[1] == 1 then
+					for _, fn in ipairs(fns) do
+						fn(player, unpack(res))
+						ordered = true
 					end
-					ordered = true
-				end
-				if ordered then return end --指令生效则吃掉这条消息
-				--修改字体颜色
-				local st1, ed1, hex, msg = string.find(message, "^(#[A-Fa-f0-9]{6})(*)$")
-				if st1 == 1 then
-					colour = {HexToPercentColor(hex)}
-					message = msg
 				end
 			end
-        end
-        OldNetworking_Say(guid, userid, name, prefab, message, colour, whisper, isemote, ...)
+			if ordered then return end --指令生效则吃掉这条消息
+			--修改字体颜色
+			local st1, ed1, hex, msg = string.find(message, "^(#%x%x%x%x%x%x)(.*)$")
+			if st1 == 1 then
+				--print(_G.HexToPercentColor(hex))
+				local r, g, b = _G.HexToPercentColor(hex)
+				r = r or 0
+				g = g or 0
+				b = b or 0
+				colour = {r, g, b, 1}
+				message = msg
+			end
+		end
     end
+    OldNetworking_Say(guid, userid, name, prefab, message, colour, whisper, isemote, ...)
 end
+--end

@@ -2,14 +2,14 @@ local DEFAULT_CD = 120
 local USE_STEP = 5
 
 local function onlevel(self, level)
-	if self.inst.player_skills_classified ~= nil then
-        self.inst.player_skills_classified:UpdateSkill("resurrect", {level=level})
+	if self.inst.player_classified ~= nil then
+        self.inst.player_classified:UpdateSkill("resurrect", {level=level})
     end
 end
 
 local function oncd_time(self, cd_time)
-	if self.inst.player_skills_classified ~= nil then
-        self.inst.player_skills_classified:UpdateSkillCd("resurrect", cd_time)
+	if self.inst.player_classified ~= nil then
+        self.inst.player_classified:UpdateSkillCd("resurrect", cd_time)
     end
 end
 

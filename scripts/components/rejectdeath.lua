@@ -8,14 +8,14 @@ local function OnMinHealth(inst, data)
 end
 
 local function onlevel(self, level)
-    if self.inst.player_skills_classified ~= nil then
-        self.inst.player_skills_classified:UpdateSkill("rejectdeath", {level=level})
+    if self.inst.player_classified ~= nil then
+        self.inst.player_classified:UpdateSkill("rejectdeath", {level=level})
     end
 end
 
 local function oncd_time(self, cd_time)
-    if self.inst.player_skills_classified ~= nil then
-        self.inst.player_skills_classified:UpdateSkillCd("rejectdeath", cd_time)
+    if self.inst.player_classified ~= nil then
+        self.inst.player_classified:UpdateSkillCd("rejectdeath", cd_time)
     end
 end
 
