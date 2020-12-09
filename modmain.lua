@@ -69,6 +69,7 @@ table.insert(PrefabFiles, "wes_clone")
 table.insert(PrefabFiles, "achiv_clear")
 table.insert(PrefabFiles, "skillbook")
 table.insert(PrefabFiles, "skillbookpage")
+table.insert(PrefabFiles, "diamond")
 table.insert(PrefabFiles, "callerhorn")
 
 table.insert(PrefabFiles, "electronic_ball")

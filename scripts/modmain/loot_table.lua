@@ -283,7 +283,8 @@ luck_loot = {
         {chance = 0.0003, item = "pigking"}, --
         {chance = 0.001, item="package_staff"}, --空间魔杖
         {chance = 0.004, item="pray_symbol"}, --祈祷符
-        {chance = 0.001, item="skillbook"},
+        {chance = 0.003, item="skillbookpage"},
+        {chance = 0.0001, item="skillbook"},
     },
 
 bad_loot = {

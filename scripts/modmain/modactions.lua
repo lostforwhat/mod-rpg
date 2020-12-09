@@ -49,6 +49,19 @@ _G.TOOLACTIONS["CALL"] = true
 AddStategraphActionHandler("wilson",ActionHandler(ACTIONS.CALL, "play_horn"))
 AddStategraphActionHandler("wilson_client",ActionHandler(ACTIONS.CALL, "play"))
 
+AddAction("USEDIAMOND", _G.STRINGS.TUM.USEDIAMOND, function(act)
+    if act.doer ~= nil and act.invobject ~= nil and act.invobject.components.diamond ~= nil then
+        return act.invobject.components.diamond:Use(act.doer)
+    end
+end)
+AddComponentAction("INVENTORY", "diamond", function(inst, doer, actions, right)
+    if doer:HasTag("player") then
+        table.insert(actions, ACTIONS.USEDIAMOND)
+    end
+end)
+AddStategraphActionHandler("wilson", ActionHandler(ACTIONS.USEDIAMOND, "dolongaction"))
+AddStategraphActionHandler("wilson_client", ActionHandler(ACTIONS.USEDIAMOND, "dolongaction"))
+
 --野蛮冲撞
 AddAction("COLLIDE",_G.STRINGS.TUM.COLLIDE, function(act)
     local act_pos = act:GetActionPoint()

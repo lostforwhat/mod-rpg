@@ -46,7 +46,7 @@ end
 
 local function ShardPlayerAndMax()
 	local max_players = GetMaxPlayers()
-	local msg = _G.SHARD_KEY.."players"..(_G.AllPlayers ~= nil and #_G.AllPlayers or 0).."-"..max_players
+	local msg = _G.SHARD_KEY.."players"..(_G.AllPlayers ~= nil and #_G.AllPlayers or 0)..":"..max_players
     TheNet:SystemMessage(msg)
 end
 
@@ -90,7 +90,7 @@ if TheNet:GetIsServer() or TheNet:IsDedicated() then
 				SetWorldData(worldId, num)
 			end)
 
-			_G.AddShardRule("^players(%d+)-(%d+)$", function(content, worldId, st, ed, num, maxplayers) 
+			_G.AddShardRule("^players(%d+):(%d+)$", function(content, worldId, st, ed, num, maxplayers) 
 				SetWorldData(worldId, num, maxplayers)
 			end)
 
