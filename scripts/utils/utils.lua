@@ -7,11 +7,11 @@ function GetBaseUrl()
     return BASE_URL
 end
 
-function GetToken()
-    return TUNNING and TUNING.token or 
+--[[function GetToken()
+    return TUNING ~= nil and TUNING.token or 
             GLOBAL.TUNING and GLOBAL.TUNING.token or 
             "0874689771c44c1e1828df13716801f5"
-end
+end]]
 
 function ExistInTable(tab, val)
 	for k, v in pairs(tab) do

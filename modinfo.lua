@@ -1,4 +1,4 @@
-name = "彩色风滚草R"
+name = " 彩色风滚草R"
 description = ""
 author = "五年"
 

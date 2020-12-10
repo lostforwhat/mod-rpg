@@ -13,7 +13,7 @@ local WorldShop = Class(function(self, inst)
 
     if TheNet:GetIsServer() then
     	self._shopdata:set("{}")
-    	self.inst:DoTaskInTime(0, function() 
+    	self.inst:DoTaskInTime(1, function() 
 			self:Refresh()
     	end)
     	if TheWorld.ismastershard then
@@ -42,6 +42,9 @@ function WorldShop:OnUpdate(dt)
 end
 
 function WorldShop:Refresh(force)
+	if not TheNet:GetIsServer() then
+		return
+	end
 	--test
 	--[[TheWorld.goods = {
 		{prefab="spear"}, {prefab="footballhat"}, {prefab="hivehat"}, {prefab="hivehat"},
@@ -67,7 +70,7 @@ function WorldShop:Refresh(force)
     	return
     end
 
-    local inst = TheWorld ~= nil and TheWorld.net or self.inst
+    local inst = self.inst
     local serversession = inst.components.shardstate:GetMasterSessionId()
     HttpGet("/public/getGoods?serversession="..serversession.."&userid="--[[..self.inst.userid]], function(result, isSuccessful, resultCode)
     	if isSuccessful and (resultCode == 200) then
@@ -76,6 +79,11 @@ function WorldShop:Refresh(force)
 			if not status or not data then
 		 		print("解析GetGoods失败! ", tostring(status), tostring(data))
 			else
+				if #data > 50 then
+					for k = 51, #data do
+						data[k] = nil
+					end
+				end
 				self._shopdata:set(Table2String(data))
 				self.refresh_time = GetTime()
 				--成功
@@ -92,8 +100,11 @@ function WorldShop:GetGoods()
 end
 
 function WorldShop:ResetShop()
+	if not TheNet:GetIsServer() then
+		return
+	end
 	self.resetting = true
-	local inst = TheWorld ~= nil and TheWorld.net or self.inst
+	local inst = self.inst
     local serversession = inst.components.shardstate:GetMasterSessionId()
     local params = {
 		serversession = serversession

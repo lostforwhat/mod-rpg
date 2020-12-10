@@ -130,6 +130,7 @@ local collect_task = {
 	{prefab = "deserthat", num = 1, level = 4},
 	{prefab = "steelwool", num = 4, level = 4},
 	{prefab = "goose_feather", num = 4, level = 4},
+	{prefab = "coffee", num = 4, level = 4},
 
 
 	{prefab = "bearger_fur", num = 1, level = 5},
@@ -178,6 +179,7 @@ local collect_task_reward = {
 		{prefab = "redgem", num = 5},
 		{prefab = "skillbookpage", num = 1},
 		{prefab = "seeds", num = 20},
+		{prefab = "coffee", num = 5},
 	},
 	[2] = {
 		{prefab = "diamond", num = 2},
@@ -190,6 +192,7 @@ local collect_task_reward = {
 		{prefab = "greengem", num = 2},
 		{prefab = "thulecite", num = 10},
 		{prefab = "gears", num = 10},
+		{prefab = "coffeebush", num = 2},
 	},
 	[3] = {
 		{prefab = "blowdart_pipe", num = 10},

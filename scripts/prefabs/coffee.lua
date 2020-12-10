@@ -150,6 +150,10 @@ local function EatCoffeeFn(inst, eater)
     end
 end
 
+local function GetShowItemInfo(inst)
+    return "速度+80%"
+end
+
 local function fn_prepared()
     local inst = CreateEntity()
 
@@ -211,6 +215,7 @@ local function fn_prepared()
     inst:AddComponent("tradable")
 
     ------------------------------------------------
+    inst.GetShowItemInfo = GetShowItemInfo
 
     return inst
 end

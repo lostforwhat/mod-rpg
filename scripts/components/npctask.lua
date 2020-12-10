@@ -11,6 +11,7 @@ local msg_data = {
 	"请帮我找 %d 个 %s",
 	"我急需 %d 个 %s，请帮我找到",
 	"就差 %d 个 %s 了，我会给你丰富的回报",
+	"我可以将 %d 张 %s 装订成一本，如果你现在有的话",
 }
 
 local function RandomVaribleNum(num)

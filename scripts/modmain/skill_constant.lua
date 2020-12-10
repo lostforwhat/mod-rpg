@@ -922,7 +922,7 @@ skill_constant = {
 			local max = level >= max_level and " (Max)" or ""
 			desc_str = desc_str.."\n Lv:"..level..max.."\n"
 			.."短时间内进行伪装，怪物无法看到自己\n"
-			.."持续时间: "..(5 + level)
+			.."持续时间: "..(5 + level).."s (R)"
 			return desc_str
 		end,
 		effect_fn=function(self, owner) 

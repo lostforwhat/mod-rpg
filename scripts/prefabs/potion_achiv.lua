@@ -48,6 +48,9 @@ local function fn()
     inst.components.edible.xpvalue = 20
     inst.components.edible.foodtype = "GOODIES"
     inst.components.edible:SetOnEatenFn(Oneat) 
+
+    inst:AddComponent("stackable")
+    inst.components.stackable.maxsize = TUNING.STACK_SIZE_SMALLITEM
   
     inst:AddComponent("inspectable")
 

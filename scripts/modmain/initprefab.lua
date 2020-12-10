@@ -48,7 +48,7 @@ local function PlayerMigrateCheck(player)
 	if player.components.vip ~= nil and player.components.vip.level > 0 then
 		return true
 	end
-	return FindEntity(
+	return _G.FindEntity(
 	        player,
 	        5,
 	        function(guy) 
@@ -743,6 +743,16 @@ local function InitShop(inst)
 end
 AddPrefabPostInit("forest_network", InitShop)
 AddPrefabPostInit("cave_network", InitShop)
+--AddPrefabPostInit("world", InitShop)
+
+if TheNet:GetIsServer() then
+	local function InitWorldShop()
+		--[[_G.TheWorld:DoTaskInTime(5, function() 
+			_G.TheWorld.net.components.worldshop:Refresh()
+		end)]]
+	end
+	AddSimPostInit(InitWorldShop)
+end
 
 --为所有武器添加等级
 AddPrefabPostInitAny(function(inst) 

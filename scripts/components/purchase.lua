@@ -103,6 +103,9 @@ function Purchase:Purchase(goods)
 					print("------------"..(self.inst.userid).." Purchase failed! ERROR:"..result.."--------------")
 					--失败后返还
 					self:CoinDoDelta(self.spend_temp)
+					if self.inst.components.talker ~= nil then
+						self.inst.components.talker:Say("购买失败了呢！"..result)
+					end
 				end
 				self.spend_temp = 0
 			end, params)
