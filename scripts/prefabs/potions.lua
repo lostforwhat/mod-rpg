@@ -79,6 +79,9 @@ local potions_type = {
 			if eater and eater.components.locomotor and eater:HasTag("player") then
 				eater.components.debuffable:AddDebuff("buff_waterwalk", "buff_waterwalk")
 			end
+		end,
+		showfn = function(inst, viewer)
+			return "水上行走+240"
 		end
 	},
 	green = {
@@ -92,6 +95,9 @@ local potions_type = {
 		        eater.components.debuffable:AddDebuff("buff_taunt", "buff_taunt")
 		        dobackperish(eater)
 		    end
+		end,
+		showfn = function(inst, viewer)
+			return "嘲讽+10", "背包返鲜+0~50"
 		end
 	},
 	luck = {
@@ -106,6 +112,9 @@ local potions_type = {
 			if eater:HasTag("potionbuilder") then
 				takeglommerfuel(eater)
 			end
+		end,
+		showfn = function(inst, viewer)
+			return "幸运+5~15", "格罗姆友好"
 		end
 	},
 	red = {
@@ -118,11 +127,14 @@ local potions_type = {
 		        not eater:HasTag("playerghost") then
 		        eater.components.debuffable:AddDebuff("buff_super_attack", "buff_super_attack")
 		    end
+		end,
+		showfn = function(inst, viewer)
+			return "体型+50%", "力量+50%"
 		end
 	}
 }
 
-local function MakePotion(type)
+local function MakePotion(potion_type)
 	local function fn()
 		local inst = CreateEntity()
 	    inst.entity:AddTransform()
@@ -133,11 +145,11 @@ local function MakePotion(type)
 	    -- Set animation info
 	    inst.AnimState:SetBuild("potions")
 	    inst.AnimState:SetBank("potions")
-	    inst.AnimState:PlayAnimation("potion_"..type)
+	    inst.AnimState:PlayAnimation("potion_"..potion_type)
 	    inst.Transform:SetScale(2, 2, 1)
 
 	    --inst:AddTag("irreplaceable")
-	    if type == "luck" then
+	    if potion_type == "luck" then
 	    	inst.entity:AddLight()
 	    	inst.Light:SetFalloff(0.7)
 		    inst.Light:SetIntensity(.5)
@@ -148,7 +160,7 @@ local function MakePotion(type)
 		    inst:AddTag("lightbattery")
 	    end
 
-	    inst:AddTag("meat")
+	    --inst:AddTag("meat")
 	    inst:AddTag("preparedfood")
 	    --MakeInventoryFloatable(inst, "small", 0.05, {1.2, 0.75, 1.2})
 	    inst.entity:SetPristine()
@@ -158,11 +170,11 @@ local function MakePotion(type)
 	    end
 
 	    inst:AddComponent("edible")
-	    inst.components.edible.healthvalue = potions_type[type].health or 0 -- Amount to heal
-	    inst.components.edible.hungervalue =  potions_type[type].hunger or 0 -- Amount to fill belly
-	    inst.components.edible.sanityvalue = potions_type[type].sanity or 0 -- Amount to help Sanity
+	    inst.components.edible.healthvalue = potions_type[potion_type].health or 0 -- Amount to heal
+	    inst.components.edible.hungervalue =  potions_type[potion_type].hunger or 0 -- Amount to fill belly
+	    inst.components.edible.sanityvalue = potions_type[potion_type].sanity or 0 -- Amount to help Sanity
 	    inst.components.edible.foodtype = "GOODIES"
-	    inst.components.edible:SetOnEatenFn(potions_type[type].fn) 
+	    inst.components.edible:SetOnEatenFn(potions_type[potion_type].fn) 
 
 	  	inst:AddComponent("stackable")
 		inst.components.stackable.maxsize = TUNING.STACK_SIZE_SMALLITEM
@@ -170,15 +182,16 @@ local function MakePotion(type)
 	    inst:AddComponent("inspectable")
 
 	    inst:AddComponent("inventoryitem")
-	    inst.components.inventoryitem.atlasname = "images/inventoryimages/potion_"..type..".xml" -- here's the atlas for our tex
+	    inst.components.inventoryitem.atlasname = "images/inventoryimages/potion_"..potion_type..".xml" -- here's the atlas for our tex
 
+	    inst.GetShowItemInfo = potions_type[potion_type].showfn
 	    --inst.OnSave = OnSave
 	    --inst.OnLoad = OnLoad
 
 	    return inst
 	end
 
-	return Prefab("potion_"..type, fn, assets)
+	return Prefab("potion_"..potion_type, fn, assets)
 end
 
 return MakePotion("blue"),

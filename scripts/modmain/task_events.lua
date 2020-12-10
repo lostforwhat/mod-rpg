@@ -103,12 +103,12 @@ local function OnEat(inst, data)
     	end
     end
 
-    if food.components.edible then
+    --[[if food.components.edible then
         local hunger_val = food.components.edible:GetHunger(inst)
         local sanity_val = food.components.edible:GetSanity(inst)
         local health_val = food.components.edible:GetHealth(inst)
         GiveExp(inst, hunger_val*0.05 + sanity_val*0.12 + health_val*0.1)
-    end
+    end]] -- 已注入组件中
 end
 
 local function OnDeath(inst, data)

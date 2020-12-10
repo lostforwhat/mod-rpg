@@ -165,7 +165,7 @@ AddPlayerPostInit(function(inst)
 
 	end
 	if prefab == "wendy" then
-		inst:AddComponent("revenge")
+		
 	end
 	if prefab == "willow" then
 
@@ -233,6 +233,7 @@ AddPlayerPostInit(function(inst)
 				inst.components.locomotor:SetExternalSpeedMultiplier(inst, "player", 1.01)
 			end
 			if prefab == "wendy" then
+				inst:AddComponent("revenge")
 				inst.components.skilldata:SetLevel("abigailclone", 1)
 				inst.components.locomotor:SetExternalSpeedMultiplier(inst, "player", 1.01)
 			end
@@ -288,6 +289,13 @@ AddPlayerPostInit(function(inst)
 		--全局注册伤害转移方法
 		if inst.components.combat ~= nil then
 			inst.components.combat.redirectdamagefn = RedirectDamageFn
+		end
+
+		inst.GetShowItemInfo = function(inst)
+			local level = inst.components.level and inst.components.level.level or 1
+			local crit = inst.components.crit and inst.components.crit:GetRealChance() or 0
+			local dodge = inst.components.dodge and inst.components.dodge:GetFinalChance() or 0
+			return "Lv: "..level, "暴击+"..(crit*100).."% / 闪避+"..(dodge*100).."%"
 		end
     end
 
@@ -413,14 +421,18 @@ AddPrefabPostInit("bernie_big", function(inst)
 				player:PushEvent("killed", data)
 			end
 		end)
+
+		inst.components.health.externalabsorbmodifiers:SetModifier("bernie_big", 0.5)
 	end
 end)
 
 --abigail添加复仇属性
 AddPrefabPostInit("abigail", function(inst) 
-	inst:AddComponent("revenge")
 	if _G.TheWorld.ismastersim then
+		inst:AddComponent("revenge")
 		inst:AddComponent("clone")
+
+		inst.components.health.externalabsorbmodifiers:SetModifier("abigail", 0.7)
 	end
 end)
 
@@ -735,7 +747,16 @@ AddPrefabPostInit("cave_network", InitShop)
 --为所有武器添加等级
 AddPrefabPostInitAny(function(inst) 
 	if inst.components.weapon ~= nil then
+		inst:AddComponent("weaponlevel")
 
+		if inst.GetShowItemInfo == nil then
+			inst.GetShowItemInfo = function(inst)
+				local level = inst.components.weaponlevel and inst.components.weaponlevel.level or 0
+				if level > 0 then
+					return "Lv: "..level
+				end
+			end
+		end
 	end
 end)
 

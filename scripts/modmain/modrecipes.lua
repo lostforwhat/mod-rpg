@@ -115,3 +115,15 @@ AddRecipe("potion_red", {Ingredient("glommerfuel",1),Ingredient("petals_evil",5)
 	"potionbuilder", -- builder_tag
 	"images/inventoryimages/potion_red.xml"
 )
+
+--号角
+AddRecipe("callerhorn", {Ingredient("horn",2),Ingredient("minotaurhorn",1)},
+    RECIPETABS.MAGIC, 
+    TECH.NONE, 
+    nil, 
+    nil, -- min_spacing
+    nil, -- nounlock
+    nil, -- numtogive
+    "vip", -- builder_tag
+    "images/inventoryimages/callerhorn.xml"
+)

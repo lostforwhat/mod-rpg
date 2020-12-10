@@ -331,3 +331,32 @@ AddComponentPostInit("groundpounder", function(self)
 		end
 	end
 end)
+
+AddComponentPostInit("edible", function(self)
+	self.xpvalue = self.xpvalue or 0
+	function self:GetXp(eater)
+		if self.xpvalue == 0 then
+			local hunger_val = self:GetHunger(eater)
+	        local sanity_val = self:GetSanity(eater)
+	        local health_val = self:GetHealth(eater)
+	        return math.floor(hunger_val*0.05 + sanity_val*0.12 + health_val*0.1)
+	    end
+	    return self.xpvalue
+	end
+end)
+
+AddComponentPostInit("eater", function(self)
+	local Old_Eat = self.Eat
+	function self:Eat(food, feeder)
+		if Old_Eat(self, food, feeder) then
+			if self.inst.components.level ~= nil then
+				local mult = self.inst.components.vip and self.inst.components.vip.level > 0 and 1.5 or 1
+	            local delta = food.components.edible:GetXp(self.inst)
+	            if delta ~= 0 then
+	                self.inst.components.level:AddXp(delta * mult)
+	            end
+	        end
+			return true
+		end
+	end
+end)

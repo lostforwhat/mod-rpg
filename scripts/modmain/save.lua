@@ -1,3 +1,5 @@
+require "utils/utils"
+
 local _G = GLOBAL
 local TheNet = _G.TheNet
 --local TheWorld = _G.TheWorld

@@ -2,7 +2,16 @@ require 'json'
 
 local BASE_URL = "http://api.tumbleweedofall.xyz:8888"
 --local BASE_URL = "http://localhost:8888"
-local TOKEN = TUNING.token or "0874689771c44c1e1828df13716801f5"
+
+function GetBaseUrl()
+    return BASE_URL
+end
+
+function GetToken()
+    return TUNNING and TUNING.token or 
+            GLOBAL.TUNING and GLOBAL.TUNING.token or 
+            "0874689771c44c1e1828df13716801f5"
+end
 
 function ExistInTable(tab, val)
 	for k, v in pairs(tab) do
@@ -17,7 +26,7 @@ function HttpPost(url, cb, params)
 	if params == nil then
 		params = {}
 	end
-	params['token'] = TOKEN
+	params['token'] = GetToken()
 	TheSim:QueryServer(
 		string.find(url, "http") == 1 and url or (BASE_URL..url),
 		function(...) 

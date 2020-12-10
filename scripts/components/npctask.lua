@@ -17,7 +17,7 @@ local function RandomVaribleNum(num)
 	if num <= 1 then
 		return num
 	end
-	local offset = math.floor(num * .5)
+	local offset = math.floor(num * .25)
 	num = math.random(num-offset, num+offset)
 	return num
 end
@@ -151,10 +151,16 @@ function NpcTask:Complete(player)
 		local level = self.current_task.level or 1
 		local reward_tb = rewards[level]
 
-		--基础奖励，钻石
-		local diamond = SpawnPrefab("diamond")
-		diamond.components.stackable:SetStackSize(level)
-		GiveItem(player, diamond)
+		--基础奖励，钻石,经验值
+		if level > 4 then
+			local diamond = SpawnPrefab("diamond")
+			diamond.components.stackable:SetStackSize(level-4)
+			GiveItem(player, diamond)
+		else
+			local potion = SpawnPrefab("potion_achiv")
+			potion.components.stackable:SetStackSize(level)
+			GiveItem(player, potion)
+		end
 
 		--物品奖励
 		local reward = reward_tb[math.random(#reward_tb)]

@@ -201,7 +201,7 @@ function ShopDetail:ShopItem()
         local value = item.value or 1
         local num = item.num or 1
         local use_left = item.use_left or 1
-        shop_item:SetTooltip(GetDescriptionString(name).."\n 价格："..value.."\n 数量："..num.."\n 耐久："..(use_left*100).."%")
+        shop_item:SetTooltip(GetDescriptionString(name).."\n 单价："..value.."\n 数量："..num.."\n 耐久："..(use_left*100).."%")
 
         shop_item.value:SetString("-"..value)
         shop_item.value:SetRegionSize(25, 18)

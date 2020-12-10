@@ -70,5 +70,15 @@ configuration_options =
 			{description = "关闭", data = false, hover = "关闭"},
 		},
 		default = false,
+	},
+	{
+		name = "holiday",
+		label = "服务器活动",
+		hover = "非专用服务器不建议开启\n 此选项开启后会不定时开启服务器范围内的奖励活动",
+		options = {
+			{description = "开启", data = true, hover = "开启活动"},
+			{description = "关闭", data = false, hover = "关闭"},
+		},
+		default = true,
 	}
 }

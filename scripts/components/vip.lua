@@ -25,6 +25,11 @@ local function tryAgainVip(self, inst)
 end
 
 local function onlevel(self, level)
+	if level > 0 then
+		self.inst:AddTag("vip")
+	else
+		self.inst:RemoveTag("vip")
+	end
 	self.net_data.level:set(level)
 end
 

@@ -162,6 +162,8 @@ local collect_task = {
 	{prefab = "armorskeleton", num = 1, level = 6},
 	{prefab = "package_staff", num = 1, level = 6},
 	{prefab = "pray_symbol", num = 1, level = 6},
+
+	{prefab = "skillbookpage", num = 20, level = 7},
 }
 
 
@@ -218,7 +220,10 @@ local collect_task_reward = {
 		{prefab = "diamond", num = 10},
 		{prefab = "skillbookpage", num = 8},
 		{prefab = "skillbook", num = 1},
-	}
+	},
+	[7] = {
+		{prefab = "skillbook", num = 1},
+	},
 }
 
 return {

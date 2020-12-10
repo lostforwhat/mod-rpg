@@ -5,43 +5,18 @@ local assets =
     Asset("ATLAS", "images/potion_achiv.xml"),
 }
 
-local function get_name(inst)
-    local ownerstr = ""
-    if inst._owner ~= nil then
-        ownerstr = "["..inst._owner.."]"
-    end
-    return STRINGS.NAMES.POTION_ACHIV.."("..inst.minachiv.."-"..inst.maxachiv..")"..ownerstr
-end
-
-local function OnSave(inst, data)
-    if  inst._userid ~= nil then
-        data._userid = inst._userid
-    end
-    data.minachiv = inst.minachiv
-    data.maxachiv = inst.maxachiv
-    data._owner = inst._owner
-end
-
-local function OnLoad(inst, data)
-    if data then
-        if data._userid and data._userid ~= nil then
-            inst._userid = data._userid
-        end
-    end 
-    inst.minachiv = data.minachiv or 1
-    inst.maxachiv = data.maxachiv or 3
-    inst._owner = data._owner or nil
-
-    inst.components.named:SetName(get_name(inst)) 
-end
 
 local function Oneat(inst, eater)
-    local coin = math.random(inst.minachiv, inst.maxachiv)
-    if eater.components.purchase then
-        eater.components.purchase:CoinDoDelta(coin)
-        eater.components.talker:Say("获得："..coin)
+    
+end
+
+--showme api
+local function GetShowItemInfo(inst, viewer)
+    local info = "经验值+"
+    if viewer ~= nil then
+        return info..inst.components.edible:GetXp(viewer)
     end
-    return true
+    return info..inst.components.edible.xpvalue
 end
 
 local function fn()
@@ -65,16 +40,12 @@ local function fn()
     if not TheWorld.ismastersim then
         return inst
     end
-    
-    inst._userid = nil
-    inst._owner = nil
-    inst.minachiv = 1
-    inst.maxachiv = 5
 
     inst:AddComponent("edible")
     inst.components.edible.healthvalue = 0  -- Amount to heal
     inst.components.edible.hungervalue =  0 -- Amount to fill belly
     inst.components.edible.sanityvalue = 0  -- Amount to help Sanity
+    inst.components.edible.xpvalue = 20
     inst.components.edible.foodtype = "GOODIES"
     inst.components.edible:SetOnEatenFn(Oneat) 
   
@@ -83,15 +54,7 @@ local function fn()
     inst:AddComponent("inventoryitem")
     inst.components.inventoryitem.atlasname = "images/potion_achiv.xml" -- here's the atlas for our tex
 
-    --inst.displaynamefn = get_name
-    inst:AddComponent("named")
-    inst.components.named:SetName(get_name(inst))
-    inst:DoPeriodicTask(1, function() 
-       inst.components.named:SetName(get_name(inst)) 
-    end)
-
-    inst.OnSave = OnSave
-    inst.OnLoad = OnLoad
+    inst.GetShowItemInfo = GetShowItemInfo
 
     return inst
 end

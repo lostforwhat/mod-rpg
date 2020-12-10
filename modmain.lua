@@ -62,7 +62,7 @@ table.insert(PrefabFiles, "book_kill")
 table.insert(PrefabFiles, "book_season")
 table.insert(PrefabFiles, "magic_circle")
 table.insert(PrefabFiles, "shadowtentacle_player")
---table.insert(PrefabFiles, "potion_achiv")
+table.insert(PrefabFiles, "potion_achiv")
 table.insert(PrefabFiles, "potions")
 table.insert(PrefabFiles, "deadbone")
 table.insert(PrefabFiles, "wes_clone")
@@ -221,6 +221,20 @@ AddClassPostConstruct("screens/playerhud", function(self)
 		return OldOnControl(self, control, down)
 	end
 end)
+
+--cover showme
+AddClassPostConstruct("widgets/hoverer",function(self)
+	local target = _G.TheInput:GetHUDEntityUnderMouse()
+	if target ~= nil then
+		target = target.widget ~= nil and target.widget.parent ~= nil and target.widget.parent.item
+	else
+		target = _G.TheInput:GetWorldEntityUnderMouse()
+	end
+	if target ~= nil then
+		--to do
+		
+	end
+end)
 --end
 
 --引入mod文件
@@ -243,6 +257,9 @@ if GetModConfigData("save") then
 end
 if GetModConfigData("clean") then
 	modimport("scripts/modmain/clean.lua")
+end
+if GetModConfigData("holiday") then
+	modimport("scripts/modmain/holiday.lua")
 end
 modimport("scripts/modmain/multiworld.lua")
 --debug

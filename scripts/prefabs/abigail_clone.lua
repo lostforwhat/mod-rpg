@@ -341,6 +341,11 @@ local function linktoplayer(inst, player)
 
     player.components.leader:AddFollower(inst)
     BecomeDefensive(inst)
+    if player ~= nil and player.components.level ~= nil then
+        local player_level = player.components.level.level or 0
+        local absorb = player_level * 0.01
+        inst.components.health.externalabsorbmodifiers:SetModifier("abigail", math.clamp(absorb, .5, .8))
+    end
 
     inst:ListenForEvent("healthdelta", AbigailHealthDelta)
     inst:ListenForEvent("onareaattackother", ApplyDebuff)

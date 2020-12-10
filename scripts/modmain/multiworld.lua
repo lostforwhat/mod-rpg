@@ -82,7 +82,7 @@ if TheNet:GetIsServer() or TheNet:IsDedicated() then
 	local function Init()
 
 		--if TheWorld ~= nil then
-			local worldId = _G.TheShard:GetShardId()
+			--local worldId = _G.TheShard:GetShardId()
 
 			local worldNum = GetWorldNum()
 
