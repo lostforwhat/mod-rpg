@@ -70,7 +70,7 @@ function Stealer:RandomItem(target)
 	if loot_table == nil then return end
 	local types = {"new_loot", "new_loot", "new_loot", "good_loot", "luck_loot"}
 	local items = deepcopy(loot_table[types[math.random(self.level)]])
-	local prefab = items[math.random(#items)]
+	local prefab = items[math.random(#items)].item
 	if prefab ~= nil and PrefabExists(prefab) then
 		local item = SpawnPrefab(prefab)
 		if item.components.inventoryitem == nil then
