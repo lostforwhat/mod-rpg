@@ -5,6 +5,20 @@ local Text = require "widgets/text"
 local TEMPLATES = require "widgets/redux/templates"
 local ScrollableList = require "widgets/scrollablelist"
 
+local DEFAULT_ATLAS = "images/inventoryimages1.xml"
+local DEFAULT_ATLAS2 = "images/inventoryimages2.xml"
+
+local categorys = {
+    tumbleweed = "giftwrap",
+    kill = "spear",
+    killboss = "nightsword",
+    eat = "meatballs",
+    cook = "cookpot",
+    build = "cutstone",
+    friend = "mandrake",
+    farm = "fast_farmplot",
+}
+
 local TaskScreen = Class(Screen, function(self, owner)
     Screen._ctor(self, "TaskScreen")
 
@@ -87,6 +101,15 @@ function TaskScreen:GetMyTask()
 	return num, total
 end
 
+local function GetAtlas(prefab)
+    local name = tostring(prefab)
+    local atlas = softresolvefilepath("images/inventoryimages/"..name..".xml")
+        or softresolvefilepath("images/"..name..".xml") or DEFAULT_ATLAS
+    local image = name .. ".tex"
+    atlas = TheSim:AtlasContains(atlas, image) and atlas or (TheSim:AtlasContains(DEFAULT_ATLAS2, image) and DEFAULT_ATLAS2)
+    return atlas, image
+end
+
 function TaskScreen:TaskItem()
     local taskdata = self.owner.components.taskdata
 	local task = Widget("taskitem")
@@ -113,14 +136,28 @@ function TaskScreen:TaskItem()
     task.desc:SetPosition(0, -17.5, 0)
 
     task.SetInfo = function(_, data)
+        if task.image ~= nil then
+            task.image:Kill()
+            task.image = nil
+        end
         task.data = data
         local info = data.task
         local index = data.index
         --task.name:SetString(info.name)
+        local category = info.category or ""
+        if categorys[category] ~= nil then
+            local atlas, image = GetAtlas(categorys[category])
+            task.image = task:AddChild(Image(atlas, image, "chesspiece_anchor_sketch.tex"))
+            --task.image:SetTint(.6, .6, .6, .6)
+            task.image:MoveToBack()
+            task.image:SetScale(0.4, 0.4)
+            task.image:SetPosition(62, -16)
+        end
+
         task.name:SetTruncatedString(info.name, 120, 100, "")
         local line = task.name:GetString()
 		while #line < #info.name do
-			task.name:SetSize(task.name:GetSize() - 0.2)
+			task.name:SetSize(task.name:GetSize() - 1)
 			task.name:SetTruncatedString(info.name, 120, 100, "")
 			line = task.name:GetString()
 		end

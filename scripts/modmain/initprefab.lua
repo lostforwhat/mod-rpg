@@ -20,7 +20,7 @@ local function RedirectDamageFn(inst, attacker, damage, weapon, stimuli)
 		if redirect_tagert == nil then
 			--此处写所有角色伤害转移策略
 			if inst:HasTag("lifeforever") and math.random() < 0.15 then
-				return FindEntity(
+				return _G.FindEntity(
 			        inst,
 			        15,
 			        function(guy) 

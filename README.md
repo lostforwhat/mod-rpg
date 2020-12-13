@@ -124,4 +124,5 @@ b.网络变量使用replica + classify <br/>
 7.触手棒+蜗牛头盔=野人套 <br/>
 <br>
 球状光虫,撒豆成兵
+c_anounce("服务器即将更新mod！")
 -->

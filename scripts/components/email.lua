@@ -3,9 +3,9 @@ require "utils/utils"
 local function SpawnItem(prefab, use_left)
 	local item = SpawnPrefab(prefab)
 	if item.components.inventoryitem == nil then --不能放物品栏
-		local real_item = item
-		item = SpawnPrefab("package_ball")
-		item.components.packer:Pack(real_item)
+		local package_ball = SpawnPrefab("package_ball")
+		package_ball.components.packer:Pack(item)
+		return package_ball
 	end
 	if use_left < 1 then
 		if item.components.perishable ~= nil then
@@ -96,6 +96,14 @@ local Email = Class(function(self, inst)
 
     self.list = {}
     self.has = false
+
+    if TheWorld.ismastersim then
+    	self.inst:DoPeriodicTask(15, function() 
+    		if not self.receiving then
+    			self:GetEmailsFromServer()
+    		end
+    	end)
+    end
 end,
 nil,
 {
@@ -216,7 +224,8 @@ function Email:ReceivedPrefabs(id)
 end
 
 function Email:GetEmailsFromServer()
-	if TheWorld.ismastersim then
+	if TheWorld.ismastersim and not self.receiving then
+		self.receiving = true
 		local serversession = TheWorld.net.components.shardstate:GetMasterSessionId()
 	    HttpGet("/public/getEmail?serversession="..serversession.."&userid="..self.inst.userid, function(result, isSuccessful, resultCode)
 	    	if isSuccessful and (resultCode == 200) then
@@ -231,6 +240,7 @@ function Email:GetEmailsFromServer()
 			else
 				print("-- getEmail failed! ERROR:"..result.."--")
 			end
+			self.receiving = nil
 		end)
 	end
 end

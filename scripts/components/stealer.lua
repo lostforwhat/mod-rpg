@@ -71,8 +71,8 @@ function Stealer:RandomItem(target)
 	local types = {"new_loot", "new_loot", "new_loot", "good_loot", "luck_loot"}
 	local items = deepcopy(loot_table[types[math.random(self.level)]])
 	local prefab = items[math.random(#items)]
-	if PrefabExists(item) then
-		local item = SpawnPrefab(item)
+	if prefab ~= nil and PrefabExists(prefab) then
+		local item = SpawnPrefab(prefab)
 		if item.components.inventoryitem == nil then
 			local pack_item = SpawnPrefab("package_ball")
 			pack_item.components.packer:Pack(item)
@@ -80,7 +80,7 @@ function Stealer:RandomItem(target)
 		end
 		return item
 	end
-	return nil
+	return SpawnPrefab("ash")
 end
 
 function Stealer:OnRemoveFromEntity()
