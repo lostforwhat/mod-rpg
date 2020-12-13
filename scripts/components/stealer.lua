@@ -39,13 +39,15 @@ function Stealer:Effect(target)
 		local maxslots = target.components.inventory.maxslots
 		local items = {}
         for k = 1, maxslots do
-	        local v = self.itemslots[k]
+	        local v = target.components.inventory.itemslots[k]
 	        if v ~= nil then
 	        	table.insert(items, v)
 	        end
 	    end
-	    item = items[math.random(#items)]
-	    item = target.components.inventory:DropItem(item)
+        if #items > 0 then
+    	    item = items[math.random(#items)]
+    	    item = target.components.inventory:DropItem(item)
+        end
     end
     --否则随机获得一个物品
     if item == nil and self.inst:HasTag("player") and not target:HasTag("player") then
@@ -67,7 +69,7 @@ end
 function Stealer:RandomItem(target)
 	if loot_table == nil then return end
 	local types = {"new_loot", "new_loot", "new_loot", "good_loot", "luck_loot"}
-	local items = deepcopy(loot_table[types[math.random(#self.level)]])
+	local items = deepcopy(loot_table[types[math.random(self.level)]])
 	local prefab = items[math.random(#items)]
 	if PrefabExists(item) then
 		local item = SpawnPrefab(item)

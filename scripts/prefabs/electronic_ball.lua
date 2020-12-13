@@ -53,7 +53,7 @@ local function FollowerOnUpdate(inst, targetpos)
 
     inst.components.locomotor.walkspeed = math.max(dist * 30, FORMATION_MAX_SPEED)
     inst:FacePoint(targetpos.x, 0, targetpos.z)
-    if inst.updatecomponents[inst.components.locomotor] == nil then
+    if inst.updatecomponents ~= nil and inst.updatecomponents[inst.components.locomotor] == nil then
         inst.components.locomotor:WalkForward(true)
     end
 end

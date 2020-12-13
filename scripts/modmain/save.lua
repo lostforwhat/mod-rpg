@@ -77,6 +77,8 @@ local function SaveServerInfo()
 	local worldnum = 1
 	if _G.TheWorld.ShardList ~= nil then
 		worldnum = GetLength(_G.TheWorld.ShardList) + 1
+	else
+		worldnum = GetLength(_G.TheWorld.sharddata)
 	end
 
 	local url = BASE_URL.."/public/saveServer"

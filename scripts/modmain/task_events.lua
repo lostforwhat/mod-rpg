@@ -36,7 +36,7 @@ end
 
 local function OnTumbleweedPicked(inst, data)
 	local taskdata = inst.components.taskdata	
-    local lucky_level = data.lucky_level
+    local level = data.level
     
     taskdata:AddOne("pick_one_tumbleweed")
     taskdata:AddOne("pick_tumbleweed_88")
@@ -44,16 +44,16 @@ local function OnTumbleweedPicked(inst, data)
     taskdata:AddOne("pick_tumbleweed_888")
     taskdata:AddOne("pick_tumbleweed_2888")
     taskdata:AddOne("pick_tumbleweed_6666")
-    if lucky_level ~= nil then
-        if lucky_level == 1 then
+    if level ~= nil then
+        if level == 1 then
             taskdata:AddOne("pick_tumbleweed_red_100")
-        elseif lucky_level == 2 then
+        elseif level == 2 then
             taskdata:AddOne("pick_tumbleweed_yellow_60")
-        elseif lucky_level == 3 then
+        elseif level == 3 then
             taskdata:AddOne("pick_tumbleweed_light_30")
-        elseif lucky_level == -1 then
+        elseif level == -1 then
             taskdata:AddOne("pick_tumbleweed_green_120")
-        elseif lucky_level == -2 then
+        elseif level == -2 then
             taskdata:AddOne("pick_tumbleweed_blue_60")
         end
     end
@@ -125,11 +125,7 @@ end
 
 local function IsValidVictim(victim)
     return victim ~= nil
-        and not ((victim:HasTag("prey") and not victim:HasTag("hostile")) or
-                victim:HasTag("veggie") or victim:HasTag("structure") or
-                victim:HasTag("wall") or victim:HasTag("balloon") or
-                victim:HasTag("groundspike") or victim:HasTag("smashable") or
-                victim:HasTag("companion") or victim:HasTag("INLIMBO"))
+        and not (victim:HasTag("wall") or victim:HasTag("balloon"))
         and victim.components.health ~= nil
         and victim.components.combat ~= nil
 end
@@ -275,7 +271,7 @@ local function OnKilled(inst, data)
     		for k, v in pairs(ents) do
     			v.components.taskdata:AddOne("kill_dragonfly")
     		end
-    	elseif prefab == "beager" then
+    	elseif prefab == "bearger" then
     		for k, v in pairs(ents) do
     			v.components.taskdata:AddOne("kill_beager")
     		end
@@ -408,7 +404,7 @@ local function OnPick(inst, data)
 		local prefab = item.prefab
 		if prefab == "cactus" then
 			taskdata:AddOne("pick_cactus_50")
-		elseif prefab == "mushroom" then
+		elseif string.find(prefab, "mushroom") then
 			taskdata:AddOne("pick_mushroom_100")
 		elseif string.find(prefab, "flower_cave") then
 			taskdata:AddOne("pick_flower_cave_100")
@@ -614,7 +610,7 @@ local function OnAddFollower(inst, data)
 	elseif string.find(prefab, "spider") then
 		taskdata:AddOne("makefriend_spider")
 	elseif prefab == "mandrake_active" then
-		if not TheWorld.state.isday then
+		if not _G.TheWorld.state.isday then
 			taskdata:AddOne("makefriend_mandrake_active")
 		end
 	elseif prefab == "smallbird" then

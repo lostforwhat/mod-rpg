@@ -102,9 +102,12 @@ function Packer:Unpack(pos)
 	end
 end
 
+function Packer:GetName()
+	return self.package and self.package.name
+end
+
 function Packer:OnSave()
 	if self.package then
-		freshen_refs(self)
 		return {package = self.package}, self.package.refs
 	end
 end

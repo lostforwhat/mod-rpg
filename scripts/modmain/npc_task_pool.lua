@@ -60,7 +60,7 @@ local collect_task = {
 	{prefab = "plantmeat", num = 2, level = 2},
 	{prefab = "bird_egg", num = 20, level = 2},
 	{prefab = "tallbirdegg", num = 1, level = 2},
-	{prefab = "fish", num = 5, level = 2},
+	--{prefab = "fish", num = 5, level = 2},
 	{prefab = "froglegs", num = 5, level = 2},
 	{prefab = "batwing", num = 2, level = 2},
 	{prefab = "fish", num = 5, level = 2},

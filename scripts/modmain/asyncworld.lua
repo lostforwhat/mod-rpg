@@ -69,11 +69,14 @@ local function ClockConverter(self)
 			totalsegs = totalsegs + (data.totaltimeinphase - data.remainingtimeinphase) / TUNING.SEG_TIME
 			
 			for i, v in ipairs(_segs) do
+				local old_totalsegs = totalsegs
 				data.segs[i] = v:value()
 				totalsegs = totalsegs - v:value()
 				if totalsegs < 0 then
-					data.phase = i
-					remainsegs = -totalsegs
+					if old_totalsegs >= 0 then
+						data.phase = i
+						remainsegs = -totalsegs
+					end
 				end
 			end
 			
@@ -112,7 +115,7 @@ local function SeasonsConverter(self)
 			end
 
 			for i, v in ipairs(SEASON_NAMES) do
-				_segs[i] = segs[v] or default
+				segs[i] = _segs[v] or default
 			end
 
 			PushSeasonClockSegs()

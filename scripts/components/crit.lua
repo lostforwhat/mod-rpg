@@ -147,7 +147,9 @@ function Crit:Effect()
 end
 
 function Crit:SetMaxHit(hit)
-	self.max_hit = hit
+	if hit > self.min_hit then
+		self.max_hit = hit
+	end
 end
 
 function Crit:SetMinHit(hit)

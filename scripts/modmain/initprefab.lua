@@ -264,7 +264,7 @@ AddPlayerPostInit(function(inst)
 				inst.components.skilldata:SetLevel("balloondummy", 1)
 			end
 			if prefab == "woodie" then
-				inst.components.health.externalabsorbmodifiers:SetModifier("player", 1.01)
+				inst.components.health.externalabsorbmodifiers:SetModifier("player", .01)
 			end
 			if prefab == "wormwood" then
 				inst.components.attackback:SetPercent(1)
@@ -361,7 +361,7 @@ AddPrefabPostInit("wortox", function(inst)
 		        inst._checksoulstask = inst:DoTaskInTime(0, CheckSoulsAdded)
 		    end
 		end
-		RemoveLastEventListener(inst, "gotnewitem")
+		_G.RemoveLastEventListener(inst, "gotnewitem")
 		inst:ListenForEvent("gotnewitem", OnGotNewItem)
 	end
 end)
