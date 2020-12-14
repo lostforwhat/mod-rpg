@@ -235,7 +235,9 @@ AddClassPostConstruct("widgets/hoverer",function(self)
 	end
 	if target ~= nil then
 		--to do
-		
+		if target:HasTag("weapon") then
+			
+		end
 	end
 end)
 --end

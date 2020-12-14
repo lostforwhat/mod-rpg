@@ -290,6 +290,10 @@ AddPlayerPostInit(function(inst)
 		if inst.components.combat ~= nil then
 			inst.components.combat.redirectdamagefn = RedirectDamageFn
 		end
+		--取消死亡掉落(还需要修改死亡state)
+		if inst.components.inventory ~= nil then
+			inst.components.inventory:DisableDropOnDeath()
+		end
 
 		inst.GetShowItemInfo = function(inst)
 			local level = inst.components.level and inst.components.level.level or 1
@@ -763,7 +767,8 @@ AddPrefabPostInitAny(function(inst)
 			inst.GetShowItemInfo = function(inst)
 				local level = inst.components.weaponlevel and inst.components.weaponlevel.level or 0
 				if level > 0 then
-					return "Lv: "..level
+					local extra_damage = inst.components.weapon.extra_damage or 0
+					return "强化+"..level.." (伤害+"..extra_damage..")"
 				end
 			end
 		end

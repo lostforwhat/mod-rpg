@@ -361,9 +361,62 @@ AddComponentPostInit("eater", function(self)
 	end
 end)
 
+--修改死亡掉落
+AddComponentPostInit("inventory", function(self)
+	local Old_DropEverything = self.DropEverything
+	function self:DropEverything(ondeath, keepequip)
+		if not ondeath or not self.inst:HasTag("player") then
+			return Old_DropEverything(self, ondeath, keepequip)
+		end
+		if self.activeitem ~= nil then
+	        self:DropItem(self.activeitem)
+	        self:SetActiveItem(nil)
+	    end
+
+	    local items = {}
+		for k = 1, self.maxslots do
+	        local v = self.itemslots[k]
+	        if v ~= nil then
+	        	if v.prefab == "amulet" then
+	        		self:DropItem(v, true, true)
+	        	else
+	        		table.insert(items, v)
+	        	end
+	        end
+	    end
+	    if #items > 0 then
+		    local shoulddropped = items[math.random(#items)]
+		    self:DropItem(shoulddropped, true, true)
+		end
+
+	    if not keepequip then
+	        for k, v in pairs(self.equipslots) do
+	            if not (ondeath and v.components.inventoryitem.keepondeath) then
+	                self:DropItem(v, true, true)
+	            end
+	        end
+	    end
+	end
+end)
+
 --修改武器等级附加伤害
 AddComponentPostInit("weapon", function(self)
-	
+	function self:SetDamage(dmg)
+		self.damage = dmg
+		self:RecalcDamage()
+	end
+
+	function self:GetDamage(attacker, target)
+		local extra_damage = self.extra_damage or 0
+		return ((type(self.damage) == "function" and self.damage(self.inst, attacker, target))
+            or self.damage) + extra_damage
+	end
+
+	function self:RecalcDamage()
+		--公式: y = 0.25*x2 + x
+		local level = self.inst.components.weaponlevel and self.inst.components.weaponlevel.level or 0
+		self.extra_damage = level * level * 0.25 + level
+	end
 end)
 
 --修改怪物掉落

@@ -47,6 +47,8 @@ function Extrameta:GetDamage()
 			if weapon ~= nil then
 				if type(weapon.components.weapon.damage) ~= "function" then
 					basedamage = weapon.components.weapon.damage
+					local weapon_extra_damage = weapon.components.weapon.extra_damage or 0
+					basedamage = basedamage + weapon_extra_damage
 				end
 			else
 				if self.inst.components.rider ~= nil and self.inst.components.rider:IsRiding() then

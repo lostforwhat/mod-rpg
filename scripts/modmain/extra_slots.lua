@@ -13,7 +13,7 @@ table.insert(Assets, Asset("ATLAS", "images/slots/neck.xml"))
 
 _G.EQUIPSLOTS.BACK = "back"
 _G.EQUIPSLOTS.NECK = "neck"
-_G.EQUIPSLOTS.HANDS2 = "hands2"
+--_G.EQUIPSLOTS.HANDS2 = "hands2"
 
 
 AddComponentPostInit("inventory", function(self, inst)

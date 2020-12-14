@@ -209,6 +209,7 @@ function Level:ReduceXp(value)
 		else
 			self.xp = 0
 		end
+		RecalcMeta(self.inst, self.level)
 	else
 		self.xp = 0
 	end
@@ -227,6 +228,7 @@ function Level:ReduceLevel()
 	if self.level > 1 then
 		self.level = self.level - 1
 		self:LevelCheck()
+		RecalcMeta(self.inst, self.level)
 	else
 		self.xp = 0
 	end

@@ -340,7 +340,7 @@ skill_constant = {
 			desc_str = desc_str.."\n Lv:"..level..max.."\n"
 			.."扔出去命中的是斧头还是斧把呢\n"
 			.."投掷范围: "..(5 + level*0.5).."\n"
-			.."伤害: "..(TUNING.AXE_DAMAGE * .5).."~"..(TUNING.AXE_DAMAGE * .5 + level*10)
+			.."伤害: "..(TUNING.AXE_DAMAGE * .5).."~"..(TUNING.AXE_DAMAGE * .5 + level*20)
 			return desc_str
 		end,
 	},

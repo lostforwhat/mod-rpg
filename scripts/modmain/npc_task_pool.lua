@@ -74,7 +74,7 @@ local collect_task = {
 	{prefab = "goatmilk", num = 2, level = 3},
 	{prefab = "butter", num = 1, level = 3},
 	{prefab = "bedroll_furry", num = 1, level = 3},
-	{prefab = "deer_antler", num = 1, level = 3},
+	--{prefab = "deer_antler", num = 1, level = 3},
 	{prefab = "butterflymuffin", num = 2, level = 3},
 	{prefab = "frogglebunwich", num = 2, level = 3},
 	{prefab = "honeyham", num = 2, level = 3},

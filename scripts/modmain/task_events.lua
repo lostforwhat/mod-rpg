@@ -255,7 +255,7 @@ local function OnKilled(inst, data)
         end
     end
     --以下为挑战boss
-    local boss_list = {"moose", "dragonfly", "beager", "deerclops",
+    local boss_list = {"moose", "dragonfly", "bearger", "deerclops",
     				  "stalker", "stalker_atrium", "klaus", "crabking",
                       "antlion", "minotaur", "beequeen", "toadstool", 
               		  "toadstool_dark", "malbatross", 

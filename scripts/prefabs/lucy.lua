@@ -156,13 +156,14 @@ end
 
 local function OnHit(inst, owner, target)
     if owner == target or owner:HasTag("playerghost") then
-        OnDropped(inst)
+        --OnDropped(inst)
+        OnCaught(inst, owner)
     else
         ReturnToOwner(inst, owner)
         if target ~= nil and target.components.combat then
             if owner.components.skilldata and owner.components.skilldata["flylucy"] then
                 local level = owner.components.skilldata:GetLevel("flylucy") or 0
-                local extra_damage = math.random(2, 10) * level
+                local extra_damage = math.random(2, 20) * level
                 target.components.combat:GetAttacked(owner, extra_damage)
             end
         end
@@ -182,6 +183,14 @@ local function OnMiss(inst, owner, target)
         OnDropped(inst)
     else
         ReturnToOwner(inst, owner)
+    end
+end
+
+local function StopTrackingDelayOwner(self)
+    if self.delayowner ~= nil then
+        self.inst:RemoveEventCallback("onremove", self._ondelaycancel, self.delayowner)
+        self.inst:RemoveEventCallback("newstate", self._ondelaycancel, self.delayowner)
+        self.delayowner = nil
     end
 end
 
@@ -282,6 +291,18 @@ local function fn()
     inst.components.projectile:SetOnHitFn(OnHit)
     inst.components.projectile:SetOnMissFn(OnMiss)
     inst.components.projectile:SetOnCaughtFn(OnCaught)
+    local OldHit = inst.components.projectile.Hit
+    inst.components.projectile.Hit = function(self, target) 
+        if target == self.owner then
+            StopTrackingDelayOwner(self)
+            self:Stop()
+            self.inst.Physics:Stop()
+            inst.AnimState:PlayAnimation("idle")
+            OnCaught(inst, target)
+        else
+            OldHit(self, target)
+        end
+    end
 
     inst:AddComponent("inspectable")
     inst:AddComponent("inventoryitem")

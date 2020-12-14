@@ -353,7 +353,8 @@ function PlayerDetail:LoadSkills()
             local level = item.level_fn and item:level_fn(self.owner) or 0
             local cost = item.cost or 0
 
-            skill_item.title:SetMultilineTruncatedString(item.name, 2, 70, 4, "...", false)
+            --skill_item.title:SetMultilineTruncatedString(item.name, 2, 70, 4, "...", false)
+            skill_item.title:SetString(item.name)
             local level_str = "Lv "..(level>=max_level and "MAX" or level)
             skill_item.level:SetString(level_str)
 

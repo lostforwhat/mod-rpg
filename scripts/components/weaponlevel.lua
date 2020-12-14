@@ -1,10 +1,20 @@
-local MAX_LEVEL = 10
+local MAX_LEVEL = 99 --理论无上限,实际应该10级左右达到上限
+
+local function onlevel(self, level)
+	if self.inst.components.weapon ~= nil then
+		self.inst.components.weapon:RecalcDamage()
+	end
+end
 
 local WeaponLevel = Class(function(self, inst) 
     self.inst = inst
     
     self.level = 0
-end)
+end,
+nil,
+{
+	level = onlevel
+})
 
 function WeaponLevel:OnSave()
 	return {
