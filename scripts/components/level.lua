@@ -117,7 +117,7 @@ end
 
 local level_fn_data = {
 	wilson = DefaultLevelUp,
-	wendy = DefaultLevelUp,
+	wendy = WendyLevelUp,
 	willow = WillowLevelUp,
 	wathgrithr = WathgrithrLevelUp,
 	wolfgang = WolfgangLevelUp,

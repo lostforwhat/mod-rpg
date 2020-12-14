@@ -360,3 +360,13 @@ AddComponentPostInit("eater", function(self)
 		end
 	end
 end)
+
+--修改武器等级附加伤害
+AddComponentPostInit("weapon", function(self)
+	
+end)
+
+--修改怪物掉落
+AddComponentPostInit("lootdropper", function(self) 
+	
+end)

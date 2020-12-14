@@ -330,11 +330,12 @@ local function OnKilled(inst, data)
     			v.components.taskdata:AddOne("kill_crabking")
     		end
     	end
+        -- 此处添加重复击杀boss获得奖励,注意排除一段克劳斯
         if not (prefab == "klaus" and not victim:IsUnchained()) then
             taskdata:AddOne("kill_boss_100")
-            taskdata.killboss = taskdata.killboss + 1
+            --taskdata.killboss = taskdata.killboss + 1
+            taskdata:KillBoss()
         end
-    	-- 此处添加重复击杀boss获得奖励,注意排除一段克劳斯
 
         local health = victim.components.health.maxhealth or 0
         local num = #ents
@@ -600,7 +601,7 @@ end
 local function OnAddFollower(inst, data)
 	local taskdata = inst.components.taskdata
 	local follower = data.follower
-	local prefab = follower.prefab
+	local prefab = follower.prefab or ""
 	if prefab == "pigman" then
 		taskdata:AddOne("makefriend_pigman")
 	elseif prefab == "bunnyman" then

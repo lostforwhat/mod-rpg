@@ -27,7 +27,8 @@ function Migrater:StartMigrate(worldid)
 	--worldid = tonumber(worldid)
 	if CheckWorldId(worldid) and 
 		(self.checkfn == nil or self.checkfn(self.inst)) then
-		TheWorld:PushEvent("ms_playerdespawnandmigrate", { player = self.inst, portalid = 1, worldid = worldid })
+		self.inst.sg:GoToState("migrate")
+		TheWorld:PushEvent("ms_playerdespawnandmigrate", { player = self.inst, portalid = 0, worldid = worldid })
 	end
 end
 

@@ -1,7 +1,7 @@
 loot_table = {
     new_loot = {
-        {chance = 20,   item = "cutgrass"},
-        {chance = 15,   item = "twigs"},
+        {chance = 15,   item = "cutgrass"},
+        {chance = 10,   item = "twigs"},
         {chance = 5, item = "log"},--木头
         {chance = 1, item = "charcoal"},--木炭
         {chance = 0.06, item = "pinecone"},--松果

@@ -78,6 +78,20 @@ end
 
 function TaskData:AddCollectTask()
 	self.collect = self.collect + 1
+	if self.collect % 5 == 0 then
+		SpawnPrefab("seffc").entity:SetParent(self.inst.entity)
+		TheNet:Announce(self.inst:GetDisplayName().." 累积完成收集任务 "..self.collect.." 次，奖励 5", self.inst.entity)
+		self.inst.components.purchase:CoinDoDelta(5)
+	end
+end
+
+function TaskData:KillBoss()
+	self.killboss = self.killboss + 1
+	if self.killboss % 5 == 0 then
+		SpawnPrefab("seffc").entity:SetParent(self.inst.entity)
+		TheNet:Announce(self.inst:GetDisplayName().." 累积击杀boss "..self.killboss.." 次，奖励 5", self.inst.entity)
+		self.inst.components.purchase:CoinDoDelta(5)
+	end
 end
 
 function TaskData:AddOne(taskname)
