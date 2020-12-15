@@ -152,7 +152,10 @@ function Stealth:OnLoad(data)
 	if data ~= nil then
 		self.cd_time = data.cd_time or 0
 		self.enabled = data.enabled or false
-	end
+        if self.cd_time > 0 then
+            self.inst:StartUpdatingComponent(self)
+        end
+    end
 end
 
 return Stealth

@@ -226,18 +226,24 @@ AddClassPostConstruct("screens/playerhud", function(self)
 end)
 
 --cover showme
+
 AddClassPostConstruct("widgets/hoverer",function(self)
-	local target = _G.TheInput:GetHUDEntityUnderMouse()
-	if target ~= nil then
-		target = target.widget ~= nil and target.widget.parent ~= nil and target.widget.parent.item
-	else
-		target = _G.TheInput:GetWorldEntityUnderMouse()
-	end
-	if target ~= nil then
-		--to do
-		if target:HasTag("weapon") then
-			
+	local OldSetString = self.text.SetString
+	self.text.SetString = function(text, str)
+		local target = _G.TheInput:GetHUDEntityUnderMouse()
+		if target ~= nil then
+			target = target.widget ~= nil and target.widget.parent ~= nil and target.widget.parent.item
+		else
+			target = _G.TheInput:GetWorldEntityUnderMouse()
 		end
+		if target ~= nil then
+			--to do
+			if target:HasTag("weapon") then
+				self.text:SetColour({0,1,0,1})
+			end
+		end
+
+		return OldSetString(text, str)
 	end
 end)
 --end
@@ -267,5 +273,6 @@ if GetModConfigData("holiday") then
 	modimport("scripts/modmain/holiday.lua")
 end
 modimport("scripts/modmain/multiworld.lua")
+modimport("scripts/modmain/weapon_strengthen.lua")
 --debug
 modimport("scripts/modmain/debug.lua")

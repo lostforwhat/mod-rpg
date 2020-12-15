@@ -944,7 +944,53 @@ task_data = {
 		need=5,
 		reward=2*rate
 	},
-	
+
+	--other
+	collect_30 = {
+		category="other",
+		name="交易",
+		desc="完成%s次猪王(鱼人王)收集任务",
+		need=30,
+		reward=3*rate
+	},
+	collect_300 = {
+		category="other",
+		name="供应链",
+		desc="完成%s次猪王(鱼人王)收集任务",
+		need=300,
+		hide=true,
+		reward=5*rate
+	},
+	strength_10 = {
+		category="other",
+		name="强化",
+		desc="熔炼装备%s次",
+		need=10,
+		reward=3*rate
+	},
+	strength_100 = {
+		category="other",
+		name="锻造师",
+		desc="熔炼装备%s次",
+		need=100,
+		hide=true,
+		reward=5*rate
+	},
+	strength_level_10 = {
+		category="other",
+		name="高级武器",
+		desc="熔炼装备等级到10级",
+		need=1,
+		reward=2*rate
+	},
+	strength_level_20 = {
+		category="other",
+		name="难得一见",
+		desc="熔炼装备等级到20级",
+		need=1,
+		hide=true,
+		reward=8*rate
+	},
 }
 
 --按顺序排序
@@ -1095,4 +1141,8 @@ task_list = {
 	'makefriend_mandrake_active',
 	'makefriend_smallbird',
 	'makefriend_rocky',
+
+	'collect_30',
+	'strength_10',
+	'strength_level_10',
 }

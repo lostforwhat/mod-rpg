@@ -700,6 +700,26 @@ local function OnCycles(inst)
     end
 end
 
+local function OnCollectTask(inst, data)
+    if inst.components.taskdata ~= nil then
+        inst.components.taskdata:AddOne("collect_30")
+        inst.components.taskdata:AddOne("collect_300")
+    end
+end
+
+local function OnWeaponStrengthen(inst, data)
+    if inst.components.taskdata ~= nil then
+        inst.components.taskdata:AddOne("strength_10")
+        inst.components.taskdata:AddOne("strength_100")
+        if data.level ~= nil and data.level >= 10 then
+            inst.components.taskdata:AddOne("strength_level_10")
+        end
+        if data.level ~= nil and data.level >= 20 then
+            inst.components.taskdata:AddOne("strength_level_20")
+        end
+    end
+end
+
 --玩家事件
 AddPlayerPostInit(function(inst)
 	--只进行服务端事件监听
@@ -772,6 +792,10 @@ AddPlayerPostInit(function(inst)
 
         --空血事件(回光返照已有组件代替)
         --inst:ListenForEvent("minhealth", OnMinHealth)
+
+        inst:ListenForEvent("completecollect", OnCollectTask)
+
+        inst:ListenForEvent("weaponstrengthen", OnWeaponStrengthen)
 
         --监听任务完成事件
         inst:ListenForEvent("taskcompleted", OnTaskCompleted)

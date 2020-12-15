@@ -2,7 +2,7 @@ name = " 彩色风滚草R"
 description = ""
 author = "五年"
 
-version = "0.0.8"
+version = "0.0.9"
 
 api_version = 10
 

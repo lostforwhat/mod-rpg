@@ -510,7 +510,15 @@ local function doSpawnItem(it, target, picker)
     if item ~= nil and needNotice(it.item) then
         local item_name = item:GetDisplayName() or "???"
         resetNotice(item_name)
-        --picker:PushEvent("tumbleweeddropped", {item = item})
+        if item.components.inventoryitem ~= nil and item.components.combat == nil then
+            picker:PushEvent("tumbleweeddropped", {item = item})
+        end
+    end
+    --武器随机增加等级
+    if item ~= nil and item:HasTag("weapon") and
+        item.components.weaponlevel ~= nil then
+        local max = math.random(1, 12)
+        item.components.weaponlevel.level = math.random(0, max)
     end
     return item
 end

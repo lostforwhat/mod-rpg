@@ -176,6 +176,7 @@ function NpcTask:Complete(player)
 			inst.components.talker:Say("这是你的奖励！")
 		end
 		player.components.taskdata:AddCollectTask()
+		player:PushEvent("completecollect", {level = level})
 		self.current_task = nil
 	end
 end

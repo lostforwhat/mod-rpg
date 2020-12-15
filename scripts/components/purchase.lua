@@ -4,8 +4,8 @@ local Purchase = Class(function(self, inst)
     self.inst = inst
 	
 	self.net_data = {
-		coin_used = net_shortint(inst.GUID, "purchase.coin_used", "coindirty"),
-		coin = net_shortint(inst.GUID, "purchase.coin", "coindirty"),
+		coin_used = net_int(inst.GUID, "purchase.coin_used", "coindirty"),
+		coin = net_int(inst.GUID, "purchase.coin", "coindirty"),
 		--goods = net_string(inst.GUID, "purchase.goods", "goodsdirty")
 	}
 

@@ -75,7 +75,7 @@ function SkillShortCutKey:UpdateSkillsCd()
     		end
             local name = skills_name[k] or "no name"
             local level = v.level
-            self.skill_btns[k]:SetTooltip(name.." Lv"..level.."\n".."cd:"..(v.cd > 0 and v.cd or "就绪"))
+            self.skill_btns[k]:SetTooltip(name.." Lv"..level.."\n".."cd:"..(v.cd > 0 and math.floor(v.cd) or "就绪"))
     	end
     end
 end
