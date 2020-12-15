@@ -48,13 +48,15 @@ end
 
 local function FollowerOnUpdate(inst, targetpos)
     CheckStatus(inst)
-    local x, y, z = inst.Transform:GetWorldPosition()
-    local dist = VecUtil_Length(targetpos.x - x, targetpos.z - z)
+        if inst ~= nil and inst:IsValid() then
+        local x, y, z = inst.Transform:GetWorldPosition()
+        local dist = VecUtil_Length(targetpos.x - x, targetpos.z - z)
 
-    inst.components.locomotor.walkspeed = math.max(dist * 30, FORMATION_MAX_SPEED)
-    inst:FacePoint(targetpos.x, 0, targetpos.z)
-    if inst.updatecomponents ~= nil and inst.updatecomponents[inst.components.locomotor] == nil then
-        inst.components.locomotor:WalkForward(true)
+        inst.components.locomotor.walkspeed = math.max(dist * 30, FORMATION_MAX_SPEED)
+        inst:FacePoint(targetpos.x, 0, targetpos.z)
+        if inst.updatecomponents ~= nil and inst.updatecomponents[inst.components.locomotor] == nil then
+            inst.components.locomotor:WalkForward(true)
+        end
     end
 end
 
@@ -118,7 +120,10 @@ local function oncollide(inst, other)
             not other.components.health:IsDead() and 
             leader.components.combat ~= nil and
             leader.components.combat:CanTarget(other) and
-            (not TheNet:GetPVPEnabled() and not other:HasTag("player") or true) then
+            (not TheNet:GetPVPEnabled() and not other:HasTag("player") 
+                and (other.components.follower == nil 
+                    or other.components.follower:GetLeader() == nil
+                    or not other.components.follower:GetLeader():HasTag("player")) or true) then
                 local damage = 5
                 if leader.components.skilldata then
                     local skill = leader.components.skilldata.skills["electricprotection"]
@@ -216,7 +221,7 @@ local function fn()
     inst:WatchWorldState("isnight", updateLight)
     updateLight(inst)
 
-    inst:DoTaskInTime(5, CheckStatus)
+    inst:DoTaskInTime(3, CheckStatus)
     return inst
 end
 

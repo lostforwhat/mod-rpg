@@ -106,7 +106,7 @@ local potions_type = {
 		hunger = 10,
 		fn = function(inst, eater)
 			if eater and eater.components.luck then
-				eater.components.luck:DoDelta(GetRandomWithVariance(5, 10))
+				eater.components.luck:DoDelta(GetRandomWithVariance(10, 5))
 			end
 			create_light(eater, "wormlight_light")
 			if eater:HasTag("potionbuilder") then

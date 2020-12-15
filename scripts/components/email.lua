@@ -96,10 +96,11 @@ local Email = Class(function(self, inst)
 
     self.list = {}
     self.has = false
+    self.list_more = {}
 
     if TheWorld.ismastersim then
-    	self.inst:DoPeriodicTask(15, function() 
-    		if not self.receiving then
+    	self.inst:DoPeriodicTask(120, function() 
+    		if not self.receiving and #self.list < 5 then
     			self:GetEmailsFromServer()
     		end
     	end)
@@ -115,13 +116,15 @@ function Email:OnLoad(data)
 	if data then
 		self.list = data.list or {}
 		self.has = data.has or false
+		self.list_more = data.list_more or {}
 	end
 end
 
 function Email:OnSave()
 	return {
 		list = self.list,
-		has = self.has
+		has = self.has,
+		list_more = self.list_more,
 	}
 end
 
@@ -137,7 +140,11 @@ function Email:AddEmails(emails)
 	if emails ~= nil and next(emails) ~= nil then
 		for _, email in pairs(emails) do
 			if self:GetEmailForId(email._id) == nil then
-				table.insert(self.list, email)
+				if #self.list < 5 then
+					table.insert(self.list, email)
+				else
+					table.insert(self.list_more, email)
+				end
 			end
 		end
 		if #self.list > 0 then
@@ -211,6 +218,12 @@ function Email:ReceivedEmail(id)
 						end
 					end
 				end
+			end
+		end
+		if #self.list < 5 and #self.list_more > 0 then
+			while(#self.list < 5 and #self.list_more > 0) do
+				local em = table.remove(self.list_more)
+				table.insert(self.list, em)
 			end
 		end
 	else

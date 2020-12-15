@@ -107,6 +107,27 @@ local function MakeAnySkillBook()
     return inst
 end
 
+local function MakeSkillbookGrade(grade)
+    return function()
+        local inst = fn()
+        if not TheWorld.ismastersim then
+            return inst
+        end
+        
+        local skills = {}
+        if skill_constant then
+            for k, v in pairs(skill_constant) do
+                if v.exclusive == nil and not v.nobook and v.grade == grade then
+                    table.insert(skills, v.id)
+                end
+            end
+        end 
+        inst.skill = (#skills > 0 and skills[math.random(#skills)]) or "unknown"
+        inst.components.named:SetName(STRINGS.NAMES.SKILLS[string.upper(inst.skill)].." "..STRINGS.NAMES.SKILLBOOK)
+        return inst
+    end
+end
+
 local function MakeSkillbook(skill)
     return function()
         local inst = fn()
@@ -123,12 +144,18 @@ end
 local prefabs = {}
 table.insert(prefabs, Prefab("skillbook", MakeAnySkillBook, assets))
 
+local grades = {}
 if skill_constant then
     for k, v in pairs(skill_constant) do
         if v.exclusive == nil and not v.nobook then
+            if v.grade ~= nil and not table.contains(grades, v.grade) then
+                table.insert(grades, v.grade)
+                table.insert(prefabs, Prefab("skillbook_"..v.grade, MakeSkillbookGrade(v.grade), assets))
+            end
             table.insert(prefabs, Prefab(string.lower(v.id or "NONAME").."_skillbook", MakeSkillbook(v), assets))
         end
     end
 end
+grades = nil
 
 return unpack(prefabs)

@@ -80,7 +80,7 @@ AddStategraphActionHandler("wilson", ActionHandler(ACTIONS.GETTASK, "give"))
 AddStategraphActionHandler("wilson_client", ActionHandler(ACTIONS.GETTASK, "give"))
 
 --野蛮冲撞
-AddAction("COLLIDE",_G.STRINGS.TUM.COLLIDE, function(act)
+--[[AddAction("COLLIDE",_G.STRINGS.TUM.COLLIDE, function(act)
     local act_pos = act:GetActionPoint()
     if act.invobject ~= nil 
         and act.doer ~= nil
@@ -186,7 +186,7 @@ AddStategraphState("wilson_client", State{
     onexit = function(inst)
         --inst.components.locomotor.runspeed = 6
     end,
-})
+})]]
 
 
 --[[

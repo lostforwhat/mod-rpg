@@ -59,8 +59,8 @@ AddRecipe("book_season",
     "images/book_season.xml"
 )
 
-AddRecipe("skillbook", 
-    {Ingredient("skillbookpage", 25, 'images/inventoryimages/skillbookpage.xml')}, 
+AddRecipe("skillbook_1", 
+    {Ingredient("skillbookpage", 5, 'images/inventoryimages/skillbookpage.xml'), Ingredient("greengem", 1)}, 
     _G.CUSTOM_RECIPETABS.BOOKS, 
     TECH.NONE, 
     nil, 
@@ -69,6 +69,35 @@ AddRecipe("skillbook",
     nil, 
     "newbookbuilder", 
     "images/inventoryimages/skillbook.xml"
+)
+
+AddRecipe("skillbook_2", 
+    {Ingredient("skillbookpage", 20, 'images/inventoryimages/skillbookpage.xml'), Ingredient("greengem", 2)}, 
+    _G.CUSTOM_RECIPETABS.BOOKS, 
+    TECH.NONE, 
+    nil, 
+    nil, 
+    nil, 
+    nil, 
+    "newbookbuilder", 
+    "images/inventoryimages/skillbook.xml"
+)
+
+--解构可用
+AddRecipe("skillbook_3", 
+    {Ingredient("skillbookpage", 30, 'images/inventoryimages/skillbookpage.xml'), Ingredient("greengem", 3)}, 
+    nil, 
+    TECH.LOST
+)
+AddRecipe("skillbook_4", 
+    {Ingredient("skillbookpage", 40, 'images/inventoryimages/skillbookpage.xml'), Ingredient("greengem", 4)}, 
+    nil, 
+    TECH.LOST
+)
+AddRecipe("skillbook", 
+    {Ingredient("skillbookpage", 20, 'images/inventoryimages/skillbookpage.xml'), Ingredient("greengem", 2)}, 
+    nil, 
+    TECH.LOST
 )
 
 --willson

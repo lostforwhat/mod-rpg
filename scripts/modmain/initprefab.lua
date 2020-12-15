@@ -663,10 +663,10 @@ local function areahitcheck(target, attacker)
 end
 
 local function SeedsOnHit(inst, attacker, target)
-	local num = 5
+	local num = 3
 	if attacker.components.skilldata then
     	local level = attacker.components.skilldata:GetLevel("seedsmagic")
-    	num = 5 + level
+    	num = 3 + level
     end
 	--[[
 	local loot = SpawnLootPrefab(inst, "")
@@ -683,7 +683,7 @@ local function SeedsOnHit(inst, attacker, target)
         local angle = k * 2 * PI / num
         local item = SpawnAtGround("deciduous_root", 2*math.cos(angle)+x, y, 2*math.sin(angle)+z)
         if item ~= nil then
-        	item.components.combat:SetAreaDamage(TUNING.DECID_MONSTER_ROOT_ATTACK_RADIUS, 1.4, areahitcheck)
+        	item.components.combat:SetAreaDamage(TUNING.DECID_MONSTER_ROOT_ATTACK_RADIUS, 1.2, areahitcheck)
     		item.components.combat:SetDefaultDamage(TUNING.DECID_MONSTER_DAMAGE)
     		local pos = Vector3(x,y,z)
     		local targetangle = item:GetAngleToPoint(rootpos) * DEGREES
@@ -777,6 +777,21 @@ end)
 
 AddPrefabPostInit("pigking", function(inst)
 	inst:AddComponent("talker")
+    inst.components.talker.fontsize = 35
+    inst.components.talker.font = _G.TALKINGFONT
+    --inst.components.talker.colour = Vector3(133/255, 140/255, 167/255)
+    inst.components.talker.offset = _G.Vector3(0, -500, 0)
+    inst.components.talker:MakeChatter()
+	inst:AddTag("npctask")
+	if _G.TheWorld.ismastersim then
+		inst:AddComponent("npctask")
+	end
+end)
+
+AddPrefabPostInit("mermking", function(inst)
+	if inst.components.talker == nil then
+		inst:AddComponent("talker")
+	end
     inst.components.talker.fontsize = 35
     inst.components.talker.font = _G.TALKINGFONT
     --inst.components.talker.colour = Vector3(133/255, 140/255, 167/255)

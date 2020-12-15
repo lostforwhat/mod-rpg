@@ -218,14 +218,19 @@ local collect_task_reward = {
 		{prefab = "gears", num = 40},
 		{prefab = "thulecite", num = 40},
 		{prefab = "pray_symbol", num = 1},
+		{prefab = "skillbook_1", num = 1},
 	},
 	[6] = {
 		{prefab = "diamond", num = 10},
 		{prefab = "skillbookpage", num = 8},
-		{prefab = "skillbook", num = 1},
+		{prefab = "skillbook_1", num = 1},
+		{prefab = "skillbook_2", num = 1},
+		{prefab = "skillbook_3", num = 1},
 	},
 	[7] = {
-		{prefab = "skillbook", num = 1},
+		{prefab = "skillbook_2", num = 1},
+		{prefab = "skillbook_3", num = 1},
+		{prefab = "skillbook_4", num = 1},
 	},
 }
 
