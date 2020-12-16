@@ -205,13 +205,18 @@ function NpcTask:GetRandomTask()
 	local task = tasks[math.random(#tasks)]
 	if task ~= nil then
 		--task = deepcopy(task)
+		local prefab = task.prefab
 		local num = task.num or 1
 		local level = task.level or 1
 		if num > 1 then
-			task.num = RandomVaribleNum(num)
+			num = RandomVaribleNum(num)
 		end
+		return {
+			prefab = prefab, 
+			num = num, 
+			level = level
+		}
 	end
-	return task
 end
 
 return NpcTask

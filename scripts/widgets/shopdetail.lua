@@ -221,8 +221,8 @@ function ShopDetail:ShopItem()
             --此处做宣告使用
             if TheInput:IsKeyDown(KEY_ALT) and TheInput:IsKeyDown(KEY_SHIFT) then
                 if not self.cooldown then
-                    local str = "我想购买：%s"
-                    TheNet:Say(string.format(str, GetDescriptionString(name)), false)
+                    local str = "我想购买：%s, 单价：%s"
+                    TheNet:Say(string.format(str, GetDescriptionString(name), value), false)
                     
                     self.cooldown = true
                     self.inst:DoTaskInTime(3, function() self.cooldown = nil end)

@@ -48,13 +48,17 @@ local function PlayerMigrateCheck(player)
 	if player.components.vip ~= nil and player.components.vip.level > 0 then
 		return true
 	end
-	return _G.FindEntity(
+	local portal = _G.FindEntity(
 	        player,
 	        5,
 	        function(guy) 
 	            return guy:HasTag("migrator")
 	            	or guy:HasTag("multiplayer_portal")
-	        end) ~= nil
+	        end)
+	if portal ~= nil then
+		return true
+	end
+	player.components.talker:Say("我需要先找到大门或者洞口")
 end
 
 AddPrefabPostInit("player_classified", function(inst)
@@ -771,6 +775,13 @@ AddPrefabPostInitAny(function(inst)
 					return "强化+"..level.." (伤害+"..extra_damage..")"
 				end
 			end
+		end
+
+		inst.displaynamefn = function(inst) 
+			if inst.components.weaponlevel.level > 0 then
+				return _G.STRINGS.NAMES[string.upper(inst.prefab)].." +"..inst.components.weaponlevel.level
+			end
+			return _G.STRINGS.NAMES[string.upper(inst.prefab)]
 		end
 	end
 end)

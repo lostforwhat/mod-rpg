@@ -10,7 +10,7 @@ local function DoStrengthen(player, inst)
     local weapon = container:GetItemInSlot(1)
     if weapon == nil or not weapon:HasTag("weapon")
       or weapon.components.weapon == nil or weapon.components.weaponlevel == nil then
-        inst.components.talker:Say("请将需要熔炼的主武器放入第一格，熔炼材料放入后几格！", nil, nil, nil, nil, Vector3(255/255, 0/255, 0/255))
+        inst.components.talker:Say("请将需要熔炼的主武器放入第一格，熔炼材料放入后几格！")
         return
     end
 
@@ -41,36 +41,37 @@ local function DoStrengthen(player, inst)
     end
     
     local basedamage = type(weapon.components.weapon.damage) == "number" and weapon.components.weapon.damage or 34
+    local baselevel = weapon.components.weaponlevel.level or 0
     local rate = 0
     for k, v in pairs(items) do
         if v:HasTag("weapon") then
             local damage = v.components.weapon.damage
             damage = type(damage) == "number" and damage or 34 --base spear
 
-            if v.components.stackable ~= nil and v.components.stackable:StackSize() > 1 then
+            if v.components.stackable ~= nil then
                 local num = v.components.stackable:StackSize()
-                rate = rate + 0.05 * num * damage / basedamage
+                rate = rate + 0.05 * num * math.pow(damage / basedamage, 2)
             else
                 local level = v.components.weaponlevel.level or 0
-                rate = rate + (level + 1) * damage / basedamage
+                rate = rate + (level + 1) * math.pow(damage / basedamage, 2)
             end
         else
             local num = v.components.stackable and v.components.stackable:StackSize() or 1
             if string.sub(v.prefab, -3) == "gem" then
                 rate = rate + num * .1
             elseif v:HasTag("molebait") then
-                rate = rate + num * .02
+                rate = rate + num * .01
             elseif v.components.armor ~= nil then
                 local absorb_percent = v.components.armor.absorb_percent or 0
-                rate = rate + .5 + (absorb_percent - .5) * 4
+                rate = rate + .5 + (absorb_percent - .6) * 4
             else
-                rate = rate + num * .01
+                rate = rate + num * .001
             end
         end
         local it = container:RemoveItemBySlot(k)
         it:Remove()
     end
-    local success = weapon.components.weaponlevel:DoStrengthen(player, math.min(rate, 8))
+    local success = weapon.components.weaponlevel:DoStrengthen(player, math.clamp(rate / (1 + baselevel), 0, 1))
     inst.components.container:Close()
     if success then
         inst.components.talker:Say("恭喜熔炼成功！")

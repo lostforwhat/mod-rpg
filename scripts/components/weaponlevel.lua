@@ -43,9 +43,11 @@ function WeaponLevel:DoStrengthen(doer, rate) --基础几率
 	local player_luck = doer.components.luck and doer.components.luck:GetLuck() or 0
 
 	local baselevel = self.level or 0
-	local real_rate = (2/(baselevel + 2)) * rate
-	if baselevel > 20 then
-		real_rate = math.min(.1, real_rate) --限制高等级
+	local real_rate = 0
+	if baselevel >= 19 then
+		real_rate = math.min(.1, rate * .1) --限制高等级
+	else
+		real_rate = (1 - baselevel*.05) * rate
 	end
 	if math.random() < real_rate * (1 + player_luck * 0.005) then
 		self:AddLevel(1)

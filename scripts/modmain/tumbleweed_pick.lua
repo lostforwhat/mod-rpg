@@ -37,33 +37,52 @@ local function removeweapon(picker)--破坏武器
     for k,v in pairs(picker.components.inventory.equipslots) do
         if v and (v.components.weapon or v:HasTag("weapon")
             or v.components.armor or v:HasTag("armor"))
-            and v.components.perishable == nil then
-            v:Remove()
+            and v.components.finiteuses ~= nil then
+            v.components.finiteuses:SetUses(1)
         end
     end
 end
 
 local function doperish(picker)--腐烂陷阱
     if picker == nil or picker.components.inventory == nil then return end
-    --考虑到有可能有返鲜机制，允许100%腐烂
-    local percent = math.random() * 2
-    percent = math.clamp(percent, 0.5, 1)
+    --old: 考虑到有可能有返鲜机制，允许100%腐烂
+    --new: 考虑到武器有等级系统，最多腐烂当前一半
+    --local percent = math.random() * 2
+    --percent = math.clamp(percent, 0.5, 1)
     for k,v in pairs(picker.components.inventory.itemslots) do
         if v and v.components.perishable then
-            v.components.perishable:ReducePercent(percent)
+            local old = v.components.perishable:GetPercent()
+            v.components.perishable:ReducePercent(old * .5)
         end
     end
     for k,v in pairs(picker.components.inventory.equipslots) do
         if v and v.components.perishable then
-            v.components.perishable:ReducePercent(percent)
+            local old = v.components.perishable:GetPercent()
+            v.components.perishable:ReducePercent(old * .5)
         end
     end
     for k,v in pairs(picker.components.inventory.opencontainers) do
         if k and k:HasTag("backpack") and k.components.container then
             for i,j in pairs(k.components.container.slots) do
                 if j and j.components.perishable then
-                    j.components.perishable:ReducePercent(percent)
+                    local old = v.components.perishable:GetPercent()
+                    j.components.perishable:ReducePercent(old * .5)
                 end
+            end
+        end
+    end
+end
+
+local function damned(picker)
+    if picker == nil or picker.components.inventory == nil then return end
+
+    for k,v in pairs(picker.components.inventory.equipslots) do
+        if v and v.components.weaponlevel ~= nil then
+            local old = v.components.weaponlevel.level or 0
+            if old > 0 then
+                v.components.weaponlevel:AddLevel(-1)
+            else
+                --v:Remove()
             end
         end
     end
@@ -317,6 +336,11 @@ local function doSpawnItem(it, target, picker)
         if name == "broken_attack" then
             removeweapon(picker)
             resetNotice(GLOBAL.STRINGS.TUM.BROKEN)
+            return
+        end
+        if name == "damned_attack" then
+            damned(picker)
+            resetNotice(GLOBAL.STRINGS.TUM.DAMNED)
             return
         end
         if name == "tentacle_circle" then

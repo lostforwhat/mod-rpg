@@ -382,6 +382,7 @@ trap_loot = { --陷阱
         {chance = 0.02, item = "shadow_boss", trap = true},--暗影boss陷阱
         {chance = 0.05, item = "ghost_circle", trap = true},--鬼魂陷阱
         {chance = 0.08, item = "monster_circle", trap = true},--怪物陷阱
+        {chance = 0.02, item = "damned_attack", trap = true},--诅咒陷阱
     },
 
 gift_loot = { --彩蛋

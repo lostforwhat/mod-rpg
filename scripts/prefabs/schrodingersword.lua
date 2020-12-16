@@ -22,6 +22,17 @@ local function onattack(inst, owner, target)
     
 end
 
+local function GetShowItemInfo(inst)
+
+    local level_str
+    local level = inst.components.weaponlevel and inst.components.weaponlevel.level or 0
+    if level > 0 then
+        local extra_damage = inst.components.weapon.extra_damage or 0
+        level_str = "强化+"..level.." (伤害+"..extra_damage..")"
+    end
+    return level_str
+end
+
 local function fn()
     local inst = CreateEntity()
 
@@ -50,7 +61,7 @@ local function fn()
     end
 
     inst:AddComponent("weapon")
-    inst.components.weapon:SetDamage(TUNING.BATBAT_DAMAGE)
+    inst.components.weapon:SetDamage(TUNING.BATBAT_DAMAGE*1.5)
     inst.components.weapon.onattack = onattack
 
     -------
@@ -69,6 +80,8 @@ local function fn()
     inst.components.equippable:SetOnUnequip(onunequip)
 
     MakeHauntableLaunch(inst)
+
+    inst.GetShowItemInfo = GetShowItemInfo
 
     return inst
 end

@@ -321,6 +321,8 @@ local function master_postinit(inst)
     inst.OnLoad = onload
     --inst.OnPreLoad = onpreload
 
+    inst.startovercharge = startovercharge
+
     if TheNet:GetServerGameMode() == "lavaarena" then
         event_server_data("lavaarena", "prefabs/wx78").master_postinit(inst)
     elseif TheNet:GetServerGameMode() == "quagmire" then

@@ -156,15 +156,15 @@ local collect_task = {
 	{prefab = "hivehat", num = 1, level = 5},
 	{prefab = "opalstaff", num = 1, level = 5},
 
-	{prefab = "orangegem", num = 30, level = 6},
-	{prefab = "yellowgem", num = 30, level = 6},
-	{prefab = "greengem", num = 20, level = 6},
+	{prefab = "orangegem", num = 20, level = 6},
+	{prefab = "yellowgem", num = 20, level = 6},
+	{prefab = "greengem", num = 15, level = 6},
 	{prefab = "thulecite", num = 40, level = 6},
 	{prefab = "armorskeleton", num = 1, level = 6},
 	{prefab = "package_staff", num = 1, level = 6},
 	{prefab = "pray_symbol", num = 1, level = 6},
 
-	{prefab = "skillbookpage", num = 20, level = 7},
+	{prefab = "skillbookpage", num = 20, level = 7, novar = true},
 }
 
 
