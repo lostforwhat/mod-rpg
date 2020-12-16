@@ -100,7 +100,7 @@ if TheNet:GetIsServer() or TheNet:IsDedicated() then
 
 		    _G.TheWorld:ListenForEvent("ms_playerspawn", ShardPlayer)
 		    _G.TheWorld:ListenForEvent("ms_playerleft", ShardPlayer)
-		    ShardMax() --先发布一个用于获取最大玩家数量
+		    --ShardMax() --先发布一个用于获取最大玩家数量
 		--end
 	end
 	AddSimPostInit(Init)

@@ -4,6 +4,9 @@ local function onlevel(self, level)
 	if self.inst.components.weapon ~= nil then
 		self.inst.components.weapon:RecalcDamage()
 	end
+	if self.inst.components.named ~= nil and level > 0 then
+		self.inst.components.named:SetName(STRINGS.NAMES[string.upper(self.inst.prefab)].." +"..level)
+	end	
 end
 
 local WeaponLevel = Class(function(self, inst) 
@@ -54,7 +57,7 @@ function WeaponLevel:DoStrengthen(doer, rate) --基础几率
 		doer:PushEvent("weaponstrengthen", {weapon = self.inst, level = self.level})
 
 		if self.level >= 10 then 
-			local str = "恭喜 "..doer:GetDisplayName().." 成功将 ".. self.inst:GetDisplayName().." 熔炼到 ".. self.level.." 级"
+			local str = "恭喜 "..doer:GetDisplayName().." 熔炼 ".. self.inst:GetDisplayName().." 成功!"
 			TheNet:Announce(str, doer.entity)
 		end
 		

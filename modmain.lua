@@ -84,7 +84,7 @@ table.insert(PrefabFiles, "coffeebush")
 table.insert(PrefabFiles, "new_buffs")
 --table.insert(PrefabFiles, "player_skills_classified")
 --新装备
-
+table.insert(PrefabFiles, "linghter_sword")
 
 --添加modUI
 --if _G.TheNet:GetIsClient() then
@@ -222,28 +222,6 @@ AddClassPostConstruct("screens/playerhud", function(self)
 			self:CloseEmailDetail()
 		end
 		return OldOnControl(self, control, down)
-	end
-end)
-
---cover showme
-
-AddClassPostConstruct("widgets/hoverer",function(self)
-	local OldSetString = self.text.SetString
-	self.text.SetString = function(text, str)
-		local target = _G.TheInput:GetHUDEntityUnderMouse()
-		if target ~= nil then
-			target = target.widget ~= nil and target.widget.parent ~= nil and target.widget.parent.item
-		else
-			target = _G.TheInput:GetWorldEntityUnderMouse()
-		end
-		if target ~= nil then
-			--to do
-			if target:HasTag("weapon") then
-				self.text:SetColour({0,1,0,1})
-			end
-		end
-
-		return OldSetString(text, str)
 	end
 end)
 --end

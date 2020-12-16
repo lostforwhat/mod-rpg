@@ -78,6 +78,7 @@ function Stealer:RandomItem(target)
 			pack_item.components.packer:Pack(item)
 			return pack_item
 		end
+        item.Transform:SetPosition(target:GetPosition():Get())
 		return item
 	end
 	return SpawnPrefab("ash")

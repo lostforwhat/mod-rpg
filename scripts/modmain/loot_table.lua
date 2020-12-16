@@ -158,7 +158,7 @@ loot_table = {
         {chance = 0.1, item = "moonglass"},
         {chance = 0.3, item = "fruitdragon", aggro = true},
         {chance = 0.05, item = "dug_trap_starfish"},
-        {chance = 0.2, item = "bullkelp_beachedroot"},
+        --{chance = 0.2, item = "bullkelp_beachedroot"},
         {chance = 0.6, item = "driftwood_log"},
         {chance = 0.1, item = "rock_avocado_bush"},
 },
