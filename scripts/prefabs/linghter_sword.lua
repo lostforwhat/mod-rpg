@@ -5,12 +5,28 @@ local assets =
     Asset("ATLAS", "images/inventoryimages/linghter_sword.xml"),
 }
 
-local function onequip(inst, owner)
+local function onpocket(inst)
+    inst.components.burnable:Extinguish()
+end
 
+local function onremovefire(fire)
+    fire.nightstick.fire = nil
+end
+
+local function onequip(inst, owner)
+    inst.components.burnable:Ignite()
     owner.AnimState:OverrideSymbol("swap_object", "swap_linghter_sword", "swap_linghter_sword")
 
     owner.AnimState:Show("ARM_carry")
     owner.AnimState:Hide("ARM_normal")
+
+    if inst.fire == nil then
+        inst.fire = SpawnPrefab("nightstickfire")
+        inst.file.Light:SetColour(80 / 255, 120 / 255, 250 / 255)
+        inst.fire.nightstick = inst
+        inst:ListenForEvent("onremove", onremovefire, inst.fire)
+    end
+    inst.fire.entity:SetParent(owner.entity)
 end
 
 local function onunequip(inst, owner)
@@ -41,7 +57,7 @@ local function fn()
     inst.entity:AddNetwork()
     
     inst.entity:AddLight()
-    inst.Light:SetRadius(2)
+    inst.Light:SetRadius(1)
     inst.Light:SetFalloff(.5)
     inst.Light:SetIntensity(.5)
     inst.Light:SetColour(80/255,120/255,250/255)
@@ -78,6 +94,9 @@ local function fn()
 
     inst.components.finiteuses:SetOnFinished(inst.Remove)
     ]]
+    inst:AddComponent("burnable")
+    inst.components.burnable.canlight = false
+    inst.components.burnable.fxprefab = nil
 
     inst:AddComponent("inspectable")
     inst:AddComponent("inventoryitem")

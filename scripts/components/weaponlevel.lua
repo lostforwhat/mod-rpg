@@ -49,10 +49,12 @@ function WeaponLevel:DoStrengthen(doer, rate) --基础几率
 	local real_rate = 0
 	if baselevel >= 19 then
 		real_rate = math.min(.1, rate * .1) --限制高等级
+	elseif baselevel >= 9 then
+		real_rate = (.68 - baselevel*.02)
 	else
-		real_rate = (1 - baselevel*.05) * rate
+		real_rate = (1 - baselevel*.04) * rate
 	end
-	if math.random() < real_rate * (1 + player_luck * 0.005) then
+	if math.random() < real_rate * (1 + player_luck * .005) then
 		self:AddLevel(1)
 		doer:PushEvent("weaponstrengthen", {weapon = self.inst, level = self.level})
 
@@ -63,7 +65,7 @@ function WeaponLevel:DoStrengthen(doer, rate) --基础几率
 		
 		self:Fixed(1)
 		return true
-	elseif baselevel > 10 then
+	elseif baselevel > 10 and not doer:HasTag("weaponprotect") then
 		self:AddLevel(-1)
 	end
 	self:Fixed(rate)

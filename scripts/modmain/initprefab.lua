@@ -765,8 +765,10 @@ end
 --为所有武器添加等级
 AddPrefabPostInitAny(function(inst) 
 	if inst.components.weapon ~= nil and inst.components.stackable == nil then
-		inst:AddComponent("weaponlevel")
-
+		if inst.components.weaponlevel == nil then
+			inst:AddComponent("weaponlevel")
+		end
+	
 		if inst.GetShowItemInfo == nil then
 			inst.GetShowItemInfo = function(inst)
 				local level = inst.components.weaponlevel and inst.components.weaponlevel.level or 0
