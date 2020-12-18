@@ -68,7 +68,7 @@ AddRecipe("skillbook_1",
     nil, 
     nil, 
     "newbookbuilder", 
-    "images/inventoryimages/skillbook.xml"
+    "images/inventoryimages/skillbook_1.xml"
 )
 
 AddRecipe("skillbook_2", 
@@ -80,7 +80,7 @@ AddRecipe("skillbook_2",
     nil, 
     nil, 
     "newbookbuilder", 
-    "images/inventoryimages/skillbook.xml"
+    "images/inventoryimages/skillbook_2.xml"
 )
 
 --解构可用
@@ -155,4 +155,37 @@ AddRecipe("callerhorn", {Ingredient("horn",2),Ingredient("minotaurhorn",1)},
     nil, -- numtogive
     "vip", -- builder_tag
     "images/inventoryimages/callerhorn.xml"
+)
+
+AddRecipe("linghter_sword", {Ingredient("yellowgem", 20),Ingredient("nightstick",1)},
+    RECIPETABS.WAR, 
+    TECH.SCIENCE_TWO, 
+    nil, 
+    nil, -- min_spacing
+    nil, -- nounlock
+    nil, -- numtogive
+    nil, -- builder_tag
+    "images/inventoryimages/linghter_sword.xml"
+)
+
+AddRecipe("space_sword", {Ingredient("orangegem", 20), Ingredient("orangestaff",1)},
+    RECIPETABS.WAR, 
+    TECH.LOST, 
+    nil, 
+    nil, -- min_spacing
+    nil, -- nounlock
+    nil, -- numtogive
+    "noopen", -- builder_tag
+    "images/inventoryimages/space_sword.xml"
+)
+
+AddRecipe("schrodingersword", {Ingredient("opalpreciousgem", 5), Ingredient("thulecite",20)},
+    RECIPETABS.WAR, 
+    TECH.LOST, 
+    nil, 
+    nil, -- min_spacing
+    nil, -- nounlock
+    nil, -- numtogive
+    "noopen", -- builder_tag
+    "images/inventoryimages/schrodingersword.xml"
 )

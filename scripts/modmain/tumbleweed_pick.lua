@@ -65,7 +65,7 @@ local function doperish(picker)--腐烂陷阱
         if k and k:HasTag("backpack") and k.components.container then
             for i,j in pairs(k.components.container.slots) do
                 if j and j.components.perishable then
-                    local old = v.components.perishable:GetPercent()
+                    local old = j.components.perishable:GetPercent()
                     j.components.perishable:ReducePercent(old * .5)
                 end
             end
@@ -215,46 +215,7 @@ local function spawnPlayerGift(picker)
 end
 
 local function needNotice(goods)
-    local notice_goods = {
-        "eyebrellahat",
-        "cane",
-        "hivehat",
-        "armorskeleton",
-        "opalstaff",
-        "krampus_sack",
-        "beequeen",
-        "toadstool",
-        "stalker_atrium",
-        "stalker",
-        "stalker_forest",
-        "spat",
-        "bearger",
-        "warg",
-        "dragonfly",
-        "moose",
-        "minotaur",
-        "deerclops",
-        "spiderqueen",
-        "package_staff",
-        "pray_symbol",
-        "minotaurhorn",
-        "yellowstaff",
-        "greenstaff",
-        "orangestaff",
-        "eyeturret_item",
-        "ruins_bat",
-        "armorruins",
-        "ruinshat",
-        "yellowamulet",
-        "panflute",
-        "shadowheart",
-        "pigtorch",
-        "monkeybarrel", -- 猴子桶
-        "catcoonden", --中空树桩
-        "ruins_statue_mage",
-        "moonbase",
-        "pigking",
-    }
+    local notice_goods = GLOBAL.notice_goods
     for i, v in ipairs(notice_goods) do
         if goods == v then 
             return true
@@ -580,7 +541,7 @@ AddPrefabPostInit(
                 san = math.max(san, 0.05)
 
                 local world_chance = math.floor(days*0.01 + playerage*0.04)
-                if picker:HasTag("title1") then
+                if picker:HasTag("cleverhands") then
                     world_chance = math.floor(playerage*0.04)
                 end
 

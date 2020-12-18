@@ -123,44 +123,7 @@ local function startmoving(inst)
 end
 
 local function needNotice(goods)
-    local notice_goods = {
-        "eyebrellahat",
-        "cane",
-        "hivehat",
-        "armorskeleton",
-        "opalstaff",
-        "krampus_sack",
-        "beequeen",
-        "toadstool",
-        "stalker_atrium",
-        "stalker",
-        "stalker_forest",
-        "spat",
-        "bearger",
-        "warg",
-        "dragonfly",
-        "moose",
-        "minotaur",
-        "deerclops",
-        "spiderqueen",
-        "package_staff",
-        "prayer_symbol",
-        "minotaurhorn",
-        "yellowstaff",
-        "greenstaff",
-        "orangestaff",
-        "eyeturret_item",
-        "ruins_bat",
-        "armorruins",
-        "ruinshat",
-        "yellowamulet",
-        "panflute",
-        "shadowheart",
-        "pigtorch",
-        "monkeybarrel", -- 猴子桶
-        "catcoonden", --中空树桩
-        "ruins_statue_mage",
-    }
+    local notice_goods = notice_goods or {}
     for i, v in ipairs(notice_goods) do
         if goods == v then 
             return true

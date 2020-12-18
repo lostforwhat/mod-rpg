@@ -1,13 +1,13 @@
 local assets =
 {
-    Asset("ANIM", "anim/batbat.zip"),
-    Asset("ANIM", "anim/swap_batbat.zip"),
-    Asset("ANIM", "anim/floating_items.zip"),
+    Asset("ANIM", "anim/schrodingersword.zip"),
+    Asset("ANIM", "anim/swap_schrodingersword.zip"),
+    Asset("ATLAS", "images/inventoryimages/schrodingersword.xml"),
 }
 
 local function onequip(inst, owner)
 
-    owner.AnimState:OverrideSymbol("swap_object", "swap_batbat", "swap_batbat")
+    owner.AnimState:OverrideSymbol("swap_object", "swap_schrodingersword", "swap_schrodingersword")
 
     owner.AnimState:Show("ARM_carry")
     owner.AnimState:Hide("ARM_normal")
@@ -19,18 +19,28 @@ local function onunequip(inst, owner)
 end
 
 local function onattack(inst, owner, target)
-    
+    if math.random() < 0.01 then
+        local percent = owner.components.health:GetPercent() or 0
+        if percent > 0 then
+            owner.components.health:SetPercent(percent * .5)
+        end
+    end
+    if math.random() < 0.01 then
+        local percent = target.components.health:GetPercent() or 0
+        if percent > 0 then
+            target.components.health:SetPercent(percent * .5)
+        end
+    end
 end
 
 local function GetShowItemInfo(inst)
-
     local level_str
     local level = inst.components.weaponlevel and inst.components.weaponlevel.level or 0
     if level > 0 then
         local extra_damage = inst.components.weapon.extra_damage or 0
         level_str = "强化+"..level.." (伤害+"..extra_damage..")"
     end
-    return level_str
+    return  "攻击有1%概率使自己减少50%生命值", "攻击有1%概率使目标减少50%生命值", level_str
 end
 
 local function fn()
@@ -42,8 +52,8 @@ local function fn()
 
     MakeInventoryPhysics(inst)
 
-    inst.AnimState:SetBank("batbat")
-    inst.AnimState:SetBuild("batbat")
+    inst.AnimState:SetBank("schrodingersword")
+    inst.AnimState:SetBuild("schrodingersword")
     inst.AnimState:PlayAnimation("idle")
 
     --inst:AddTag("dull")
@@ -51,8 +61,7 @@ local function fn()
     --weapon (from weapon component) added to pristine state for optimization
     inst:AddTag("weapon")
 
-    local swap_data = {sym_build = "swap_batbat"}
-    MakeInventoryFloatable(inst, "large", 0.05, {0.8, 0.35, 0.8}, true, -27, swap_data)
+    MakeInventoryFloatable(inst, nil)
 
     inst.entity:SetPristine()
 
@@ -61,19 +70,14 @@ local function fn()
     end
 
     inst:AddComponent("weapon")
-    inst.components.weapon:SetDamage(TUNING.BATBAT_DAMAGE*1.5)
+    inst.components.weapon:SetDamage(TUNING.BATBAT_DAMAGE*.5)
     inst.components.weapon.onattack = onattack
 
     -------
 
-    inst:AddComponent("finiteuses")
-    inst.components.finiteuses:SetMaxUses(TUNING.BATBAT_USES)
-    inst.components.finiteuses:SetUses(TUNING.BATBAT_USES)
-
-    inst.components.finiteuses:SetOnFinished(inst.Remove)
-
     inst:AddComponent("inspectable")
     inst:AddComponent("inventoryitem")
+    inst.components.inventoryitem.atlasname = "images/inventoryimages/schrodingersword.xml"
 
     inst:AddComponent("equippable")
     inst.components.equippable:SetOnEquip(onequip)

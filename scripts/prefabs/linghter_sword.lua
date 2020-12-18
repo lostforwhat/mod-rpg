@@ -10,26 +10,33 @@ local function onpocket(inst)
 end
 
 local function onremovefire(fire)
-    fire.nightstick.fire = nil
+    fire.linghter_sword.fire = nil
 end
 
 local function onequip(inst, owner)
-    inst.components.burnable:Ignite()
     owner.AnimState:OverrideSymbol("swap_object", "swap_linghter_sword", "swap_linghter_sword")
 
     owner.AnimState:Show("ARM_carry")
     owner.AnimState:Hide("ARM_normal")
 
-    if inst.fire == nil then
-        inst.fire = SpawnPrefab("nightstickfire")
-        inst.file.Light:SetColour(80 / 255, 120 / 255, 250 / 255)
-        inst.fire.nightstick = inst
-        inst:ListenForEvent("onremove", onremovefire, inst.fire)
+    if not inst.components.fueled:IsEmpty() then
+        inst.components.burnable:Ignite()
+
+        if inst.fire == nil then
+            inst.fire = SpawnPrefab("nightstickfire")
+            inst.fire.Light:SetColour(255 / 255, 193 / 255, 37 / 255)
+            inst.fire.linghter_sword = inst
+            inst:ListenForEvent("onremove", onremovefire, inst.fire)
+        end
+        inst.fire.entity:SetParent(owner.entity)
     end
-    inst.fire.entity:SetParent(owner.entity)
 end
 
 local function onunequip(inst, owner)
+    if inst.fire ~= nil then
+        inst.fire:Remove()
+    end
+    inst.components.burnable:Extinguish()
     owner.AnimState:Hide("ARM_carry")
     owner.AnimState:Show("ARM_normal")
 end
@@ -49,6 +56,42 @@ local function GetShowItemInfo(inst)
     return level_str
 end
 
+local function onfuelchange(section, oldsection, inst)
+    if inst.components.fueled:IsEmpty() then
+        inst:AddTag("broken")
+        inst.components.burnable:Extinguish()
+        if inst.fire ~= nil then
+            inst.fire:Remove()
+        end
+    else
+        inst:RemoveTag("broken")
+        inst.components.burnable:Ignite()
+    end
+end
+
+local function OnUse(inst)
+    if inst.components.fueled:IsEmpty() then
+        inst.components.useableitem:StopUsingItem()
+        return
+    end
+    local owner = inst.components.inventoryitem.owner
+    local equipped = inst.replica.equippable:IsEquipped()
+    if owner ~= nil and equipped then
+        inst.components.fueled:DoDelta(-80)
+        owner:StartThread(function()
+            local x,y,z = owner.Transform:GetWorldPosition()
+            local num = 10
+            for k = 1, num do
+                local r = math.random(1, 5)
+                local angle = k * 2 * PI / num
+                local pos = Point(r*math.cos(angle)+x, y, r*math.sin(angle)+z)
+                TheWorld:PushEvent("ms_sendlightningstrike", pos)
+                Sleep(.3 + math.random())
+            end
+        end)
+    end
+end
+
 local function fn()
     local inst = CreateEntity()
 
@@ -60,7 +103,7 @@ local function fn()
     inst.Light:SetRadius(1)
     inst.Light:SetFalloff(.5)
     inst.Light:SetIntensity(.5)
-    inst.Light:SetColour(80/255,120/255,250/255)
+    inst.Light:SetColour(255 / 255, 193 / 255, 37 / 255)
     inst.Light:Enable(true)
 
     MakeInventoryPhysics(inst)
@@ -83,17 +126,21 @@ local function fn()
     end
 
     inst:AddComponent("weapon")
-    inst.components.weapon:SetDamage(TUNING.BATBAT_DAMAGE*1.5)
+    inst.components.weapon:SetDamage(TUNING.BATBAT_DAMAGE)
     inst.components.weapon.onattack = onattack
 
-    -------
-    --[[
-    inst:AddComponent("finiteuses")
-    inst.components.finiteuses:SetMaxUses(TUNING.BATBAT_USES)
-    inst.components.finiteuses:SetUses(TUNING.BATBAT_USES)
+    inst:AddComponent("useableitem")
+    inst.components.useableitem:SetOnUseFn(OnUse)
 
-    inst.components.finiteuses:SetOnFinished(inst.Remove)
-    ]]
+    -------
+    inst:AddComponent("fueled")
+    inst.components.fueled.fueltype = "YELLOWGEN"
+    inst.components.fueled:InitializeFuelLevel(800)
+    inst.components.fueled:SetSectionCallback(onfuelchange)
+    --inst.components.fueled:StopConsuming() 
+    inst.components.fueled.accepting = true
+    inst.components.fueled:SetFirstPeriod(TUNING.TURNON_FUELED_CONSUMPTION, TUNING.TURNON_FULL_FUELED_CONSUMPTION)
+
     inst:AddComponent("burnable")
     inst.components.burnable.canlight = false
     inst.components.burnable.fxprefab = nil

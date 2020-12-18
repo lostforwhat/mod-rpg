@@ -147,7 +147,6 @@ AddPlayerPostInit(function(inst)
 	inst:AddComponent("taskdata")
 	inst:AddComponent("skilldata")
 	inst:AddComponent("purchase")
-	inst:AddComponent("suit")
 	
 	inst:AddComponent("attackdeath")
 	inst:AddComponent("attackbroken")
@@ -223,6 +222,7 @@ AddPlayerPostInit(function(inst)
 	end
 
 	if _G.TheWorld.ismastersim then
+		inst:AddComponent("suit")
 		inst:AddComponent("stealth")
 		inst:AddComponent("resurrect")
 		inst.components.resurrect.level = 1
@@ -809,6 +809,27 @@ AddPrefabPostInit("mermking", function(inst)
 	inst:AddTag("npctask")
 	if _G.TheWorld.ismastersim then
 		inst:AddComponent("npctask")
+	end
+end)
+
+_G.FUELTYPE.ORANGEGEM = "ORANGEGEM"
+_G.FUELTYPE.YELLOWGEN = "YELLOWGEN"
+AddPrefabPostInit("orangegem", function(inst) 
+	if _G.TheWorld.ismastersim then
+		if inst.components.fuel == nil then
+			inst:AddComponent("fuel")
+		end
+		inst.components.fuel.fuelvalue = 100
+		inst.components.fuel.fueltype = "ORANGEGEM"
+	end
+end)
+AddPrefabPostInit("yellowgem", function(inst) 
+	if _G.TheWorld.ismastersim then
+		if inst.components.fuel == nil then
+			inst:AddComponent("fuel")
+		end
+		inst.components.fuel.fuelvalue = 200
+		inst.components.fuel.fueltype = "YELLOWGEN"
 	end
 end)
 

@@ -10,7 +10,7 @@ description = [[
 ]]
 author = "五年"
 
-version = "0.0.9"
+version = "0.0.10"
 
 api_version = 10
 

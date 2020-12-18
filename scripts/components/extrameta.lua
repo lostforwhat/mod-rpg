@@ -56,7 +56,7 @@ function Extrameta:GetDamage()
 		            if mount ~= nil and mount.components.combat ~= nil then
 		                basedamage = mount.components.combat.defaultdamage
 		                basemultiplier = mount.components.combat.damagemultiplier
-		                externaldamagemultipliers = mount.components.combat.externaldamagemultipliers
+		                --externaldamagemultipliers = mount.components.combat.externaldamagemultipliers
 		                bonus = mount.components.combat.damagebonus
 		            end
 

@@ -1,8 +1,18 @@
 require "modmain/loot_table"
 
+local function needNotice(goods)
+    local notice_goods = notice_goods
+    for i, v in ipairs(notice_goods) do
+        if goods == v then 
+            return true
+        end
+    end
+    return false
+end
+
 local function IsValidVictim(victim)
     return victim ~= nil
-        and not ((victim:HasTag("prey") and not victim:HasTag("hostile")) or
+        and not ((victim:HasTag("stealed") and not victim:HasTag("hostile")) or
                 victim:HasTag("veggie") or victim:HasTag("structure") or
                 victim:HasTag("wall") or victim:HasTag("balloon") or
                 victim:HasTag("groundspike") or victim:HasTag("smashable") or
@@ -52,8 +62,15 @@ function Stealer:Effect(target)
     --否则随机获得一个物品
     if item == nil and self.inst:HasTag("player") and not target:HasTag("player") then
     	item = self:RandomItem(target)
-    else
+        if not target:HasTag("epic") then
+            target:AddTag("stealed") --防止薅羊毛
+        end
+    elseif item == nil then
     	return
+    end
+    --宣告贵重物品
+    if item ~= nil and needNotice(item.prefab) then
+        TheNet:Announce(self.inst:GetDisplayName().." 使用探云手，从 "..target:GetDisplayName().." 偷取了 "..item:GetDisplayName())
     end
     --如果攻击者有物品栏，则物品归属攻击者
     if self.inst.components.inventory ~= nil then

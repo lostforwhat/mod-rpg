@@ -42,7 +42,7 @@ function WeaponLevel:AddLevel(amount)
 	self.inst:PushEvent("weaponlevelup", {oldlevel = oldlevel, newlevel = self.level})
 end
 
-function WeaponLevel:DoStrengthen(doer, rate) --基础几率
+function WeaponLevel:DoStrengthen(doer, rate, protect) --基础几率
 	local player_luck = doer.components.luck and doer.components.luck:GetLuck() or 0
 
 	local baselevel = self.level or 0
@@ -65,7 +65,7 @@ function WeaponLevel:DoStrengthen(doer, rate) --基础几率
 		
 		self:Fixed(1)
 		return true
-	elseif baselevel > 10 and not doer:HasTag("weaponprotect") then
+	elseif baselevel > 10 and not protect and not doer:HasTag("weaponprotect") and not TheWorld:HasTag("weaponprotect") then
 		self:AddLevel(-1)
 	end
 	self:Fixed(rate)

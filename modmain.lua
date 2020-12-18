@@ -85,6 +85,8 @@ table.insert(PrefabFiles, "new_buffs")
 --table.insert(PrefabFiles, "player_skills_classified")
 --新装备
 table.insert(PrefabFiles, "linghter_sword")
+table.insert(PrefabFiles, "space_sword")
+table.insert(PrefabFiles, "schrodingersword")
 
 --添加modUI
 --if _G.TheNet:GetIsClient() then

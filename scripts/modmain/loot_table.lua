@@ -288,6 +288,8 @@ luck_loot = {
         {chance = 0.0006, item="skillbook_2"},
         {chance = 0.0002, item="skillbook_3"},
         {chance = 0.0001, item="skillbook_4"},
+        {chance = 0.002, item="space_sword"},
+        {chance = 0.002, item="schrodingersword"},
     },
 
 bad_loot = {
@@ -399,3 +401,48 @@ gift_loot = { --彩蛋
         {chance = 0.01, item = "player_gift", gift = true}, --专属彩蛋
     }
 }
+
+notice_goods = {
+        "eyebrellahat",
+        "cane",
+        "hivehat",
+        "armorskeleton",
+        "opalstaff",
+        "krampus_sack",
+        "beequeen",
+        "toadstool",
+        "stalker_atrium",
+        "stalker",
+        "stalker_forest",
+        "spat",
+        "bearger",
+        "warg",
+        "dragonfly",
+        "moose",
+        "minotaur",
+        "deerclops",
+        "spiderqueen",
+        "package_staff",
+        "pray_symbol",
+        "minotaurhorn",
+        "yellowstaff",
+        "greenstaff",
+        "orangestaff",
+        "eyeturret_item",
+        "ruins_bat",
+        "armorruins",
+        "ruinshat",
+        "yellowamulet",
+        "panflute",
+        "shadowheart",
+        "pigtorch",
+        "monkeybarrel", -- 猴子桶
+        "catcoonden", --中空树桩
+        "ruins_statue_mage",
+        "moonbase",
+        "pigking",
+        "skillbook",
+        "schrodingersword",
+        "space_sword",
+        "linghter_sword",
+    }
