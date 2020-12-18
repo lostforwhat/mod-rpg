@@ -117,7 +117,7 @@ suit_data = {
 		desc = "增加10%闪避",
 	},
 	{
-		prefabs = {"space_sword", "timerhat", "armorlinghter"},
+		prefabs = {"space_sword", "timerhat", "armorforget"},
 		num = 3,
 		onmatch = function(owner)
 

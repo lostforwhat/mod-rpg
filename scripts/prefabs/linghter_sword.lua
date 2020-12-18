@@ -65,16 +65,29 @@ local function onfuelchange(section, oldsection, inst)
         end
     else
         inst:RemoveTag("broken")
-        inst.components.burnable:Ignite()
+
+        local equipped = inst.replica.equippable:IsEquipped()
+        if equipped and inst.fire == nil then
+            inst.components.burnable:Ignite()
+
+            inst.fire = SpawnPrefab("nightstickfire")
+            inst.fire.Light:SetColour(255 / 255, 193 / 255, 37 / 255)
+            inst.fire.linghter_sword = inst
+            inst:ListenForEvent("onremove", onremovefire, inst.fire)
+            local owner = inst.components.inventoryitem.owner
+            inst.fire.entity:SetParent(owner.entity)
+        end
     end
 end
 
 local function OnUse(inst)
+    local owner = inst.components.inventoryitem.owner
     if inst.components.fueled:IsEmpty() then
+        owner.components.talker:Say("没有能量了")
         inst.components.useableitem:StopUsingItem()
         return
     end
-    local owner = inst.components.inventoryitem.owner
+    
     local equipped = inst.replica.equippable:IsEquipped()
     if owner ~= nil and equipped then
         inst.components.fueled:DoDelta(-80)
@@ -90,6 +103,7 @@ local function OnUse(inst)
             end
         end)
     end
+    inst.components.useableitem:StopUsingItem()
 end
 
 local function fn()
@@ -139,7 +153,7 @@ local function fn()
     inst.components.fueled:SetSectionCallback(onfuelchange)
     --inst.components.fueled:StopConsuming() 
     inst.components.fueled.accepting = true
-    inst.components.fueled:SetFirstPeriod(TUNING.TURNON_FUELED_CONSUMPTION, TUNING.TURNON_FULL_FUELED_CONSUMPTION)
+    inst.components.fueled:SetFirstPeriod(TUNING.TURNON_FUELED_CONSUMPTION, TUNING.TURNON_FULL_FUELED_CONSUMPTION*2)
 
     inst:AddComponent("burnable")
     inst.components.burnable.canlight = false

@@ -98,7 +98,7 @@ function Suit:EffectSuit(suit)
         if self.inst.components.talker ~= nil then
             self.inst.components.talker:Say("已获得套装效果!")
         end
-        self.current_suit.onmatch(suit)
+        self.current_suit.onmatch(self.inst)
     end
 end
 

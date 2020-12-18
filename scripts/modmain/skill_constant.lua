@@ -559,7 +559,7 @@ skill_constant = {
 			desc_str = desc_str.."\n Lv:"..level..max.."\n"
 			.."种子就是我最大的武器，上吧我的伙伴\n"
 			.."投掷伤害: " .. (level * 2 + 5).."\n"
-			.."生成生物: " .. (level + 5)
+			.."生成生物: " .. (level + 3)
 			return desc_str
 		end,
 		effect_fn=function(self, owner)

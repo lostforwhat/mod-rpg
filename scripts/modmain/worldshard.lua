@@ -106,19 +106,20 @@ _G.Networking_Say = function(guid, userid, name, prefab, message, colour, whispe
 				end
 			end
 			if ordered then return end --指令生效则吃掉这条消息
-			--修改字体颜色
-			local st1, ed1, hex, msg = string.find(message, "^(#%x%x%x%x%x%x)(.*)$")
-			if st1 == 1 then
-				--print(_G.HexToPercentColor(hex))
-				local r, g, b = _G.HexToPercentColor(hex)
-				r = r or 0
-				g = g or 0
-				b = b or 0
-				colour = {r, g, b, 1}
-				message = msg
-			end
 		end
     end
+    --修改字体颜色
+	local st1, ed1, hex, msg = string.find(message, "^(#%x%x%x%x%x%x)(.*)$")
+	if st1 == 1 then
+		--print(_G.HexToPercentColor(hex))
+		local r, g, b = _G.HexToPercentColor(hex)
+		r = r or 0
+		g = g or 0
+		b = b or 0
+		colour = {r, g, b, 1}
+		message = msg
+	end
+    --local shardId = _G.TheShard:GetShardId() or 1
     OldNetworking_Say(guid, userid, name, prefab, message, colour, whisper, isemote, ...)
 end
 --end
