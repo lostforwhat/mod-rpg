@@ -197,10 +197,10 @@ AddClassPostConstruct("widgets/hoverer",function(self)
         else
             target = _G.TheInput:GetWorldEntityUnderMouse()
         end
-        if target ~= nil then
+        if target ~= nil and target.prefab ~= nil then
             --to do
-            if target:HasTag("weapon") then
-                local name = _G.STRINGS.NAMES[string.upper(target.prefab)]
+            local name = _G.STRINGS.NAMES[string.upper(target.prefab)]
+            if target:HasTag("weapon") and name ~= nil then
                 local st, ed, level = string.find(str, ""..name.."%s*+(%d+)")
                 level = level ~= nil and _G.tonumber(level) or 1
                 if level <= 20 then

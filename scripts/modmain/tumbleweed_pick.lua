@@ -35,8 +35,8 @@ end
 local function removeweapon(picker)--破坏武器
     if picker == nil or picker.components.inventory == nil then return end
     for k,v in pairs(picker.components.inventory.equipslots) do
-        if v and (v.components.weapon or v:HasTag("weapon")
-            or v.components.armor or v:HasTag("armor"))
+        if v --[[and (v.components.weapon or v:HasTag("weapon")
+            or v.components.armor or v:HasTag("armor"))]]
             and v.components.finiteuses ~= nil then
             v.components.finiteuses:SetUses(1)
         end
@@ -82,7 +82,7 @@ local function damned(picker)
             if old > 0 then
                 v.components.weaponlevel:AddLevel(-1)
             else
-                --v:Remove()
+                v:Remove()
             end
         end
     end

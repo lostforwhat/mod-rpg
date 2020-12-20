@@ -42,7 +42,7 @@ local function onunequip(inst, owner)
 end
 
 local function onattack(inst, owner, target)
-    
+    inst.components.fueled:DoDelta(-1)
 end
 
 local function GetShowItemInfo(inst)
@@ -63,6 +63,7 @@ local function onfuelchange(section, oldsection, inst)
         if inst.fire ~= nil then
             inst.fire:Remove()
         end
+        inst.components.weapon:SetDamage(0)
     else
         inst:RemoveTag("broken")
 
@@ -77,6 +78,7 @@ local function onfuelchange(section, oldsection, inst)
             local owner = inst.components.inventoryitem.owner
             inst.fire.entity:SetParent(owner.entity)
         end
+        inst.components.weapon:SetDamage(TUNING.BATBAT_DAMAGE)
     end
 end
 
@@ -149,7 +151,7 @@ local function fn()
     -------
     inst:AddComponent("fueled")
     inst.components.fueled.fueltype = "YELLOWGEN"
-    inst.components.fueled:InitializeFuelLevel(800)
+    inst.components.fueled:InitializeFuelLevel(1800)
     inst.components.fueled:SetSectionCallback(onfuelchange)
     --inst.components.fueled:StopConsuming() 
     inst.components.fueled.accepting = true

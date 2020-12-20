@@ -225,9 +225,9 @@ titles_data = {
 				titles_fx:WatchWorldState("cycles", function() 
 					local types = {"new_loot", "new_loot", "new_loot", "good_loot", "luck_loot"}
 					local items = deepcopy(loot_table[types[math.random(#types)]])
-					local prefab = items[math.random(#items)]
-					if PrefabExists(item) then
-						local item = SpawnPrefab(item)
+					local prefab = items[math.random(#items)].item
+					if PrefabExists(prefab) then
+						local item = SpawnPrefab(prefab)
 						if item.components.inventory == nil then
 							local pack_item = SpawnPrefab("package_ball")
 							pack_item.components.packer:Pack(item)

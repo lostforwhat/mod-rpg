@@ -19,7 +19,7 @@ local function onunequip(inst, owner)
 end
 
 local function onattack(inst, owner, target)
-    
+    inst.components.fueled:DoDelta(-1)
 end
 
 local function GetShowItemInfo(inst)
@@ -37,7 +37,7 @@ local function onblink(staff, pos, caster)
     if caster.components.sanity ~= nil then
         caster.components.sanity:DoDelta(-TUNING.SANITY_MED)
     end
-    staff.components.fueled:DoDelta(-2)
+    staff.components.fueled:DoDelta(-20)
 end
 
 local function onfuelchange(section, oldsection, inst)
@@ -46,6 +46,7 @@ local function onfuelchange(section, oldsection, inst)
         if inst.components.blinkstaff ~= nil then
             inst:RemoveComponent("blinkstaff")
         end
+        inst.components.weapon:SetDamage()
     else
         inst:RemoveTag("broken")
         if inst.components.blinkstaff == nil then
@@ -53,6 +54,7 @@ local function onfuelchange(section, oldsection, inst)
             inst.components.blinkstaff:SetFX("sand_puff_large_front", "sand_puff_large_back")
             inst.components.blinkstaff.onblinkfn = onblink
         end
+        inst.components.weapon:SetDamage(TUNING.BATBAT_DAMAGE*1.2)
     end
 end
 
@@ -95,7 +97,7 @@ local function fn()
     -------
     inst:AddComponent("fueled")
     inst.components.fueled.fueltype = "ORANGEGEM"
-    inst.components.fueled:InitializeFuelLevel(200)
+    inst.components.fueled:InitializeFuelLevel(2000)
     inst.components.fueled:SetSectionCallback(onfuelchange)
     --inst.components.fueled:StopConsuming() 
     inst.components.fueled.accepting = true

@@ -819,7 +819,7 @@ AddPrefabPostInit("orangegem", function(inst)
 		if inst.components.fuel == nil then
 			inst:AddComponent("fuel")
 		end
-		inst.components.fuel.fuelvalue = 100
+		inst.components.fuel.fuelvalue = 1000
 		inst.components.fuel.fueltype = "ORANGEGEM"
 	end
 end)
@@ -828,7 +828,7 @@ AddPrefabPostInit("yellowgem", function(inst)
 		if inst.components.fuel == nil then
 			inst:AddComponent("fuel")
 		end
-		inst.components.fuel.fuelvalue = 200
+		inst.components.fuel.fuelvalue = 400
 		inst.components.fuel.fueltype = "YELLOWGEN"
 	end
 end)
