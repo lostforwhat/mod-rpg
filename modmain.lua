@@ -3,6 +3,7 @@ local TheNet = _G.TheNet
 local TUNING = _G.TUNING
 env.require = GLOBAL.require
 
+TUNING.level = GetModConfigData("level") or 2
 TUNING.token = GetModConfigData("token") and 
 			#GetModConfigData("token") > 10 and 
 			GetModConfigData("token") or 

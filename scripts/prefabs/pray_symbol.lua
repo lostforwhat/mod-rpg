@@ -57,7 +57,8 @@ local function DoPlant(prayer, inst)
         "flower_cave_double",
         "flower_cave",
         "wormlight_plant",
-        "moon_tree_blossom_worldgen"
+        "moon_tree_blossom_worldgen",
+        "mandrake_planted",
     }
     if c_countprefabs("tallbirdnest", true) < 20 then
         table.insert(names, "tallbirdnest")

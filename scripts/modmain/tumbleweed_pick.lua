@@ -582,7 +582,7 @@ AddPrefabPostInit(
                     --print("name:"..n.item..",chance:"..n.chance)
                 end
 
-                local num_loots = 1
+                local num_loots = math.floor(math.random()*2)
                 if picker:HasTag("cleverhands") and math.random() < 0.1 then
                     num_loots = num_loots + 1
                 end

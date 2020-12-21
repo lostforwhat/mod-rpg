@@ -1,9 +1,10 @@
 local _G = GLOBAL
 local assert = assert or _G.assert
 local IsServer = _G.TheNet:GetIsServer()
+local difficulty_level = TUNING.level
 
 --强度，0-4 超过范围报错
-local DEGREE = 2
+local DEGREE = difficulty_level
 assert(DEGREE >= 0 and DEGREE <= 4, "MOD DEGREE out of range: "..tostring(DEGREE))
 
 --怪物强化都写这里

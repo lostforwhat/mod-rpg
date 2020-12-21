@@ -352,7 +352,7 @@ local function MakeLoot(inst)
     local next_loot = nil
     local next_aggro = nil
     local next_chance = nil
-    local num_loots = 1 --根据风滚草颜色固定对应等级1种物品
+    local num_loots = math.floor(math.random()*2) --根据风滚草颜色固定对应等级1种物品
     while num_loots > 0 do
         next_chance = math.random()*totalchance
         next_loot = nil

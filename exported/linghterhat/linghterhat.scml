@@ -16,7 +16,7 @@
             </mainline>
             <timeline id="0" name="linghterhat">
                 <key id="0" spin="0">
-                    <object folder="0" file="4" x="-128" y="168"/>
+                    <object folder="0" file="4" x="-128" y="168" angle="0"/>
                 </key>
             </timeline>
         </animation>

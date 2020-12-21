@@ -1,6 +1,7 @@
 local _G = GLOBAL
 local TheNet = _G.TheNet
 local TUNING = _G.TUNING
+local difficulty_level = TUNING.level
 
 --修复打包导致的存档崩溃问题
 AddComponentPostInit("entitytracker", function(self)
@@ -427,7 +428,7 @@ AddComponentPostInit("lootdropper", function(self)
 		local newloots = {}
 	    local loots = OldGenerateLoot(self)
 	    for _, v in pairs(loots) do
-	    	if math.random() < 0.33 then
+	    	if math.random() < (1 / difficulty_level) then
 	    		table.insert(newloots, v)
 	    	end
 	    end

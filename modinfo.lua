@@ -88,5 +88,16 @@ configuration_options =
 			{description = "关闭", data = false, hover = "关闭"},
 		},
 		default = true,
-	}
+	},
+	{
+		name = "level",
+		label = "难度",
+		hover = "高难度boss增强，并且对应物品掉落减少",
+		options = {
+			{description = "简单", data = 1, hover = "非常简单"},
+			{description = "困难", data = 2, hover = "难度适中"},
+			{description = "噩梦", data = 3, hover = "非常困难模式"},
+		},
+		default = 3
+	},
 }
