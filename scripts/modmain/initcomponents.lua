@@ -422,5 +422,15 @@ end)
 
 --修改怪物掉落
 AddComponentPostInit("lootdropper", function(self) 
-	
+	local OldGenerateLoot = self.GenerateLoot
+	function self:GenerateLoot()
+		local newloots = {}
+	    local loots = OldGenerateLoot(self)
+	    for _, v in pairs(loots) do
+	    	if math.random() < 0.33 then
+	    		table.insert(newloots, v)
+	    	end
+	    end
+	    return newloots
+	end
 end)

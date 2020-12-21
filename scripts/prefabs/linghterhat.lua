@@ -39,6 +39,16 @@ local function onunequip(inst, owner)
     end
 end
 
+local function ontakedamage(inst, damage)
+    if inst.take ~= nil then
+        inst.take = inst.take + 1
+        if inst.take >= 10 then
+
+            inst.take = 0
+        end
+    end
+end
+
 local function simple()
     local inst = CreateEntity()
 
@@ -86,9 +96,11 @@ local function fn()
     if not TheWorld.ismastersim then
         return inst
     end
+    inst.take = 0
 
     inst:AddComponent("armor")
-    inst.components.armor:InitCondition(TUNING.ARMOR_FOOTBALLHAT*10, TUNING.ARMOR_FOOTBALLHAT_ABSORPTION)
+    inst.components.armor:InitIndestructible(.75)
+    inst.components.armor.ontakedamage = ontakedamage
 
     return inst
 end

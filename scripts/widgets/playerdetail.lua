@@ -34,6 +34,8 @@ function PlayerDetail:SetPlayerData()
     self.vertical_line:SetScale(.5, .72)
     self.vertical_line:SetPosition(0, 0)
 
+    SendModRPCToServer(MOD_RPC.RPG_meta.update, true)
+
     local meta_data = {
         {
             name = "生命值",
@@ -786,6 +788,7 @@ end
 
 function PlayerDetail:Close()
     self:MoveTo(self.in_pos, self.out_pos, .33, function() self:Kill() end)
+    SendModRPCToServer(MOD_RPC.RPG_meta.update, false)
 end
 
 function PlayerDetail:OnControl(control, down)

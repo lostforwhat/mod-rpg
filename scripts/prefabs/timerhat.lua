@@ -79,6 +79,7 @@ local function simple()
     inst.components.equippable.equipslot = EQUIPSLOTS.HEAD
     inst.components.equippable:SetOnEquip(onequip)
     inst.components.equippable:SetOnUnequip(onunequip)
+    inst.components.equippable.walkspeedmult = 1.15
 
     MakeHauntableLaunch(inst)
 
@@ -94,7 +95,7 @@ local function fn()
     end
 
     inst:AddComponent("armor")
-    inst.components.armor:InitCondition(TUNING.ARMOR_FOOTBALLHAT*10, TUNING.ARMOR_FOOTBALLHAT_ABSORPTION)
+    inst.components.armor:InitIndestructible(.6)
 
     inst:AddComponent("waterproofer")
     inst.components.waterproofer:SetEffectiveness(1)

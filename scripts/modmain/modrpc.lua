@@ -71,3 +71,14 @@ AddModRPCHandler("RPG_Receive", "received", function(player, accept)
 		end
 	end
 end)
+
+--meta update
+AddModRPCHandler("RPG_meta", "update", function(player, start) 
+	if player ~= nil and player.components.extrameta ~= nil then
+		if start == true then
+			player.components.extrameta:StartUpdate()
+		else
+			player.components.extrameta:StopUpdate()
+		end
+	end
+end)

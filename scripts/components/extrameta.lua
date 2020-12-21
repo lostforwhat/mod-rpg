@@ -22,7 +22,7 @@ local Extrameta = Class(function(self, inst)
     --self.extra_damage = SourceModifierList(self.inst) --额外伤害比较复杂，所以有单独组件
     --self.extra_speed = SourceModifierList(self.inst)
 
-    self.inst:StartUpdatingComponent(self)
+    --self.inst:StartUpdatingComponent(self)
 end)
 
 function Extrameta:GetDamageMultiplier()
@@ -45,7 +45,7 @@ function Extrameta:GetDamage()
 			local basemultiplier = self.inst.components.combat.damagemultiplier or 1
 			local bonus = 0
 			if weapon ~= nil then
-				if type(weapon.components.weapon.damage) ~= "function" then
+				if type(weapon.components.weapon.damage) == "number" then
 					basedamage = weapon.components.weapon.damage
 					local weapon_extra_damage = weapon.components.weapon.extra_damage or 0
 					basedamage = basedamage + weapon_extra_damage
@@ -121,6 +121,21 @@ function Extrameta:GetSpeed()
 		return self.inst.components.locomotor:GetRunSpeed()
 	else
 		return self._net_speed:value() or self.inst.components.locomotor:GetRunSpeed()
+	end
+end
+
+--优化，仅在面板打开时开始更新数值
+function Extrameta:StartUpdate()
+	if not self.updating then
+		self.inst:StartUpdatingComponent(self)
+		self.updating = true
+	end
+end
+
+function Extrameta:StopUpdate()
+	if self.updating then
+		self.inst:StopUpdatingComponent(self)
+		self.updating = nil
 	end
 end
 
