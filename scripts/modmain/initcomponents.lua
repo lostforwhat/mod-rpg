@@ -434,4 +434,12 @@ AddComponentPostInit("lootdropper", function(self)
 	    end
 	    return newloots
 	end
+
+	local OldDropLoot = self.DropLoot
+	function self:DropLoot(pt)
+		OldDropLoot(self, pt)
+		if _G.TheWorld:HasTag("doubledrop") then
+			OldDropLoot(self, pt)
+		end
+	end
 end)

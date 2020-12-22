@@ -7,13 +7,17 @@ local SpawnPrefab = _G.SpawnPrefab
 
 local function GiveExp(inst, exp)
     --预留插槽，用于提升或减少额外经验等
+    if inst:HasTag("doublexp") or _G.TheWorld:HasTag("doublexp") then
+        exp = exp * 2
+    end
+
     if inst:HasTag("leisurely") then
         exp = exp * 1.1
     end
 
-    local vip = inst.components.vip and inst.components.vip.level > 0 or false
-    if vip then
-        exp = exp * 1.4
+    local viplevel = inst.components.vip and inst.components.vip.level or 0
+    if viplevel > 0 then
+        exp = exp * 1.2 + math.log10(viplevel) * .25
     end
 
     exp = math.floor(exp)
