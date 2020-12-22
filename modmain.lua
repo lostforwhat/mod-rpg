@@ -90,6 +90,7 @@ table.insert(PrefabFiles, "space_sword")
 table.insert(PrefabFiles, "schrodingersword")
 table.insert(PrefabFiles, "timerhat")
 table.insert(PrefabFiles, "linghterhat")
+table.insert(PrefabFiles, "linghter_fx")
 
 --添加modUI
 --if _G.TheNet:GetIsClient() then

@@ -44,10 +44,11 @@ end
 local function delaycloseholiday(time, cb)
 	_G.TheWorld:DoTaskInTime(time, function() 
 		--_G.TheWorld.holiday = nil
-		_G.TheWorld._holiday:set("")
+		_G.TheWorld.net._holiday:set("")
 
 		--活动结束删除活动物品
 		_G.c_removeallwithtags("rpg_holiday")
+		TheNet:Announce("世界"..shardId.." 活动结束！")
 		cb()
 	end)
 end
@@ -139,6 +140,9 @@ local function delayspawnprefab(delay)
 				local monster = _G.SpawnPrefab(prefab) 
 				monster.Transform:SetPosition(pos.x, 0, pos.z) 
 				monster:AddTag("rpg_holiday")
+				--print("created:"..pos.x..","..pos.z) 
+			else
+				print("pos err")
 			end 
 		end
 	end)
@@ -249,7 +253,7 @@ local holidays = {
 		name = "消灭领主",
 		time = 1200,
 		fn = function(prefab) 
-			
+			delayspawnboss(10)
 		end,
 		closefn = function()
 			
@@ -277,7 +281,9 @@ local function StartHoliday(index)
 	if holiday_fn ~= nil then
 		holiday_fn()
 		--_G.TheWorld.holiday = index
-		_G.TheWorld._holiday:set("正在进行 "..name.." 活动")
+		local name = holidays[index].name
+		_G.TheWorld.net._holiday:set("正在进行 "..name.." 活动")
+		TheNet:Announce("世界"..shardId.." 正在进行 "..name.." 活动")
 
 		local delay_time = holidays[index].time or 120
 		delaycloseholiday(delay_time, closefn or function() end)
@@ -285,7 +291,11 @@ local function StartHoliday(index)
 end
 
 --only run in world 1
-local function TriggerHoliday()
+_G.TriggerHoliday = function()
+	if not _G.TheWorld.ismastershard then 
+		TheNet:SystemMessage(_G.SHARD_KEY.."triggerholiday")
+		return
+	end
 	if _G.TheWorld.holiday == nil then
 		local worlds = {}
 		local shards = _G.Shard_GetConnectedShards()
@@ -294,11 +304,12 @@ local function TriggerHoliday()
 		end
 
 		if #worlds > 0 then
-			local world = worlds[math.random(#world)]
+			local world = worlds[math.random(#worlds)]
 			local index = math.random(#holidays)
 
 			local msg = _G.SHARD_KEY.."holiday"..index..":"..world
     		TheNet:SystemMessage(msg)
+    		print(msg)
 
     		_G.TheWorld.holiday = index
     		local time = holidays[index].time or 120
@@ -312,8 +323,16 @@ end
 if TheNet:GetIsServer() then
 	--注册世界通信
 	_G.AddShardRule("^holiday(%d+):(%d*)$", function(content, worldId, st, ed, num, id) 
+		--print("compare:", shardId, id, shardId == id)
 		if id == nil or shardId == id then
+			num = _G.tonumber(num)
 			StartHoliday(num)
+		end
+	end)
+
+	_G.AddShardRule("^triggerholiday$", function(content, worldId) 
+		if _G.TheWorld.ismastershard and worldId ~= 1 then
+			_G.TriggerHoliday()
 		end
 	end)
 
@@ -326,6 +345,7 @@ if TheNet:GetIsServer() then
 			_G.TheWorld.WatchWorldState("cycles", function(inst) 
 				local playerNum = GetPlayerNum()
 				if CurrentHoliday() == nil and math.random() < 0.01 + 0.002*playerNum then
+					print("--开始触发活动--")
 					TriggerHoliday()
 				end
 			end)
@@ -333,7 +353,31 @@ if TheNet:GetIsServer() then
 	end)
 end
 
-AddPrefabPostInit("world", function(inst)
-    inst._holiday = net_string(inst.GUID, "world._holiday", "worldholidaydirty")
-    inst._holiday:set("")
+--[[AddPrefabPostInit("world", function(inst)
+    inst._holiday = _G.net_string(inst.GUID, "world._holiday", "worldholidaydirty")
+    --inst._holiday:set("")
+end)]]
+
+local function InitWorld(inst)
+	inst._holiday = _G.net_string(inst.GUID, "world._holiday", "worldholidaydirty")
+end
+AddPrefabPostInit("forest_network", InitWorld)
+AddPrefabPostInit("cave_network", InitWorld)
+
+local Widget = require "widgets/widget"
+local Text = require "widgets/text"
+AddClassPostConstruct("widgets/controls", function(self)
+	self.holiday = self.top_root:AddChild(Widget("holiday"))
+	self.holiday:SetHAnchor(_G.ANCHOR_MIDDLE)
+    self.holiday:SetVAnchor(_G.ANCHOR_TOP)
+    self.holiday.text = self.holiday:AddChild(Text(_G.NUMBERFONT, 30))
+    self.holiday.text:SetString(_G.TheWorld.net._holiday:value())
+    self.holiday.text:SetColour({0, 1, 0, 1})
+    self.holiday.text:SetPosition(0, -20)
+    self.holiday:MoveToFront()
+
+    self.holiday.inst:ListenForEvent("worldholidaydirty", function() 
+    	--print("---------", _G.TheWorld.net._holiday:value())
+    	self.holiday.text:SetString(_G.TheWorld.net._holiday:value())
+	end, _G.TheWorld.net)
 end)
