@@ -226,6 +226,7 @@ local collect_task_reward = {
 		{prefab = "skillbook_1", num = 1},
 		{prefab = "skillbook_2", num = 1},
 		{prefab = "skillbook_3", num = 1},
+		--{prefab = "package_staff", num =1},
 	},
 	[7] = {
 		{prefab = "skillbook_2", num = 1},

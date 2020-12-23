@@ -417,7 +417,7 @@ AddComponentPostInit("weapon", function(self)
 		local base = type(self.damage) == "number" and (self.damage * 0.03) or 1
 		--公式: y = 0.25*x2 + x
 		local level = self.inst.components.weaponlevel and self.inst.components.weaponlevel.level or 0
-		self.extra_damage = (level * level * 0.25 + level) * base
+		self.extra_damage = math.floor((level * level * 0.25 + level) * base * 100) * 0.01
 	end
 end)
 

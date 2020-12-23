@@ -4,7 +4,7 @@ local IsServer = _G.TheNet:GetIsServer()
 local difficulty_level = TUNING.level
 
 --强度，0-4 超过范围报错
-local DEGREE = difficulty_level
+local DEGREE = difficulty_level - 1
 assert(DEGREE >= 0 and DEGREE <= 4, "MOD DEGREE out of range: "..tostring(DEGREE))
 
 --怪物强化都写这里
@@ -278,7 +278,7 @@ AddPrefabPostInitAny(function(inst)
             inst.components.lifesteal:SetPercent(50)
        end
     end
-    if inst.prefab == "krampus" then
+    if inst.prefab == "krampus" or inst.prefab == "monkey" then
         inst:AddComponent("stealer")
         if IsServer then
             inst.components.stealer.chance = 0.1

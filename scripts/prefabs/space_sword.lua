@@ -46,7 +46,7 @@ local function onfuelchange(section, oldsection, inst)
         if inst.components.blinkstaff ~= nil then
             inst:RemoveComponent("blinkstaff")
         end
-        inst.components.weapon:SetDamage()
+        inst.components.weapon:SetDamage(1)
     else
         inst:RemoveTag("broken")
         if inst.components.blinkstaff == nil then

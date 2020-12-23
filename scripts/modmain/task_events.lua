@@ -64,6 +64,21 @@ local function OnTumbleweedPicked(inst, data)
     taskdata.tumbleweednum = taskdata.tumbleweednum + 1
 
     GiveExp(inst, math.random(1, 5))
+
+    if _G.TheWorld:HasTag("pick_tumbleweed_aoe") then
+        local target = data.target
+        if target ~= nil and not inst.picking then
+            inst.picking = true
+            local x, y, z = inst.Transform:GetWorldPosition()
+            local ents = TheSim:FindEntities(x,y,z, 5)
+            for k,v in pairs(ents) do
+                if v.prefab == "tumbleweed" and v~=target and v.onpickup then
+                    v:onpickup(inst)
+                end
+            end
+            inst.picking = nil
+        end
+    end
 end
 
 local function OnEat(inst, data)

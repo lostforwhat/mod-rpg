@@ -63,7 +63,7 @@ local function onfuelchange(section, oldsection, inst)
         if inst.fire ~= nil then
             inst.fire:Remove()
         end
-        inst.components.weapon:SetDamage(0)
+        inst.components.weapon:SetDamage(1)
     else
         inst:RemoveTag("broken")
 

@@ -167,6 +167,10 @@ function NpcTask:Complete(player)
 		local reward = reward_tb[math.random(#reward_tb)]
 		local prefab = reward.prefab
 		local num = reward.num or 1
+
+		if TheWorld:HasTag("pigking_task_double") then
+			num = num * 2
+		end
 		for k=1, num do
 			local item = SpawnItem(prefab)
 			DropLoot(player, item)

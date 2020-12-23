@@ -589,6 +589,9 @@ AddPrefabPostInit(
                 if picker.components.vip and picker.components.vip.level > 0 then
                     num_loots = num_loots + 1
                 end
+                if _G.TheWorld:HasTag("pick_tumbleweed_more") then
+                    num_loots + 1
+                end
                 --[[if TUNING.more_blueprint and level >=2 then
                     spawnAtGround("blueprint", x, y, z)
                     num_loots = num_loots - 1

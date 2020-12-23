@@ -2,6 +2,8 @@ require "utils/utils"
 
 local _G = GLOBAL
 local TheNet = _G.TheNet
+local TUNING = _G.TUNING
+local DEGREES = _G.DEGREES
 
 --发布全服活动
 
@@ -51,6 +53,29 @@ local function delaycloseholiday(time, cb)
 		TheNet:Announce("世界"..shardId.." 活动结束！")
 		cb()
 	end)
+end
+
+local function GetNextSpawnAngle(pt, radius)
+
+    local base_angle = math.random() * PI
+    local deviation = math.random(-TUNING.TRACK_ANGLE_DEVIATION, TUNING.TRACK_ANGLE_DEVIATION)*DEGREES
+    local start_angle = base_angle + deviation
+
+    local offset, result_angle = _G.FindWalkableOffset(pt, start_angle, radius, 14, true, true)
+
+    return result_angle
+end
+
+local function GetSpawnPoint(pt, radius)
+
+	local angle = GetNextSpawnAngle(pt, radius)
+	if angle then
+	    local offset = _G.Vector3(radius * math.cos( angle ), 0, -radius * math.sin( angle ))
+	    local spawn_point = pt + offset
+	    return spawn_point
+	end
+
+	return nil
 end
 
 local function getrandomposition() 
@@ -131,21 +156,28 @@ local monster_tb = {
     "penguin", -- 企鹅
     "ghost",
 }
-local function delayspawnprefab(delay)
-	_G.TheWorld:DoTaskInTime(delay, function() 
-		for k=1, 50 do 
-			local pos = getrandomposition() 
-			if pos ~= nil then 
-				local prefab = monster_tb[math.random(#monster_tb)]
-				local monster = _G.SpawnPrefab(prefab) 
-				monster.Transform:SetPosition(pos.x, 0, pos.z) 
-				monster:AddTag("rpg_holiday")
-				--print("created:"..pos.x..","..pos.z) 
-			else
-				print("pos err")
-			end 
-		end
-	end)
+local function delayspawnprefab(delay, times)
+	times = times or 5
+
+	for i=1, times do
+		_G.TheWorld:DoTaskInTime(delay*i, function() 
+			for k, v in pairs(_G.AllPlayers) do
+				
+				for m=1, math.random(5, 10) do
+					local pos = GetSpawnPoint(v:GetPosition(), math.random(8, 20))
+					if pos ~= nil then
+						local prefab = monster_tb[math.random(#monster_tb)]
+						local monster = _G.SpawnPrefab(prefab) 
+						monster.Transform:SetPosition(pos.x, 0, pos.z) 
+						monster:AddTag("rpg_holiday")
+						if monster.components.combat ~= nil then
+							monster.components.combat:SuggestTarget(v)
+						end
+					end
+				end
+			end
+		end)
+	end
 end
 
 
@@ -260,10 +292,10 @@ local holidays = {
 		end,
 	},
 	[11] = {--暂留空
-		name = "",
-		time = 600,
+		name = "猪王的奖励",
+		time = 1200,
 		fn = function() 
-			
+			_G.TheWorld:AddTag("pigking_task_double")
 		end,
 		closefn = function()
 			
