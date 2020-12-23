@@ -443,3 +443,8 @@ AddComponentPostInit("lootdropper", function(self)
 		end
 	end
 end)
+
+--修改弹道类组件
+AddComponentPostInit("projectile", function(self)
+	
+end)

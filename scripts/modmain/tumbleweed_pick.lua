@@ -1,4 +1,5 @@
 local PI = GLOBAL.PI
+local _G = GLOBAL
 require("modmain/loot_table")
 local loot_table = GLOBAL.loot_table
 
@@ -590,7 +591,7 @@ AddPrefabPostInit(
                     num_loots = num_loots + 1
                 end
                 if _G.TheWorld:HasTag("pick_tumbleweed_more") then
-                    num_loots + 1
+                    num_loots = num_loots + 1
                 end
                 --[[if TUNING.more_blueprint and level >=2 then
                     spawnAtGround("blueprint", x, y, z)
