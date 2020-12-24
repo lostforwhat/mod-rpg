@@ -7,26 +7,25 @@ local Help = Class(Widget, function(self, owner)
     Widget._ctor(self, "Help")
     self.owner = owner
 
-    self.button = self:AddChild(ImageButton("images/hud.xml", "tab_light.tex"))
+    self.button = self:AddChild(ImageButton("images/hud/help.xml", "help.tex"))
     self.button:SetHoverText("帮助",{ size = 9, offset_x = 40, offset_y = -45, colour = {1,0,1,1}})
     self.button:SetOnClick(function() self:ToggleHelpDetail() end)
 
 
-    self.inst:ListenForEvent("continuefrompause", function()
-        if self.shown then
-            
+    self.inst:ListenForEvent("daycomplete", function()
+        if self.shown and self.owner.Network:GetPlayerAge() > 10 then
+            self:Hide()
         end
     end, TheWorld)
 
-    self.inst:ListenForEvent("hasemaildirty", function() 
-        if self.owner.components.email:HasEmail() then
-            self:Show()
-        else
-            self:Hide()
-        end
+    self.inst:ListenForEvent("helpdirty", function() 
+        
     end, self.owner)
 
-    self:Hide()
+    --self:Hide()
+    if self.owner.Network:GetPlayerAge() > 10 then
+        self:Hide()
+    end
 end)
 
 

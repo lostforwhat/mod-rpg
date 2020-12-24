@@ -22,6 +22,8 @@ Assets = {
 	Asset("ANIM", "anim/coffee.zip"),
 	Asset("ATLAS", "images/hud/email.xml"),
     Asset("IMAGE", "images/hud/email.tex"),
+    Asset("ATLAS", "images/hud/help.xml"),
+    Asset("IMAGE", "images/hud/help.tex"),
 
     --称号图标
     Asset("ATLAS", "images/titles/cleverhands.xml"),

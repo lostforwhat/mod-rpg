@@ -17,7 +17,7 @@ local LineProjectile = Class(function(self, inst)
     self.oncaught = nil
 
     self.stimuli = nil
-    self.maxdist = 15
+    self.maxdist = 25
 
 	--self.has_damage_set = nil -- set to true if the projectile has its own damage set, instead of needed to get it from the launching weapon
 
@@ -200,7 +200,7 @@ local function AttackTarget(self, pos)
             not guy.components.follower:GetLeader():HasTag("player"))) then
 
             local range = guy:GetPhysicsRadius(0) + self.hitdist
-            if distsq(pos, target:GetPosition()) < range * range then
+            if distsq(pos, guy:GetPosition()) < range * range then
                 self:Hit(guy)
             end
         end
@@ -210,7 +210,7 @@ end
 local function DoUpdate(self, pos, rot, force)
     if distsq(self.owner:GetPosition(), pos) > self.maxdist * self.maxdist then
         --超出最大距离，丢失
-        self:OnLost()
+        self:Lost()
         return
     end
     if force then

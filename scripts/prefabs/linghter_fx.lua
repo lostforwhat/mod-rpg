@@ -21,7 +21,8 @@ local function onthrown(inst, attacker, target)
 end
 
 local function thrown(inst, attacker, angle)
-    inst.components.projectile:Throw(attacker, angle)
+    inst.AnimState:SetOrientation(ANIM_ORIENTATION.OnGround)
+    inst.components.lineprojectile:Throw(attacker, angle)
 end
 
 local function fn()
@@ -32,6 +33,12 @@ local function fn()
     inst.entity:AddLight()
     inst.entity:AddSoundEmitter()
     inst.entity:AddNetwork()
+
+    inst.Light:SetRadius(.8)
+    inst.Light:SetFalloff(.8)
+    inst.Light:SetIntensity(.8)
+    inst.Light:SetColour(12 / 255, 25 / 255, 250 / 255)
+    inst.Light:Enable(true)
 
     MakeInventoryPhysics(inst)
 
@@ -51,12 +58,12 @@ local function fn()
     end
 
     inst:AddComponent("weapon")
-    inst.components.weapon:SetDamage(50)
+    inst.components.weapon:SetDamage(8)
 
     inst:DoTaskInTime(2, inst.Remove)
 
     inst:AddComponent("lineprojectile")
-    inst.components.lineprojectile:SetSpeed(30)
+    inst.components.lineprojectile:SetSpeed(20)
     inst.components.lineprojectile:SetOnHitFn(onhit)
     inst.components.lineprojectile:SetHitDist(1)
     --inst.components.projectile:SetOnThrownFn(onthrown)

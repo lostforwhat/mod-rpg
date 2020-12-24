@@ -47,6 +47,13 @@ end
 
 local function onattack(inst, owner, target)
     inst.components.fueled:DoDelta(-1)
+    local level = inst.components.weaponlevel and inst.components.weaponlevel.level or 0
+    if not inst.components.fueled:IsEmpty() and math.random() < (0.1 + 0.02*level) then
+        local lt = SpawnPrefab("linghter_fx")
+        lt.Transform:SetPosition(owner:GetPosition():Get())
+        local angle = lt:GetAngleToPoint(target:GetPosition():Get())
+        lt:thrown(owner, angle)
+    end
 end
 
 local function GetShowItemInfo(inst)
@@ -110,26 +117,24 @@ local function OnUse(inst)
         inst.components.useableitem:StopUsingItem()
         return
     end
-
-    if TheWorld:HasTag("cave") then
-        owner.components.talker:Say("这里的环境无法释放能量！")
-        inst.components.useableitem:StopUsingItem()
-        return
-    end
     
     local equipped = inst.replica.equippable:IsEquipped()
     if owner ~= nil and equipped then
-        inst.components.fueled:DoDelta(-80)
-        owner:StartThread(function()
-            local x,y,z = owner.Transform:GetWorldPosition()
-            local num = 5
-            for k = 1, num do
-                local r = math.random(3, 10)
-                local angle = k * 2 * PI / num
-                local pos = Point(r*math.cos(angle)+x, y, r*math.sin(angle)+z)
-                TheWorld:PushEvent("ms_sendlightningstrike", pos)
-                Sleep(.3 + math.random())
+        if owner.startovercharge ~= nil then
+            inst.components.fueled:DoDelta(-50)
+            owner.components.health:DoDelta(TUNING.HEALING_SUPERHUGE, false, "lightning")
+            owner.components.sanity:DoDelta(-TUNING.SANITY_LARGE)
+            owner.components.talker:Say(GetString(owner, "ANNOUNCE_CHARGE"))
+            owner:startovercharge(CalcDiminishingReturns(owner.charge_time, .5*TUNING.TOTAL_DAY_TIME))
+        end
+        inst:DoTaskInTime(0, function() 
+            for k=1, 8 do
+                local angle = k * 360 / 8
+                local lt = SpawnPrefab("linghter_fx")
+                lt.Transform:SetPosition(owner:GetPosition():Get())
+                lt:thrown(owner, angle)
             end
+            inst.components.fueled:DoDelta(-50)
         end)
     end
     inst.components.useableitem:StopUsingItem()

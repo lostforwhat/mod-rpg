@@ -97,6 +97,7 @@ configuration_options =
 			{description = "简单", data = 1, hover = "非常简单"},
 			{description = "困难", data = 2, hover = "难度适中"},
 			{description = "噩梦", data = 3, hover = "非常困难模式"},
+			{description = "地狱", data = 4, hover = "不要轻易尝试"},
 		},
 		default = 3
 	},

@@ -48,7 +48,7 @@ local function ontakedamage(inst, damage)
             if owner ~= nil then
                 local num = math.random(8)
                 for k=1, num do
-                    local angle = k * 2 * PI / num
+                    local angle = k * 360 / num
                     local lt = SpawnPrefab("linghter_fx")
                     lt.Transform:SetPosition(owner:GetPosition():Get())
                     lt:thrown(owner, angle)
@@ -90,10 +90,12 @@ local function simple()
 
     inst:AddComponent("tradable")
 
+
     inst:AddComponent("equippable")
     inst.components.equippable.equipslot = EQUIPSLOTS.HEAD
     inst.components.equippable:SetOnEquip(onequip)
     inst.components.equippable:SetOnUnequip(onunequip)
+    inst.components.equippable.dapperness = TUNING.DAPPERNESS_MED
 
     MakeHauntableLaunch(inst)
 
