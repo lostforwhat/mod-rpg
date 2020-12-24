@@ -55,6 +55,22 @@ AddComponentPostInit("combat", function(self)
 	        and victim.components.health ~= nil
 	        and victim.components.combat ~= nil
 	end
+
+	local function AddImpact(attacker, target, scale)
+		scale = scale or 1
+		local impactfx = _G.SpawnPrefab("impact")
+	    if impactfx ~= nil and target.components.combat then
+	    	impactfx.Transform:SetScale(scale, scale, scale)
+	        local follower = impactfx.entity:AddFollower()
+	        follower:FollowSymbol(target.GUID, target.components.combat.hiteffectsymbol, 0, 0, 0)
+	        if attacker ~= nil and attacker:IsValid() then
+	            impactfx:FacePoint(attacker.Transform:GetWorldPosition())
+	        end
+	        if target.SoundEmitter ~= nil then
+                target.SoundEmitter:PlaySound("dontstarve/common/whip_large", nil, 0.3)
+            end
+	    end
+	end
 	local OldGetAttacked = self.GetAttacked
 	function self:GetAttacked(attacker, damage, weapon, stimuli)
 		--注入改写伤害
@@ -84,6 +100,7 @@ AddComponentPostInit("combat", function(self)
 				local target_health = target.components.health.maxhealth or 0
 				if player_health > target_health then
 					target.components.health.currenthealth = 0.01
+					AddImpact(attacker, target, 3)
 					return OldGetAttacked(self, attacker, 1, weapon, stimuli)
 				end
 			end
@@ -108,6 +125,7 @@ AddComponentPostInit("combat", function(self)
 						local absorb = target.components.health and target.components.health.absorb or 0
 						if absorb < 1 then
 			            	damage = maxhp * (1- math.clamp(absorb, 0, 1)) + 1 --修改伤害为致死
+			            	AddImpact(attacker, target, 3)
 			            	return OldGetAttacked(self, attacker, damage + extra_damage, weapon, stimuli)
 			            end
 					end
@@ -133,6 +151,7 @@ AddComponentPostInit("combat", function(self)
 					if attacker.components.crit:Effect() then
 						--print("暴击生效")
 						damage = damage * (attacker.components.crit:GetRandomHit() + 1)
+						AddImpact(attacker, target)
 					end
 				end
 				--附加伤害

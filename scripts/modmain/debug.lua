@@ -1,5 +1,6 @@
---debug
+--debug 测试使用，正式服务器请勿随意使用
 local _G = GLOBAL
+local TheNet = _G.TheNet
 local os = _G.os
 local GetDebugEntity = GetDebugEntity or _G.GetDebugEntity or nil
 
@@ -64,4 +65,13 @@ _G.x_printworlds = function()
 		local sharddata = _G.TheWorld.net.components.sharddata._sharddata:value()
 		print("sharddata:", sharddata)
 	end
+end
+
+_G.x_openholiday = function()
+	_G.TriggerHoliday()
+end
+
+_G.x_updatehelp = function(text)
+	local msg = _G.SHARD_KEY.."updatehelp:"..text
+    TheNet:SystemMessage(msg)
 end

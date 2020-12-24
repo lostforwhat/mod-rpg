@@ -20,8 +20,8 @@ local function onthrown(inst, attacker, target)
 
 end
 
-local function thrown(inst, attacker, target)
-    inst.components.projectile:Throw(attacker, target)
+local function thrown(inst, attacker, angle)
+    inst.components.projectile:Throw(attacker, angle)
 end
 
 local function fn()
@@ -53,11 +53,12 @@ local function fn()
     inst:AddComponent("weapon")
     inst.components.weapon:SetDamage(50)
 
-    inst:DoTaskInTime(1.5, inst.Remove)
+    inst:DoTaskInTime(2, inst.Remove)
 
-    inst:AddComponent("projectile")
-    inst.components.projectile:SetSpeed(30)
-    inst.components.projectile:SetOnHitFn(onhit)
+    inst:AddComponent("lineprojectile")
+    inst.components.lineprojectile:SetSpeed(30)
+    inst.components.lineprojectile:SetOnHitFn(onhit)
+    inst.components.lineprojectile:SetHitDist(1)
     --inst.components.projectile:SetOnThrownFn(onthrown)
 
     inst.thrown = thrown

@@ -44,25 +44,16 @@ local function ontakedamage(inst, damage)
         inst.take = inst.take + 1
         if inst.take >= 3 then
             local owner = inst.components.inventoryitem.owner
-            local guy = FindEntity(
-                    owner,
-                    15,
-                    function(guy) 
-                        return guy ~= owner
-                            and guy.entity:IsVisible()
-                            and not guy.components.health:IsDead()
-                            and (guy.components.combat.target == owner or
-                                guy:HasTag("character") or
-                                guy:HasTag("monster") or
-                                guy:HasTag("animal") or 
-                                guy:HasTag("fly"))
-                    end,
-                    { "_combat", "_health" },
-                    { "prey", "INLIMBO" })
-            if guy ~= nil then
-                local lt = SpawnPrefab("linghter_fx")
-                lt.Transform:SetPosition(owner:GetPosition():Get())
-                lt:thrown(owner, guy)
+            
+            if owner ~= nil then
+                local num = math.random(8)
+                for k=1, num do
+                    local angle = k * 2 * PI / num
+                    local lt = SpawnPrefab("linghter_fx")
+                    lt.Transform:SetPosition(owner:GetPosition():Get())
+                    lt:thrown(owner, angle)
+                end
+                
                 inst.take = 0
             end
         end

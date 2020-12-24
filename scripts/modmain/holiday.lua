@@ -298,7 +298,7 @@ local holidays = {
 			_G.TheWorld:AddTag("pigking_task_double")
 		end,
 		closefn = function()
-			
+			_G.TheWorld:RemoveTag("pigking_task_double")
 		end,
 	},
 }
@@ -392,6 +392,7 @@ end)]]
 
 local function InitWorld(inst)
 	inst._holiday = _G.net_string(inst.GUID, "world._holiday", "worldholidaydirty")
+	inst._holiday_time = _G.net_shortint(inst.GUID, "world._holiday_time", "worldholidaydirty")
 end
 AddPrefabPostInit("forest_network", InitWorld)
 AddPrefabPostInit("cave_network", InitWorld)
@@ -399,6 +400,15 @@ AddPrefabPostInit("cave_network", InitWorld)
 local Widget = require "widgets/widget"
 local Text = require "widgets/text"
 AddClassPostConstruct("widgets/controls", function(self)
+	local function GetHolidayText()
+		local title = _G.TheWorld.net._holiday:value() or ""
+		local time = _G.TheWorld.net._holiday_time:value() or 0
+		if time > 0 and title ~= "" then
+			return title.." ["..time.."s]"
+		end
+		return ""
+	end
+
 	self.holiday = self.top_root:AddChild(Widget("holiday"))
 	self.holiday:SetHAnchor(_G.ANCHOR_MIDDLE)
     self.holiday:SetVAnchor(_G.ANCHOR_TOP)

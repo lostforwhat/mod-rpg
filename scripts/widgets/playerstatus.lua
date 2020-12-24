@@ -4,6 +4,7 @@ local TaskInfo = require "widgets/taskinfo"
 local TitleInfo = require "widgets/titleinfo"
 local ShopInfo = require "widgets/shopinfo"
 local Email = require "widgets/email"
+local Help = require "widgets/help"
 
 
 
@@ -30,6 +31,10 @@ local PlayerStatus = Class(Widget, function(self, owner)
     self.email = self:AddChild(Email(owner))
     self.email:SetPosition(170, -40)
     self.email:SetScale(0.5,0.5)
+
+    self.help = self:AddChild(Help(owner))
+    self.help:SetPosition(40, -80)
+    self.help:SetScale(0.6, 0.6)
 end)
 
 

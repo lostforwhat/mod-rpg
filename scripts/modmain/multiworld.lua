@@ -101,6 +101,11 @@ if TheNet:GetIsServer() or TheNet:IsDedicated() then
 		    _G.TheWorld:ListenForEvent("ms_playerspawn", ShardPlayer)
 		    _G.TheWorld:ListenForEvent("ms_playerleft", ShardPlayer)
 		    --ShardMax() --先发布一个用于获取最大玩家数量
+
+		    --注册新手指引文本
+		    _G.AddShardRule("^updatehelp:(.*)", function(content, worldId, st, ed, text)
+		    	_G.TheWorld.net._help_text:set(text or "")
+			end)
 		--end
 	end
 	AddSimPostInit(Init)
@@ -108,6 +113,8 @@ end
 
 local function InitWorld(inst)
 	inst:AddComponent("sharddata")
+
+	inst._help_text = _G.net_string(inst.GUID, "world._help_text") --注册新手指引文本
 end
 AddPrefabPostInit("forest_network", InitWorld)
 AddPrefabPostInit("cave_network", InitWorld)

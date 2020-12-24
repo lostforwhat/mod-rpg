@@ -824,3 +824,84 @@ AddPlayerPostInit(function(inst)
     end
 	
 end)
+
+
+local function OnEntityDropLoot(world, data)
+    local inst = data.inst
+    if inst == nil then
+        return
+    end
+    if inst.prefab == "stalker_atrium" and not inst:IsNearAtrium() then
+        return
+    end
+    if inst.prefab == "stalker" or inst.prefab == "stalker_forest" then
+        return
+    end
+
+    if inst:HasTag("rpg_holiday") then
+        if inst:HasTag("epic") then
+            if math.random() < 0.1 then
+                inst.components.lootdropper:SpawnLootPrefab("skillbook_2")
+            end
+            if math.random() < 0.01 then
+                inst.components.lootdropper:SpawnLootPrefab("timerhat")
+            end
+            if math.random() < 0.01 then
+                inst.components.lootdropper:SpawnLootPrefab("linghterhat")
+            end
+        else
+            if math.random() < 0.1 then
+                inst.components.lootdropper:SpawnLootPrefab("skillbookpage")
+            end
+            if math.random() < 0.02 then
+                inst.components.lootdropper:SpawnLootPrefab("diamond")
+            end
+        end
+    end
+
+    if inst:HasTag("epic") then --大型boss
+        local loot = {}
+        if math.random() < 0.01 then
+            table.insert(loot, "prayer_symbol")
+        end
+        if math.random() < 0.05 then
+            table.insert(loot, "potion_achiv")
+        end
+        if math.random() < 0.01 then
+            table.insert(loot, "potion_blue")
+        end
+        if math.random() < 0.01 then
+            table.insert(loot, "potion_green")
+        end
+        if math.random() < 0.01 then
+            table.insert(loot, "potion_lucky")
+        end
+        if math.random() < 0.01 then
+            table.insert(loot, "skillbookpage")
+        end
+        if inst.prefab == "klaus" then
+            if inst.enraged then
+                table.insert(loot, "prayer_symbol")
+                table.insert(loot, "prayer_symbol")
+                table.insert(loot, "prayer_symbol")
+                table.insert(loot, "package_staff")
+                table.insert(loot, "skillbook")
+            end
+        end
+        if #loot > 0 then
+            inst.components.lootdropper:SpawnLootPrefab(loot[math.random(#loot)])
+        end
+    else
+
+    end
+end
+
+--world 事件
+AddPrefabPostInit(
+    "world",
+    function(inst)
+        -- 新添加物品掉落
+        inst:ListenForEvent("entity_droploot", OnEntityDropLoot)
+        
+    end
+)
