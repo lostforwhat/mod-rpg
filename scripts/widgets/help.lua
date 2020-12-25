@@ -18,8 +18,8 @@ local Help = Class(Widget, function(self, owner)
         end
     end, TheWorld)
 
-    self.inst:ListenForEvent("helpdirty", function() 
-        
+    self.inst:ListenForEvent("_showhelp", function() 
+        self.owner.HUD:ShowHelpDetail()
     end, self.owner)
 
     --self:Hide()

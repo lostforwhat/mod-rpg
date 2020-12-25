@@ -124,6 +124,10 @@ AddPrefabPostInit("player_classified", function(inst)
     inst._skillsupdate = _G.net_event(inst.GUID, "_skillsupdate")
     inst._skillsupdatecd = _G.net_event(inst.GUID, "_skillsupdatecd")
 
+    inst._suit = _G.net_byte(inst.GUID, "_suit", "_suitdirty")
+
+    inst._showhelp = _G.net_event(inst.GUID, "_showhelp")
+
     if not _G.TheWorld.ismastersim then
         inst.client_skills = skills
         inst.GetSkills = GetSkills
@@ -132,6 +136,12 @@ AddPrefabPostInit("player_classified", function(inst)
     	end)
     	inst:ListenForEvent("_skillsupdatecd", function() 
         	inst._parent:PushEvent("_skillsupdatecd")
+    	end)
+    	inst:ListenForEvent("_showhelp", function() 
+    		inst._parent:PushEvent("_showhelp")
+    	end)
+    	inst:ListenForEvent("_suitdirty", function() 
+    		inst._parent:PushEvent("_suitdirty")
     	end)
     else
     	inst.skills = skills
@@ -820,7 +830,7 @@ AddPrefabPostInit("yellowgem", function(inst)
 		if inst.components.fuel == nil then
 			inst:AddComponent("fuel")
 		end
-		inst.components.fuel.fuelvalue = 400
+		inst.components.fuel.fuelvalue = 900
 		inst.components.fuel.fueltype = "YELLOWGEN"
 	end
 end)

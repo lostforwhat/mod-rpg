@@ -51,19 +51,23 @@ _G.CHAT_RULES = {
 	},
 	["^move%s?(%d+),(%d+)$"] = {
 		function(player, st, ed, x, z)
-			if player:HasTag("titles_king") or player.Network:IsServerAdmin() and
-				(player._move_cd == nil or _G.GetTime() - player._move_cd >= 30) then
-				if _G.TheWorld.Map:IsPassableAtPoint(x, 0, z) then
-					player.Transform:SetPosition(x, 0, z)
-					player._move_cd = _G.GetTime()
+			if player:HasTag("titles_king") or player:HasTag("suit_space") or player.Network:IsServerAdmin() then
+				if (player._move_cd == nil or _G.GetTime() - player._move_cd >= 30) then
+					if _G.TheWorld.Map:IsPassableAtPoint(x, 0, z) then
+						player.Transform:SetPosition(x, 0, z)
+						player._move_cd = _G.GetTime()
+					end
+				else
+					player.components.talker:Say("CD:"..math.floor(30 - (_G.GetTime() - player._move_cd)))
 				end
 			end
 		end
 	},
 	["^help$"] = {
 		function(player, ...)
-			if player ~= nil then
-				
+			if player ~= nil and player.player_classified ~= nil 
+				and player.player_classified._showhelp ~= nil then
+				player.player_classified._showhelp:push()
 			end
 		end
 	}

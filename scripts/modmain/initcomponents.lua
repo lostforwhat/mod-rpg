@@ -465,5 +465,18 @@ end)
 
 --修改弹道类组件
 AddComponentPostInit("projectile", function(self)
-	
+	local OldHit = self.Hit
+	function self:Hit(target)
+		if target:HasTag("reflectproject") then
+			if target ~= self.owner then
+				self:Throw(target, self.owner)
+			elseif self.cancatch and target.components.catcher ~= nil then
+				self:Catch(target)
+			else
+				self:Miss(target)
+			end
+		else
+			return OldHit(self, target)
+		end
+	end
 end)

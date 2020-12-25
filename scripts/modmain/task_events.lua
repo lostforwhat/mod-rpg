@@ -613,6 +613,85 @@ local function OnDoCook(inst, data)
 	taskdata:AddOne("cook_100")
 	taskdata:AddOne("cook_888")
 	--预留烹饪特殊食物
+    local product = data.product
+    if product == "butterflymuffin" then
+        taskdata:AddOne("cook_butterflymuffin_5")
+    end
+    if product == "frogglebunwich" then
+        taskdata:AddOne("cook_frogglebunwich_5")
+    end
+    if product == "taffy" then
+        taskdata:AddOne("cook_taffy_5")
+    end
+    if product == "pumpkincookie" then
+        taskdata:AddOne("cook_pumpkincookie_5")
+    end
+    if product == "stuffedeggplant" then
+        taskdata:AddOne("cook_stuffedeggplant_5")
+    end
+    if product == "fishsticks" then
+        taskdata:AddOne("cook_fishsticks_5")
+    end
+    if product == "honeynuggets" then
+        taskdata:AddOne("cook_honeynuggets_5")
+    end
+    if product == "honeyham" then
+        taskdata:AddOne("cook_honeyham_5")
+    end
+    if product == "dragonpie" then
+        taskdata:AddOne("cook_dragonpie_5")
+    end
+    if product == "kabobs" then
+        taskdata:AddOne("cook_kabobs_5")
+    end
+    if product == "mandrakesoup" then
+        taskdata:AddOne("cook_mandrakesoup_2")
+    end
+    if product == "baconeggs" then
+        taskdata:AddOne("cook_baconeggs_5")
+    end
+    if product == "perogies" then
+        taskdata:AddOne("cook_perogies_5")
+    end
+    if product == "turkeydinner" then
+        taskdata:AddOne("cook_turkeydinner_5")
+    end
+    if product == "jammypreserves" then
+        taskdata:AddOne("cook_jammypreserves_5")
+    end
+    if product == "fruitmedley" then
+        taskdata:AddOne("cook_fruitmedley_5")
+    end
+    if product == "fishtacos" then
+        taskdata:AddOne("cook_fishtacos_5")
+    end
+    if product == "waffles" then
+        taskdata:AddOne("cook_waffles_5")
+    end
+    if product == "unagi" then
+        taskdata:AddOne("cook_unagi_10")
+    end
+    if product == "flowersalad" then
+        taskdata:AddOne("cook_flowersalad_10")
+    end
+    if product == "icecream" then
+        taskdata:AddOne("cook_icecream_5")
+    end
+    if product == "watermelonicle" then
+        taskdata:AddOne("cook_watermelonicle_5")
+    end
+    if product == "trailmix" then
+        taskdata:AddOne("cook_trailmix_5")
+    end
+    if product == "hotchili" then
+        taskdata:AddOne("cook_hotchili_5")
+    end
+    if product == "bananapop" then
+        taskdata:AddOne("cook_bananapop_5")
+    end
+    if product == "guacamole" then
+        taskdata:AddOne("cook_guacamole_10")
+    end
 
     GiveExp(inst, 1)
 end
@@ -896,12 +975,20 @@ local function OnEntityDropLoot(world, data)
     end
 end
 
+local function OnPlayerSpawn(world, player)
+    local OldOnNewSpawn = player.OnNewSpawn or function() return true end
+    player.OnNewSpawn = function(...)
+        
+        return OldOnNewSpawn(...)
+    end
+end
+
 --world 事件
 AddPrefabPostInit(
     "world",
     function(inst)
         -- 新添加物品掉落
         inst:ListenForEvent("entity_droploot", OnEntityDropLoot)
-        
+        inst:ListenForEvent("ms_playerspawn", OnPlayerSpawn)
     end
 )

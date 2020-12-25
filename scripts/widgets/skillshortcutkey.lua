@@ -1,4 +1,6 @@
 --require "modmain/skill_constant"
+require "modmain/suit_data"
+
 local Widget = require "widgets/widget"
 local Text = require "widgets/text"
 local Image = require "widgets/image"
@@ -39,6 +41,7 @@ local SkillShortCutKey = Class(Widget, function(self, owner)
     self.inst:ListenForEvent("_skillsupdatecd", function() self:UpdateSkillsCd() end, self.owner)
     self.inst:DoTaskInTime(.1, function()
         self:InitKey()
+        self:InitSuit()
     end)
 end)
 
@@ -132,6 +135,35 @@ function SkillShortCutKey:ReLayout()
             --table.insert(self.skill_btns, btn)
             self.skill_btns[v] = btn
         end
+    end
+
+end
+
+function SkillShortCutKey:InitSuit()
+    --suit
+    self.suit = self.root:AddChild(ImageButton("images/skills/suit.xml", "suit.tex"))
+    self.suit:SetPosition(-462, 42)
+    self.suit:SetScale(.5, .5)
+    self.suit:SetTooltipColour(0.1, 1, 0.2, 1)
+    self.suit:Hide()
+
+    self.suit.inst:ListenForEvent("_suitdirty", function() 
+        self:UpdateSuit()
+    end, self.owner)
+end
+
+function SkillShortCutKey:UpdateSuit()
+    if self.owner.player_classified ~= nil and 
+        self.owner.player_classified._suit:value() ~= nil and 
+        self.owner.player_classified._suit:value() > 0 then
+
+        local index = self.owner.player_classified._suit:value()
+        local name = suit_data[index].name
+        local desc = suit_data[index].desc
+        self.suit:SetTooltip("套装:"..name.."\n"..desc)
+        self.suit:Show()
+    else
+        self.suit:Hide()
     end
 end
 

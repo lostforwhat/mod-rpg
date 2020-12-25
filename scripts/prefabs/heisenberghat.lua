@@ -1,13 +1,10 @@
-local assets = { Asset("ANIM", "anim/footballhat.zip") }
+local assets = { 
+    Asset("ANIM", "anim/heisenberghat.zip"),
+    Asset("ATLAS", "images/inventoryimages/heisenberghat.xml")
+}
 
 local function onequip(inst, owner, symbol_override)
-    local skin_build = inst:GetSkinBuild()
-    if skin_build ~= nil then
-        owner:PushEvent("equipskinneditem", inst:GetSkinName())
-        owner.AnimState:OverrideItemSkinSymbol("swap_hat", skin_build, symbol_override or "swap_hat", inst.GUID, fname)
-    else
-        owner.AnimState:OverrideSymbol("swap_hat", fname, symbol_override or "swap_hat")
-    end
+    owner.AnimState:OverrideSymbol("swap_hat", "heisenberghat", "swap_hat")
     owner.AnimState:Show("HAT")
     owner.AnimState:Show("HAIR_HAT")
     owner.AnimState:Hide("HAIR_NOHAT")
@@ -50,8 +47,8 @@ local function simple()
 
     MakeInventoryPhysics(inst)
 
-    inst.AnimState:SetBank(symname)
-    inst.AnimState:SetBuild(fname)
+    inst.AnimState:SetBank("heisenberghat")
+    inst.AnimState:SetBuild("heisenberghat")
     inst.AnimState:PlayAnimation("anim")
 
     inst:AddTag("hat")
@@ -65,6 +62,7 @@ local function simple()
     end
 
     inst:AddComponent("inventoryitem")
+    inst.components.inventoryitem.atlasname = "images/inventoryimages/heisenberghat.xml"
 
     inst:AddComponent("inspectable")
 

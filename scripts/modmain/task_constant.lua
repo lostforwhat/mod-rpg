@@ -705,8 +705,191 @@ task_data = {
 		category="cook",
 		name="小当家",
 		desc="烹饪%s次",
-		need=100,
-		reward=2*rate
+		need=888,
+		reward=4*rate
+	},
+	cook_butterflymuffin_5 = {
+		category="cook",
+		name="蝴蝶松饼",
+		desc="烹饪蝴蝶松饼%s次",
+		need=5,
+		reward=1*rate
+	},
+	cook_frogglebunwich_5 = {
+		category="cook",
+		name="蛙腿三明治",
+		desc="烹饪蛙腿三明治%s次",
+		need=5,
+		reward=1*rate
+	},
+	cook_taffy_5 = {
+		category="cook",
+		name="太妃糖",
+		desc="烹饪太妃糖%s次",
+		need=5,
+		reward=1*rate
+	},
+	cook_pumpkincookie_5 = {
+		category="cook",
+		name="南瓜饼干",
+		desc="烹饪南瓜饼干%s次",
+		need=5,
+		reward=1*rate
+	},
+	cook_stuffedeggplant_5 = {
+		category="cook",
+		name="香酥茄盒",
+		desc="烹饪香酥茄盒%s次",
+		need=5,
+		reward=1*rate
+	},
+	cook_fishsticks_5 = {
+		category="cook",
+		name="炸鱼条",
+		desc="烹饪炸鱼条%s次",
+		need=5,
+		reward=1*rate
+	},
+	cook_honeynuggets_5 = {
+		category="cook",
+		name="甜蜜金砖",
+		desc="烹饪甜蜜金砖%s次",
+		need=5,
+		reward=1*rate
+	},
+	cook_honeyham_5 = {
+		category="cook",
+		name="蜜汁火腿",
+		desc="烹饪蜜汁火腿%s次",
+		need=5,
+		reward=1*rate
+	},
+	cook_dragonpie_5 = {
+		category="cook",
+		name="火龙果派",
+		desc="烹饪火龙果派%s次",
+		need=5,
+		reward=1*rate
+	},
+	cook_kabobs_5 = {
+		category="cook",
+		name="烤肉串",
+		desc="烹饪烤肉串%s次",
+		need=5,
+		reward=1*rate
+	},
+	cook_mandrakesoup_2 = {
+		category="cook",
+		name="曼德拉汤",
+		desc="烹饪曼德拉汤%s次",
+		need=2,
+		reward=1*rate
+	},
+	cook_baconeggs_5 = {
+		category="cook",
+		name="培根煎蛋",
+		desc="烹饪培根煎蛋%s次",
+		need=5,
+		reward=1*rate
+	},
+	cook_perogies_5 = {
+		category="cook",
+		name="饺子",
+		desc="烹饪饺子%s次",
+		need=5,
+		reward=1*rate
+	},
+	cook_turkeydinner_5 = {
+		category="cook",
+		name="火鸡大餐",
+		desc="烹饪火鸡大餐%s次",
+		need=5,
+		reward=1*rate
+	},
+	cook_jammypreserves_5 = {
+		category="cook",
+		name="果酱蜜饯",
+		desc="烹饪果酱蜜饯%s次",
+		need=5,
+		reward=1*rate
+	},
+	cook_fruitmedley_5 = {
+		category="cook",
+		name="水果集锦",
+		desc="烹饪水果集锦%s次",
+		need=5,
+		reward=1*rate
+	},
+	cook_fishtacos_5 = {
+		category="cook",
+		name="鱼肉玉米卷",
+		desc="烹饪鱼肉玉米卷%s次",
+		need=5,
+		reward=1*rate
+	},
+	cook_waffles_5 = {
+		category="cook",
+		name="华夫饼",
+		desc="烹饪华夫饼%s次",
+		need=5,
+		reward=1*rate
+	},
+	cook_unagi_10 = {
+		category="cook",
+		name="鳗鱼料理",
+		desc="烹饪鳗鱼料理%s次",
+		need=10,
+		reward=3*rate
+	},
+	cook_flowersalad_10 = {
+		category="cook",
+		name="鲜花沙拉",
+		desc="烹饪鲜花沙拉%s次",
+		need=10,
+		reward=3*rate
+	},
+	cook_icecream_5 = {
+		category="cook",
+		name="冰淇淋",
+		desc="烹饪冰淇淋%s次",
+		need=5,
+		reward=1*rate
+	},
+	cook_watermelonicle_5 = {
+		category="cook",
+		name="西瓜冰",
+		desc="烹饪西瓜冰%s次",
+		need=5,
+		reward=1*rate
+	},
+	cook_trailmix_5 = {
+		category="cook",
+		name="什锦干果",
+		desc="烹饪什锦干果%s次",
+		need=5,
+		reward=1*rate
+	},
+	cook_hotchili_5 = {
+		category="cook",
+		name="辣椒酱",
+		desc="烹饪辣椒酱%s次",
+		need=5,
+		reward=1*rate
+	},
+	cook_guacamole_10 = {
+		category="cook",
+		name="鳄梨酱",
+		desc="烹饪鳄梨酱%s次",
+		need=10,
+		hide=true,
+		reward=3*rate
+	},
+	cook_bananapop_5 = {
+		category="cook",
+		name="香蕉冰",
+		desc="烹饪香蕉冰%s次",
+		need=5,
+		reward=1*rate
 	},
 
 	--制作部分
@@ -1103,6 +1286,31 @@ task_list = {
 	--烹饪
 	'cook_100',
 	'cook_888',
+	'cook_butterflymuffin_5',
+	'cook_frogglebunwich_5',
+	'cook_taffy_5',
+	'cook_pumpkincookie_5',
+	'cook_stuffedeggplant_5',
+	'cook_fishsticks_5',
+	'cook_honeynuggets_5',
+	'cook_honeyham_5',
+	'cook_dragonpie_5',
+	'cook_kabobs_5',
+	'cook_mandrakesoup_2',
+	'cook_baconeggs_5',
+	'cook_perogies_5',
+	'cook_turkeydinner_5',
+	'cook_jammypreserves_5',
+	'cook_fruitmedley_5',
+	'cook_fishtacos_5',
+	'cook_waffles_5',
+	'cook_unagi_10',
+	'cook_flowersalad_10',
+	'cook_icecream_5',
+	'cook_watermelonicle_5',
+	'cook_trailmix_5',
+	'cook_hotchili_5',
+	'cook_bananapop_5',
 
 	--制作部分
 	'build_30',

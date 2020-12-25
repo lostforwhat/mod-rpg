@@ -114,19 +114,21 @@ suit_data = {
 			owner.components.dodge:RemoveExtraChance("suit")
 		end,
 		name = "神圣之光",
-		desc = "增加10%闪避",
+		desc = "增加10%闪避, 提升激光束的效果",
 	},
 	{
 		prefabs = {"space_sword", "timerhat", "armorforget"},
 		num = 3,
 		onmatch = function(owner)
-
+			owner.components.locomotor:SetExternalSpeedMultiplier(owner, "suit", 1.25)
+			owner:AddTag("suit_space")
 		end,
 		onmismatch = function(owner)
-
+			owner.components.locomotor:RemoveExternalSpeedMultiplier(owner, "suit")
+			owner:RemoveTag("suit_space")
 		end,
 		name = "时空奥秘",
-		desc = "",
+		desc = "增加速度25%, 可随意穿梭空间",
 	},
 	{
 		prefabs = {"schrodingersword", "heisenberghat", "armordebroglie"},

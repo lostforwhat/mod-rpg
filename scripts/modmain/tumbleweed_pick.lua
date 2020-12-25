@@ -542,7 +542,7 @@ AddPrefabPostInit(
                 san = math.max(san, 0.05)
 
                 local world_chance = math.floor(days*0.01 + playerage*0.04)
-                if picker:HasTag("cleverhands") then
+                if picker:HasTag("cleverhands") or playerage < 4 then
                     world_chance = math.floor(playerage*0.04)
                 end
 
@@ -563,9 +563,11 @@ AddPrefabPostInit(
                     insertLoot(loot_table.new_loot, 1)
                     insertLoot(loot_table.good_loot, 1)
                     insertLoot(loot_table.luck_loot, 1)
+                    insertLoot(loot_table.gift_loot, 1)
                 elseif level == 2 then
-                    insertLoot(loot_table.good_loot, 1)
-                    insertLoot(loot_table.luck_loot, 1)
+                    insertLoot(loot_table.good_loot, 2)
+                    insertLoot(loot_table.luck_loot, 5)
+                    insertLoot(loot_table.gift_loot, 1)
                 elseif level == 3 then
                     possible_loot = loot_table.luck_loot
                 elseif level == -1 then

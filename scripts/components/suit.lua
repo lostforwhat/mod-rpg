@@ -15,6 +15,12 @@ local function OnUnEquipSlot(inst, data)
     end
 end
 
+local function onsuit(self, suit)
+    if self.inst.player_classified ~= nil then
+        self.inst.player_classified._suit:set(suit or 0)
+    end
+end
+
 --装备套装属性
 local Suit = Class(function(self, inst) 
     self.inst = inst
@@ -33,7 +39,11 @@ local Suit = Class(function(self, inst)
     self.inst:DoTaskInTime(0, function() 
         self:Calc(true)
     end)
-end)
+end,
+nil,
+{
+    current_suit = onsuit
+})
 
 function Suit:OnEquipSlot(data)
 	local item = data.item
@@ -81,7 +91,7 @@ function Suit:Calc(force)
             end
 
             if suit >= num and (required_prefabs == nil or require_suit >= #required_prefabs) then
-                self:EffectSuit(v)
+                self:EffectSuit(_)
                 return
             end
         end
@@ -89,16 +99,19 @@ function Suit:Calc(force)
     self:EffectSuit(nil)
 end
 
-function Suit:EffectSuit(suit)
-    if self.current_suit ~= nil and self.current_suit.onmismatch ~= nil then
-        self.current_suit.onmismatch(self.inst)
+function Suit:EffectSuit(suit_index)
+    if self.current_suit ~= nil 
+        and suit_data[self.current_suit] ~= nil 
+        and suit_data[self.current_suit].onmismatch ~= nil then
+        suit_data[self.current_suit].onmismatch(self.inst)
     end
-    self.current_suit = suit
-    if self.current_suit ~= nil and self.current_suit.onmatch ~= nil then
+    self.current_suit = suit_index
+    if self.current_suit ~= nil 
+        and suit_data[self.current_suit].onmatch ~= nil then
         if self.inst.components.talker ~= nil then
             self.inst.components.talker:Say("已获得套装效果!")
         end
-        self.current_suit.onmatch(self.inst)
+        suit_data[self.current_suit].onmatch(self.inst)
     end
 end
 

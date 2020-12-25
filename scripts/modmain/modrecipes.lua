@@ -157,7 +157,7 @@ AddRecipe("callerhorn", {Ingredient("horn",2),Ingredient("minotaurhorn",1)},
     "images/inventoryimages/callerhorn.xml"
 )
 
-AddRecipe("linghter_sword", {Ingredient("yellowgem", 20),Ingredient("nightstick",1)},
+AddRecipe("linghter_sword", {Ingredient("yellowgem", 20), Ingredient("nightstick",1), Ingredient("moonglass", 10)},
     RECIPETABS.WAR, 
     TECH.SCIENCE_TWO, 
     nil, 
@@ -168,6 +168,17 @@ AddRecipe("linghter_sword", {Ingredient("yellowgem", 20),Ingredient("nightstick"
     "images/inventoryimages/linghter_sword.xml"
 )
 
+AddRecipe("linghterhat", {Ingredient("yellowgem", 20), Ingredient("moonrocknugget",10), Ingredient("moonglass", 10)},
+    RECIPETABS.WAR, 
+    TECH.LOST, 
+    nil, 
+    nil, -- min_spacing
+    nil, -- nounlock
+    nil, -- numtogive
+    nil, -- builder_tag
+    "images/inventoryimages/linghterhat.xml"
+)
+
 AddRecipe("space_sword", {Ingredient("orangegem", 20), Ingredient("orangestaff",1)},
     RECIPETABS.WAR, 
     TECH.LOST, 
@@ -175,7 +186,7 @@ AddRecipe("space_sword", {Ingredient("orangegem", 20), Ingredient("orangestaff",
     nil, -- min_spacing
     nil, -- nounlock
     nil, -- numtogive
-    "noopen", -- builder_tag
+    nil, -- builder_tag
     "images/inventoryimages/space_sword.xml"
 )
 
@@ -186,6 +197,6 @@ AddRecipe("schrodingersword", {Ingredient("opalpreciousgem", 5), Ingredient("thu
     nil, -- min_spacing
     nil, -- nounlock
     nil, -- numtogive
-    "noopen", -- builder_tag
+    nil, -- builder_tag
     "images/inventoryimages/schrodingersword.xml"
 )

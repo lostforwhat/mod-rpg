@@ -41,10 +41,11 @@ local function fn()
     inst.Light:Enable(true)
 
     MakeInventoryPhysics(inst)
+    inst.Physics:ClearCollisionMask()
 
     inst:AddTag("NOCLICK")
 
-    inst:AddTag("blowdart")
+    inst:AddTag("linghter")
     inst:AddTag("sharp")
 
     inst.AnimState:SetBank("linghter_fx")

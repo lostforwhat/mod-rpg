@@ -464,6 +464,7 @@ local function OnLoad(inst, data)
     end
     if data ~= nil and data.level ~= nil then
         local level = data.level
+        inst.level = level
         if inst.components.colourtweener == nil then
             inst:AddComponent("colourtweener")
         end

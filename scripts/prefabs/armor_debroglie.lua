@@ -1,6 +1,7 @@
 local assets =
 {
-    Asset("ANIM", "anim/armor_wood.zip"),
+    Asset("ANIM", "anim/armor_debroglie.zip"),
+    Asset("ALTAS", "images/inventoryimages/armordebroglie.xml"),
 }
 
 local function OnBlocked(owner) 
@@ -10,7 +11,7 @@ end
 local function onequip(inst, owner)
     local skin_build = inst:GetSkinBuild()
 
-	owner.AnimState:OverrideSymbol("swap_body", "armor_wood", "swap_body")
+	owner.AnimState:OverrideSymbol("swap_body", "armor_debroglie", "swap_body")
     
     inst:ListenForEvent("blocked", OnBlocked, owner)
 end
@@ -29,8 +30,8 @@ local function fn()
 
     MakeInventoryPhysics(inst)
 
-    inst.AnimState:SetBank("armor_wood")
-    inst.AnimState:SetBuild("armor_wood")
+    inst.AnimState:SetBank("armor_debroglie")
+    inst.AnimState:SetBuild("armor_debroglie")
     inst.AnimState:PlayAnimation("anim")
 
     inst:AddTag("wood")
@@ -48,11 +49,8 @@ local function fn()
     inst:AddComponent("inspectable")
 
     inst:AddComponent("inventoryitem")
+    inst.components.inventoryitem.atlasname = "images/inventoryimages/armordebroglie.xml"
 
-    inst:AddComponent("fuel")
-    inst.components.fuel.fuelvalue = TUNING.LARGE_FUEL
-
-    MakeSmallBurnable(inst, TUNING.SMALL_BURNTIME)
     MakeSmallPropagator(inst)
 
     inst:AddComponent("armor")
