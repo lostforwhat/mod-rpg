@@ -101,7 +101,7 @@ AddPrefabPostInit("player_classified", function(inst)
 
 	local function OnSkillsUpdate(inst)
 	    for k, v in pairs(inst._skills) do
-	        inst.client_skills[k] = _G.String2Table(v:value())
+	        inst.skills[k] = _G.String2Table(v:value())
 	    end
 	end
 
@@ -112,7 +112,7 @@ AddPrefabPostInit("player_classified", function(inst)
 	    else
 	        OnSkillsUpdate(inst)
 	        --print("skills:", _G.Table2String(inst.client_skills))
-	        return inst.client_skills
+	        return inst.skills
 	    end
 	end
 
@@ -128,21 +128,23 @@ AddPrefabPostInit("player_classified", function(inst)
 
     inst._showhelp = _G.net_event(inst.GUID, "_showhelp")
 
+
+    inst:ListenForEvent("_skillsupdate", function() 
+    	inst._parent:PushEvent("_skillsupdate")
+	end)
+	inst:ListenForEvent("_skillsupdatecd", function() 
+    	inst._parent:PushEvent("_skillsupdatecd")
+	end)
+	inst:ListenForEvent("_showhelp", function() 
+		inst._parent:PushEvent("_showhelp")
+	end)
+	inst:ListenForEvent("_suitdirty", function() 
+		inst._parent:PushEvent("suitdirty")
+	end)
+
     if not _G.TheWorld.ismastersim then
-        inst.client_skills = skills
+        inst.skills = skills
         inst.GetSkills = GetSkills
-        inst:ListenForEvent("_skillsupdate", function() 
-        	inst._parent:PushEvent("_skillsupdate")
-    	end)
-    	inst:ListenForEvent("_skillsupdatecd", function() 
-        	inst._parent:PushEvent("_skillsupdatecd")
-    	end)
-    	inst:ListenForEvent("_showhelp", function() 
-    		inst._parent:PushEvent("_showhelp")
-    	end)
-    	inst:ListenForEvent("_suitdirty", function() 
-    		inst._parent:PushEvent("_suitdirty")
-    	end)
     else
     	inst.skills = skills
 	    inst.UpdateSkill = UpdateSkill

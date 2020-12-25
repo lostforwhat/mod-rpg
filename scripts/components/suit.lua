@@ -100,6 +100,9 @@ function Suit:Calc(force)
 end
 
 function Suit:EffectSuit(suit_index)
+    if self.current_suit == suit_index then
+        return
+    end
     if self.current_suit ~= nil 
         and suit_data[self.current_suit] ~= nil 
         and suit_data[self.current_suit].onmismatch ~= nil then

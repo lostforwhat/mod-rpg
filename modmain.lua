@@ -54,6 +54,8 @@ Assets = {
     Asset("IMAGE", "images/skills/stealth.tex"),
     Asset("ATLAS", "images/skills/resurrect.xml"),
     Asset("IMAGE", "images/skills/resurrect.tex"),
+    Asset("ATLAS", "images/skills/suit.xml"),
+    Asset("IMAGE", "images/skills/suit.tex"),
 }
 
 PrefabFiles = {}
