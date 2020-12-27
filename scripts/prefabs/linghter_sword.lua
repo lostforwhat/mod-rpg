@@ -110,34 +110,26 @@ local function onfuelchange(section, oldsection, inst)
     end
 end
 
-local function OnUse(inst)
+local function createlight(inst, target, pos)
     local owner = inst.components.inventoryitem.owner
     if inst.components.fueled:IsEmpty() then
         owner.components.talker:Say("没有能量了")
-        inst.components.useableitem:StopUsingItem()
         return
     end
     
     local equipped = inst.replica.equippable:IsEquipped()
     if owner ~= nil and equipped then
-        if owner.startovercharge ~= nil then
-            inst.components.fueled:DoDelta(-50)
-            owner.components.health:DoDelta(TUNING.HEALING_SUPERHUGE, false, "lightning")
-            owner.components.sanity:DoDelta(-TUNING.SANITY_LARGE)
-            owner.components.talker:Say(GetString(owner, "ANNOUNCE_CHARGE"))
-            owner:startovercharge(CalcDiminishingReturns(owner.charge_time, .5*TUNING.TOTAL_DAY_TIME))
+        TheWorld:PushEvent("ms_sendlightningstrike", pos)
+        for k=1, 5 do
+            inst:DoTaskInTime(.2 * k, function() 
+                    local lt = SpawnPrefab("linghter_fx")
+                    lt.Transform:SetPosition(owner:GetPosition():Get())
+                    local angle = lt:GetAngleToPoint(pos:Get())
+                    lt:thrown(owner, angle)
+            end)
         end
-        inst:DoTaskInTime(0, function() 
-            for k=1, 8 do
-                local angle = k * 360 / 8
-                local lt = SpawnPrefab("linghter_fx")
-                lt.Transform:SetPosition(owner:GetPosition():Get())
-                lt:thrown(owner, angle)
-            end
-            inst.components.fueled:DoDelta(-50)
-        end)
+        inst.components.fueled:DoDelta(-50)
     end
-    inst.components.useableitem:StopUsingItem()
 end
 
 local function fn()
@@ -179,8 +171,12 @@ local function fn()
     inst.components.weapon:SetDamage(TUNING.BATBAT_DAMAGE)
     inst.components.weapon.onattack = onattack
 
-    inst:AddComponent("useableitem")
-    inst.components.useableitem:SetOnUseFn(OnUse)
+    --[[inst:AddComponent("useableitem")
+    inst.components.useableitem:SetOnUseFn(OnUse)]]
+    inst:AddComponent("spellcaster")
+    inst.components.spellcaster:SetSpellFn(createlight)
+    inst.components.spellcaster.canuseonpoint = true
+    inst.components.spellcaster.canuseonpoint_water = true
 
     -------
     inst:AddComponent("fueled")

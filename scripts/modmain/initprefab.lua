@@ -130,16 +130,24 @@ AddPrefabPostInit("player_classified", function(inst)
 
 
     inst:ListenForEvent("_skillsupdate", function() 
-    	inst._parent:PushEvent("_skillsupdate")
+    	if inst._parent ~= nil then
+	    	inst._parent:PushEvent("_skillsupdate")
+	    end
 	end)
-	inst:ListenForEvent("_skillsupdatecd", function() 
-    	inst._parent:PushEvent("_skillsupdatecd")
+	inst:ListenForEvent("_skillsupdatecd", function()
+		if inst._parent ~= nil then 
+	    	inst._parent:PushEvent("_skillsupdatecd")
+	    end
 	end)
 	inst:ListenForEvent("_showhelp", function() 
-		inst._parent:PushEvent("_showhelp")
+		if inst._parent ~= nil then
+			inst._parent:PushEvent("_showhelp")
+		end
 	end)
 	inst:ListenForEvent("_suitdirty", function() 
-		inst._parent:PushEvent("suitdirty")
+		if inst._parent ~= nil then
+			inst._parent:PushEvent("suitdirty")
+		end
 	end)
 
     if not _G.TheWorld.ismastersim then

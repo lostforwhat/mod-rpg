@@ -329,7 +329,7 @@ _G.TriggerHoliday = function()
 		return
 	end
 	if _G.TheWorld.holiday == nil then
-		local worlds = {}
+		local worlds = {shardId}
 		local shards = _G.Shard_GetConnectedShards()
 		for k, v in pairs(shards) do
 			table.insert(worlds, k)

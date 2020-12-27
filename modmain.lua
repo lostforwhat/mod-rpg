@@ -95,6 +95,10 @@ table.insert(PrefabFiles, "space_sword")
 table.insert(PrefabFiles, "schrodingersword")
 table.insert(PrefabFiles, "timerhat")
 table.insert(PrefabFiles, "linghterhat")
+table.insert(PrefabFiles, "heisenberghat")
+table.insert(PrefabFiles, "armor_linghter")
+table.insert(PrefabFiles, "armor_forget")
+table.insert(PrefabFiles, "armor_debroglie")
 table.insert(PrefabFiles, "linghter_fx")
 
 

@@ -179,11 +179,11 @@ end
 local function AttackTarget(self, pos)
     local inst = self.inst
     local RETARGET_MUST_TAGS = { "_combat", "_health" }
-    local RETARGET_CANT_TAGS = { "prey" }
-    local NO_PVP_TAGS = {"prey", "player"}
+    local RETARGET_CANT_TAGS = {}
+    local NO_PVP_TAGS = {"player"}
 
     local x,y,z = inst.Transform:GetWorldPosition()
-    local ents = TheSim:FindEntities(x, y, z, self.hitdist + 1, RETARGET_MUST_TAGS, TheNet:GetPVPEnabled() and RETARGET_CANT_TAGS or NO_PVP_TAGS)
+    local ents = TheSim:FindEntities(x, y, z, self.hitdist + 1, RETARGET_MUST_TAGS, (self.owner:HasTag("player") and TheNet:GetPVPEnabled()) and RETARGET_CANT_TAGS or NO_PVP_TAGS)
     for _, guy in pairs(ents) do
         if guy.entity:IsVisible()
         and CheckTarget(guy)
@@ -195,6 +195,7 @@ local function AttackTarget(self, pos)
             guy:HasTag("animal"))
         and (guy.components.follower == nil or 
             guy.components.follower:GetLeader() == nil or
+            not self.owner:HasTag("player") or
             (TheNet:GetPVPEnabled() and
             guy.components.follower:GetLeader() ~= self.owner or
             not guy.components.follower:GetLeader():HasTag("player"))) then

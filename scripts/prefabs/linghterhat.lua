@@ -42,7 +42,7 @@ end
 local function ontakedamage(inst, damage)
     if inst.take ~= nil then
         inst.take = inst.take + 1
-        if inst.take >= 3 then
+        if inst.take >= 10 or math.random() < 0.1 then
             local owner = inst.components.inventoryitem.owner
             
             if owner ~= nil then
