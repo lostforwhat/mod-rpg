@@ -454,6 +454,12 @@ AddPrefabPostInit("bernie_big", function(inst)
 	end
 end)
 
+TUNING.ABIGAIL_SPEED = 8
+TUNING.ABIGAIL_HEALTH = 900
+TUNING.ABIGAIL_HEALTH_LEVEL1 = 300
+TUNING.ABIGAIL_HEALTH_LEVEL2 = 600
+TUNING.ABIGAIL_HEALTH_LEVEL3 = 900
+
 --abigail添加复仇属性
 AddPrefabPostInit("abigail", function(inst) 
 	if _G.TheWorld.ismastersim then

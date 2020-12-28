@@ -1,3 +1,5 @@
+local ABSORPTION = .75
+
 local assets =
 {
     Asset("ANIM", "anim/armor_linghter.zip"),
@@ -6,7 +8,7 @@ local assets =
 
 local function GetShowItemInfo(inst)
 
-    return "特殊:光之屏障"
+    return "光之屏障: 免疫并反射远程投掷物"
 end
 
 local function OnBlocked(owner) 
@@ -32,7 +34,7 @@ local function checkbroken(inst)
         inst.components.armor:InitIndestructible(0)
     else
         inst:RemoveTag("broken")
-        inst.components.armor:InitIndestructible(TUNING.ARMORWOOD_ABSORPTION)
+        inst.components.armor:InitIndestructible(ABSORPTION)
     end
 end
 
@@ -87,7 +89,7 @@ local function fn()
     inst.components.fueled.accepting = true
 
     inst:AddComponent("armor")
-    inst.components.armor:InitIndestructible(TUNING.ARMORWOOD_ABSORPTION)
+    inst.components.armor:InitIndestructible(ABSORPTION)
     inst.components.armor:AddWeakness("shadowcreature", 20)
     inst.components.armor:AddWeakness("shadowchesspiece", 50)
     inst.components.armor.ontakedamage = ontakedamage

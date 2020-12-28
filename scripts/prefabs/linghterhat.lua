@@ -3,6 +3,11 @@ local assets = {
     Asset("ATLAS", "images/inventoryimages/linghterhat.xml")
 }
 
+local function GetShowItemInfo(inst)
+
+    return "激光反击: 随机向敌方反馈激光束"
+end
+
 local function onequip(inst, owner, symbol_override)
     owner.AnimState:OverrideSymbol("swap_hat", "linghterhat", "swap_hat")
     
@@ -114,6 +119,8 @@ local function fn()
     inst:AddComponent("armor")
     inst.components.armor:InitIndestructible(.75)
     inst.components.armor.ontakedamage = ontakedamage
+
+    inst.GetShowItemInfo = GetShowItemInfo
 
     return inst
 end

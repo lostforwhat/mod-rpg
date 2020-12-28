@@ -278,16 +278,27 @@ AddPrefabPostInitAny(function(inst)
             inst.components.lifesteal:SetPercent(50)
        end
     end
-    if inst.prefab == "krampus" or inst.prefab == "monkey" then
+    if inst.prefab == "krampus" or 
+        inst.prefab == "pigman" or 
+        inst.prefab == "bearger" or 
+        inst.prefab == "monkey" then
         inst:AddComponent("stealer")
         if IsServer then
-            inst.components.stealer.chance = 0.1
+            inst.components.stealer.chance = inst.prefab == "krampus" and 0.3 or 0.1
         end
     end
     if inst.prefab == "merm" then
         inst:AddComponent("dodge")
         if IsServer then
-            inst.components.dodge:SetChance(0.2)
+            inst.components.dodge:SetChance(.2)
+        end
+    end
+    if inst.prefab == "tentacle" or 
+        inst.prefab == "leif" or 
+        inst.prefab == "moonpig" then
+        inst:AddComponent("crit")
+        if IsServer then
+            inst.components.crit:SetChance(.25)
         end
     end
 end)

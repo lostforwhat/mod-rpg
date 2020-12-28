@@ -19,13 +19,14 @@ local function onunequip(inst, owner)
 end
 
 local function onattack(inst, owner, target)
-    if math.random() < 0.01 then
+    local level = inst.components.weaponlevel and inst.components.weaponlevel.level or 0
+    if math.random() < 0.01 * (1 + .2*level) then
         local percent = owner.components.health:GetPercent() or 0
         if percent > 0 then
             owner.components.health:SetPercent(percent * .5)
         end
     end
-    if math.random() < 0.01 then
+    if math.random() < 0.01 * (1 + .2*level) then
         local percent = target.components.health:GetPercent() or 0
         if percent > 0 then
             target.components.health:SetPercent(percent * .5)
@@ -40,7 +41,7 @@ local function GetShowItemInfo(inst)
         local extra_damage = inst.components.weapon.extra_damage or 0
         level_str = "强化+"..level.." (伤害+"..extra_damage..")"
     end
-    return  "攻击有1%概率使自己减少50%生命值", "攻击有1%概率使目标减少50%生命值", level_str
+    return  "攻击"..(1 + .2*level).."%概率使目标或自己减少50%生命值", level_str
 end
 
 local function fn()

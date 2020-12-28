@@ -6,7 +6,7 @@ local assets =
 
 local function GetShowItemInfo(inst)
 
-    return "特殊:遗忘光环"
+    return "遗忘光环:使攻击者放弃当前目标"
 end
 
 local function OnBlocked(owner) 

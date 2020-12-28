@@ -134,6 +134,10 @@ AddComponentPostInit("combat", function(self)
 				if attacker:HasTag("leisurely") then
 					damage = math.random() * 3 * damage
 				end
+				--量子套装效果
+				if attacker:HasTag("suit_quantum") then
+					damage = damage * (1.5 - math.random())
+				end
 				--弱点攻击为附加伤害不参与暴击
 				if attacker.components.attackbroken ~= nil then
 					if attacker.components.attackbroken:Effect() then
