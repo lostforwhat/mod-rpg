@@ -3,7 +3,7 @@ local ABSORPTION = .75
 local assets =
 {
     Asset("ANIM", "anim/armor_linghter.zip"),
-    Asset("ALTAS", "images/inventoryimages/armorlinghter.xml"),
+    Asset("ATLAS", "images/inventoryimages/armorlinghter.xml"),
 }
 
 local function GetShowItemInfo(inst)
@@ -66,7 +66,7 @@ local function fn()
 
     inst.foleysound = "dontstarve/movement/foley/logarmour"
 
-    MakeInventoryFloatable(inst, "small", 0.2, 0.80)
+    MakeInventoryFloatable(inst, "small", 2, 1)
 
     inst.entity:SetPristine()
 

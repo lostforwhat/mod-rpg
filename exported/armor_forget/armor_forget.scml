@@ -19,9 +19,9 @@
                     <object_ref id="0" timeline="0" key="0" z_index="0"/>
                 </key>
             </mainline>
-            <timeline id="0" name="armor_forget">
+            <timeline id="0" name="swap_body-13">
                 <key id="0" spin="0">
-                    <object folder="0" file="9" x="-0.449" y="0.299" angle="0"/>
+                    <object folder="0" file="9" x="-7" y="23"/>
                 </key>
             </timeline>
         </animation>

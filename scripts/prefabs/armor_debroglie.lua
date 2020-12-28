@@ -1,7 +1,7 @@
 local assets =
 {
     Asset("ANIM", "anim/armor_debroglie.zip"),
-    Asset("ALTAS", "images/inventoryimages/armordebroglie.xml"),
+    Asset("ATLAS", "images/inventoryimages/armordebroglie.xml"),
 }
 
 local function OnBlocked(owner) 
@@ -38,7 +38,7 @@ local function fn()
 
     inst.foleysound = "dontstarve/movement/foley/logarmour"
 
-    MakeInventoryFloatable(inst, "small", 0.2, 0.80)
+    MakeInventoryFloatable(inst, "small", 2, 1)
 
     inst.entity:SetPristine()
 

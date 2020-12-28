@@ -469,18 +469,79 @@ end)
 
 --修改弹道类组件
 AddComponentPostInit("projectile", function(self)
+	local function CreateWeapon()
+		local weapon = _G.CreateEntity()
+        --[[Non-networked entity]]
+        weapon.entity:AddTransform()
+        weapon:AddComponent("weapon")
+        weapon.components.weapon:SetDamage(10)
+        weapon:AddComponent("inventoryitem")
+        weapon.persists = false
+        weapon.components.inventoryitem:SetOnDroppedFn(weapon.Remove)
+        return weapon
+	end
+
+	local function StopTrackingDelayOwner(self)
+	    if self.delayowner ~= nil then
+	        self.inst:RemoveEventCallback("onremove", self._ondelaycancel, self.delayowner)
+	        self.inst:RemoveEventCallback("newstate", self._ondelaycancel, self.delayowner)
+	        self.delayowner = nil
+	    end
+	end
+
 	local OldHit = self.Hit
 	function self:Hit(target)
 		if target:HasTag("reflectproject") then
 			if target ~= self.owner then
-				self:Throw(target, self.owner)
+				--self:Throw(target, self.owner)
+				local attacker = self.owner
+				local weapon = self.inst
+				if attacker.components.combat == nil and attacker.components.weapon ~= nil and attacker.components.inventoryitem ~= nil then
+			        weapon = (self.has_damage_set and weapon.components.weapon ~= nil) and weapon or attacker
+			        attacker = attacker.components.inventoryitem.owner
+			    end
+				self:Miss(target)
+				local newprojectile = _G.SpawnPrefab(self.inst.prefab)
+				newprojectile.Transform:SetPosition(target.Transform:GetWorldPosition())
+
+				weapon = target.components.combat:GetWeapon() or weapon
+				newprojectile.components.projectile:Throw(weapon, attacker, target)
+				newprojectile.components.projectile.attacker = target
+				self.inst:Remove()
 			elseif self.cancatch and target.components.catcher ~= nil then
 				self:Catch(target)
 			else
 				self:Miss(target)
 			end
 		else
-			return OldHit(self, target)
+			local attacker = self.owner
+		    local weapon = self.inst
+		    StopTrackingDelayOwner(self)
+		    self:Stop()
+		    self.inst.Physics:Stop()
+			
+		    if attacker.components.combat == nil and attacker.components.weapon ~= nil and attacker.components.inventoryitem ~= nil then
+		        weapon = (self.has_damage_set and weapon.components.weapon ~= nil) and weapon or attacker
+		        attacker = self.attacker or attacker.components.inventoryitem.owner
+		    end
+
+		    if self.onprehit ~= nil then
+		        self.onprehit(self.inst, attacker, target)
+		    end
+		    if attacker ~= nil and attacker.components.combat ~= nil then
+				if attacker.components.combat.ignorehitrange then
+			        attacker.components.combat:DoAttack(target, weapon, self.inst, self.stimuli)
+				else
+					attacker.components.combat.ignorehitrange = true
+					attacker.components.combat:DoAttack(target, weapon, self.inst, self.stimuli)
+					attacker.components.combat.ignorehitrange = false
+				end
+		    end
+		    if self.onhit ~= nil then
+		        self.onhit(self.inst, attacker, target)
+		    end
+			--return OldHit(self, target)
 		end
 	end
+
 end)
