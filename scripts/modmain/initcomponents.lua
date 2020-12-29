@@ -77,7 +77,7 @@ AddComponentPostInit("combat", function(self)
 		local rad = target:GetPhysicsRadius(0)
 		local x, y, z = target.Transform:GetWorldPosition()
 		miss.Transform:SetPosition(x, y + .5 * rad , z)
-		miss:Display("闪避", 36, {1, .2, .2})
+		miss:Display("闪避", 24, {1, .2, .2})
 	end
 
 	local function ApplyBroken(attacker, target)
@@ -85,7 +85,7 @@ AddComponentPostInit("combat", function(self)
 		local rad = attacker:GetPhysicsRadius(0)
 		local x, y, z = attacker.Transform:GetWorldPosition()
 		broken.Transform:SetPosition(x, y + .5 * rad , z)
-		broken:Display("击破", 46, {.2, .1, 1})
+		broken:Display("击破", 30, {.2, .1, 1})
 	end
 
 	local function ApplyCrit(attacker, target, rate)
@@ -97,7 +97,7 @@ AddComponentPostInit("combat", function(self)
 		if rate > 2 then
 			str = str .. "x" .. rate
 		end
-		crit:Display(str, 38 + rate, {.6, .1, 1})
+		crit:Display(str, 20 + rate, {.6, .4, 1})
 		AddImpact(attacker, target, .4 + .3 * rate)
 	end
 
@@ -106,7 +106,7 @@ AddComponentPostInit("combat", function(self)
 		local rad = attacker:GetPhysicsRadius(0)
 		local x, y, z = attacker.Transform:GetWorldPosition()
 		king.Transform:SetPosition(x, y + .5 * rad , z)
-		king:Display("蔑视", 46, {.3, .1, .5})
+		king:Display("蔑视", 32, {.3, .1, .5})
 
 		if target.SoundEmitter ~= nil then
             target.SoundEmitter:PlaySound("dontstarve/common/whip_large", nil, 0.3)
@@ -118,7 +118,7 @@ AddComponentPostInit("combat", function(self)
 		local rad = attacker:GetPhysicsRadius(0)
 		local x, y, z = attacker.Transform:GetWorldPosition()
 		death.Transform:SetPosition(x, y + .5 * rad , z)
-		death:Display("致死", 46, {.3, .1, .5})
+		death:Display("致死", 32, {.3, .1, .5})
 
 		if target.SoundEmitter ~= nil then
             target.SoundEmitter:PlaySound("dontstarve/common/whip_large", nil, 0.3)

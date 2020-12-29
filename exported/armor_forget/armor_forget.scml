@@ -12,6 +12,9 @@
         <file id="8" name="swap_body/swap_body-8.png" width="108" height="136" pivot_x="0.552542" pivot_y="0.323901"/>
         <file id="9" name="swap_body/swap_body-13.png" width="180" height="148" pivot_x="0.459719" pivot_y="0.248652"/>
     </folder>
+    <folder id="1" name="armor_forget">
+        <file id="0" name="armor_forget/armor_forget.png" width="180" height="148" pivot_x="0" pivot_y="1"/>
+    </folder>
     <entity id="0" name="armor_forget">
         <animation id="0" name="anim" length="1000" interval="100">
             <mainline>
@@ -19,9 +22,9 @@
                     <object_ref id="0" timeline="0" key="0" z_index="0"/>
                 </key>
             </mainline>
-            <timeline id="0" name="swap_body-13">
+            <timeline id="0" name="armor_forget">
                 <key id="0" spin="0">
-                    <object folder="0" file="9" x="-7" y="23"/>
+                    <object folder="1" file="0" x="-88" y="132"/>
                 </key>
             </timeline>
         </animation>

@@ -34,11 +34,9 @@ local function fn()
     inst.AnimState:SetBuild("armor_debroglie")
     inst.AnimState:PlayAnimation("anim")
 
-    inst:AddTag("wood")
-
     inst.foleysound = "dontstarve/movement/foley/logarmour"
 
-    MakeInventoryFloatable(inst, "small", 2, 1)
+    MakeInventoryFloatable(inst)
 
     inst.entity:SetPristine()
 
@@ -54,8 +52,7 @@ local function fn()
     MakeSmallPropagator(inst)
 
     inst:AddComponent("armor")
-    inst.components.armor:InitCondition(TUNING.ARMORWOOD, TUNING.ARMORWOOD_ABSORPTION)
-    inst.components.armor:AddWeakness("beaver", TUNING.BEAVER_WOOD_DAMAGE)
+    inst.components.armor:InitCondition(TUNING.ARMORWOOD*15, .9)
 
     inst:AddComponent("equippable")
     inst.components.equippable.equipslot = EQUIPSLOTS.BODY

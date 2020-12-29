@@ -12,6 +12,9 @@
         <file id="8" name="swap_body/swap_body-8.png" width="96" height="120" pivot_x="0.509896" pivot_y="0.2475"/>
         <file id="9" name="swap_body/swap_body-13.png" width="164" height="152" pivot_x="0.477591" pivot_y="0.245888"/>
     </folder>
+    <folder id="1" name="armor_debroglie">
+        <file id="0" name="armor_debroglie/armor_debroglie.png" width="164" height="152" pivot_x="0" pivot_y="1"/>
+    </folder>
     <entity id="0" name="armor_debroglie">
         <animation id="0" name="anim" length="1000" interval="100">
             <mainline>
@@ -19,9 +22,9 @@
                     <object_ref id="0" timeline="0" key="0" z_index="0"/>
                 </key>
             </mainline>
-            <timeline id="0" name="swap_body-13">
+            <timeline id="0" name="armor_debroglie">
                 <key id="0" spin="0">
-                    <object folder="0" file="9" x="-4" y="26"/>
+                    <object folder="1" file="0" x="-80" y="132"/>
                 </key>
             </timeline>
         </animation>

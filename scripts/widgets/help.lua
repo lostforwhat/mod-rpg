@@ -22,8 +22,9 @@ local Help = Class(Widget, function(self, owner)
         self.owner.HUD:ShowHelpDetail()
     end, self.owner)
 
-    --self:Hide()
-    if self.owner.Network:GetPlayerAge() > 10 then
+    if self.owner.Network:GetPlayerAge() < 10 then
+        self:Show()
+    else
         self:Hide()
     end
 end)

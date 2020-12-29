@@ -61,6 +61,7 @@ local ShopDetail = Class(Widget, function(self, owner)
 end)
 
 function ShopDetail:LoadShopFromServer()
+    self.shop_goods = {}
     local serversession = TheWorld.net.components.shardstate:GetMasterSessionId()
     HttpGet("/public/getGoods?serversession="..serversession.."&userid="..self.owner.userid, function(result, isSuccessful, resultCode)
         if isSuccessful and (resultCode == 200) then
@@ -71,7 +72,6 @@ function ShopDetail:LoadShopFromServer()
             else
                 --成功
 
-                self.shop_goods = {}
                 if self.owner.components.purchase then
                     local shop_goods = data
                     for k, v in pairs(shop_goods) do
