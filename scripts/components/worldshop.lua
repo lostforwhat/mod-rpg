@@ -6,13 +6,14 @@ local MAX_RESET_TIME = 1800
 local WorldShop = Class(function(self, inst) 
     self.inst = inst
 
-    self._shopdata = net_string(inst.GUID, "worldshop._shopdata", "shopdatadirty")
+    --self._shopdata = net_string(inst.GUID, "worldshop._shopdata", "shopdatadirty")
+    self._shopdata = {}
 
     self.refresh_time = 0
     self.reset_time = 0 --重置商店时间
 
     if TheNet:GetIsServer() then
-    	self._shopdata:set("{}")
+    	--self._shopdata:set("{}")
     	self.inst:DoTaskInTime(1, function() 
 			self:Refresh()
     	end)
@@ -66,7 +67,7 @@ function WorldShop:Refresh(force)
     local time = GetTime()
     local world_refresh_time = self.refresh_time or 0
 
-    if #self._shopdata:value() > 2 and time - world_refresh_time < 15 and not force then
+    if #self._shopdata > 2 and time - world_refresh_time < 15 and not force then
     	return
     end
 
@@ -84,7 +85,8 @@ function WorldShop:Refresh(force)
 						data[k] = nil
 					end
 				end
-				self._shopdata:set(Table2String(data))
+				--self._shopdata:set(Table2String(data))
+				self._shopdata = data
 				self.refresh_time = GetTime()
 				--成功
 			end
@@ -96,7 +98,8 @@ function WorldShop:Refresh(force)
 end
 
 function WorldShop:GetGoods()
-	return String2Table(self._shopdata:value()) or {}
+	--return String2Table(self._shopdata:value()) or {}
+	return self._shopdata
 end
 
 function WorldShop:ResetShop()

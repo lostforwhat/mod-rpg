@@ -89,6 +89,7 @@ table.insert(PrefabFiles, "coffeebush")
 --buff
 table.insert(PrefabFiles, "new_buffs")
 --table.insert(PrefabFiles, "player_skills_classified")
+table.insert(PrefabFiles, "display_effect")
 --新装备
 table.insert(PrefabFiles, "linghter_sword")
 table.insert(PrefabFiles, "space_sword")

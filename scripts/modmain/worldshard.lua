@@ -39,6 +39,22 @@ _G.Networking_SystemMessage = function(message)
 end
 
 
+local function getrandomposition() 
+	local ground = _G.TheWorld 
+	local centers = {} 
+	for i, node in ipairs(ground.topology.nodes) do 
+		if ground.Map:IsPassableAtPoint(node.x, 0, node.y) and node.type ~= _G.NODE_TYPE.SeparatedRoom then 
+			table.insert(centers, {x = node.x, z = node.y}) 
+		end 
+	end 
+	if #centers > 0 then 
+		local pos = centers[math.random(#centers)] 
+		return _G.Point(pos.x, 0, pos.z) 
+	else 
+		return nil  
+	end 
+end
+
 _G.CHAT_KEY = "#"
 _G.CHAT_RULES = {
 	["^pos$"] = {
@@ -56,11 +72,29 @@ _G.CHAT_RULES = {
 					if _G.TheWorld.Map:IsPassableAtPoint(x, 0, z) then
 						player.Transform:SetPosition(x, 0, z)
 						player._move_cd = _G.GetTime()
+					else
+						player.components.talker:Say("无法到达的目的地")
 					end
 				else
 					player.components.talker:Say("CD:"..math.floor(30 - (_G.GetTime() - player._move_cd)))
 				end
 			end
+		end
+	},
+	["^move$"] = {
+		function(player)
+			if player:HasTag("titles_king") or player:HasTag("suit_space") or player.Network:IsServerAdmin() then
+				if (player._move_cd == nil or _G.GetTime() - player._move_cd >= 30) then
+					local pos = getrandomposition()
+					if pos ~= nil then
+						player.Transform:SetPosition(pos:Get())
+					else
+						player.components.talker:Say("无法触及的空间")
+					end
+				else
+					player.components.talker:Say("CD:"..math.floor(30 - (_G.GetTime() - player._move_cd)))
+				end
+			end 
 		end
 	},
 	["^help$"] = {

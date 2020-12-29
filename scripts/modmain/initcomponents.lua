@@ -71,6 +71,60 @@ AddComponentPostInit("combat", function(self)
             end
 	    end
 	end
+
+	local function ApplyMiss(target, attacker)
+		local miss = _G.SpawnPrefab("display_effect")
+		local rad = target:GetPhysicsRadius(0)
+		local x, y, z = target.Transform:GetWorldPosition()
+		miss.Transform:SetPosition(x, y + .5 * rad , z)
+		miss:Display("闪避", 36, {1, .2, .2})
+	end
+
+	local function ApplyBroken(attacker, target)
+		local broken = _G.SpawnPrefab("display_effect")
+		local rad = attacker:GetPhysicsRadius(0)
+		local x, y, z = attacker.Transform:GetWorldPosition()
+		broken.Transform:SetPosition(x, y + .5 * rad , z)
+		broken:Display("击破", 46, {.2, .1, 1})
+	end
+
+	local function ApplyCrit(attacker, target, rate)
+		local crit = _G.SpawnPrefab("display_effect")
+		local rad = attacker:GetPhysicsRadius(0)
+		local x, y, z = attacker.Transform:GetWorldPosition()
+		crit.Transform:SetPosition(x, y + .5 * rad , z)
+		local str = "暴击"
+		if rate > 2 then
+			str = str .. "x" .. rate
+		end
+		crit:Display(str, 38 + rate, {.6, .1, 1})
+		AddImpact(attacker, target, .4 + .3 * rate)
+	end
+
+	local function ApplyKing(attacker, target)
+		local king = _G.SpawnPrefab("display_effect")
+		local rad = attacker:GetPhysicsRadius(0)
+		local x, y, z = attacker.Transform:GetWorldPosition()
+		king.Transform:SetPosition(x, y + .5 * rad , z)
+		king:Display("蔑视", 46, {.3, .1, .5})
+
+		if target.SoundEmitter ~= nil then
+            target.SoundEmitter:PlaySound("dontstarve/common/whip_large", nil, 0.3)
+        end
+	end
+
+	local function ApplyDeath(attacker, target)
+		local death = _G.SpawnPrefab("display_effect")
+		local rad = attacker:GetPhysicsRadius(0)
+		local x, y, z = attacker.Transform:GetWorldPosition()
+		death.Transform:SetPosition(x, y + .5 * rad , z)
+		death:Display("致死", 46, {.3, .1, .5})
+
+		if target.SoundEmitter ~= nil then
+            target.SoundEmitter:PlaySound("dontstarve/common/whip_large", nil, 0.3)
+        end
+	end
+
 	local OldGetAttacked = self.GetAttacked
 	function self:GetAttacked(attacker, damage, weapon, stimuli)
 		--注入改写伤害
@@ -100,7 +154,7 @@ AddComponentPostInit("combat", function(self)
 				local target_health = target.components.health.maxhealth or 0
 				if player_health > target_health then
 					target.components.health.currenthealth = 0.01
-					AddImpact(attacker, target, 3)
+					ApplyKing(attacker, target)
 					return OldGetAttacked(self, attacker, 1, weapon, stimuli)
 				end
 			end
@@ -109,6 +163,7 @@ AddComponentPostInit("combat", function(self)
 			if target.components.dodge and target.components.dodge:GetChance() > 0 then
 				if target.components.dodge:Effect() then
 					--damage = 0
+					ApplyMiss(target, attacker)
 					return OldGetAttacked(self, attacker, 0, weapon, stimuli)
 				end
 			end
@@ -125,7 +180,7 @@ AddComponentPostInit("combat", function(self)
 						local absorb = target.components.health and target.components.health.absorb or 0
 						if absorb < 1 then
 			            	damage = maxhp * (1- math.clamp(absorb, 0, 1)) + 1 --修改伤害为致死
-			            	AddImpact(attacker, target, 3)
+			            	ApplyDeath(attacker, target)
 			            	return OldGetAttacked(self, attacker, damage + extra_damage, weapon, stimuli)
 			            end
 					end
@@ -142,6 +197,7 @@ AddComponentPostInit("combat", function(self)
 				if attacker.components.attackbroken ~= nil then
 					if attacker.components.attackbroken:Effect() then
 						extra_damage = extra_damage + attacker.components.attackbroken:GetBrokenPercent() * 0.01 * (target.components.health.currenthealth or 0)
+						ApplyBroken(attacker, target)
 					end
 				end
 				--复仇为附加伤害
@@ -154,8 +210,9 @@ AddComponentPostInit("combat", function(self)
 					--print("暴击测试")
 					if attacker.components.crit:Effect() then
 						--print("暴击生效")
-						damage = damage * (attacker.components.crit:GetRandomHit() + 1)
-						AddImpact(attacker, target)
+						local rate = attacker.components.crit:GetRandomHit() + 1
+						damage = damage * rate
+						ApplyCrit(attacker, target, rate)
 					end
 				end
 				--附加伤害

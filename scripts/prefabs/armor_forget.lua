@@ -6,7 +6,7 @@ local assets =
 
 local function GetShowItemInfo(inst)
 
-    return "遗忘光环:使攻击者放弃当前目标"
+    return "忘却痛苦:吸收伤害的10%用于恢复生命和精神值"
 end
 
 local function OnBlocked(owner) 
@@ -42,9 +42,20 @@ local function onfuelchange(section, oldsection, inst)
     checkbroken(inst)
 end
 
+local function heal(owner, amount)
+    if owner.components.health ~= nil and not owner.components.health:IsDead() then
+        owner.components.health:DoDelta(amount*.5)
+    end
+    if owner.components.sanity ~= nil then
+        owner.components.sanity:DoDelta(amount*.5)
+    end
+end
+
 local function ontakedamage(inst, damage)
+    local owner = inst.components.inventoryitem.owner
     if not inst.components.fueled:IsEmpty() then
         inst.components.fueled:DoDelta(-damage*.5)
+        heal(owner, amount*.1)
     end
 end
 

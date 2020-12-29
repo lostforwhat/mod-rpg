@@ -61,18 +61,34 @@ local ShopDetail = Class(Widget, function(self, owner)
 end)
 
 function ShopDetail:LoadShopFromServer()
-    self.shop_goods = {}
-    if self.owner.components.purchase then
-        local shop_goods = deepcopy(TheWorld.net.components.worldshop:GetGoods())
-        for k, v in pairs(shop_goods) do
-            if PrefabExists(v.prefab) then
-                table.insert(self.shop_goods, {index=k, item=v})
+    local serversession = TheWorld.net.components.shardstate:GetMasterSessionId()
+    HttpGet("/public/getGoods?serversession="..serversession.."&userid="..self.owner.userid, function(result, isSuccessful, resultCode)
+        if isSuccessful and (resultCode == 200) then
+            print("-- GetGoods success--")
+            local status, data = pcall( function() return json.decode(result) end )
+            if not status or not data then
+                print("解析GetGoods失败! ", tostring(status), tostring(data))
+            else
+                --成功
+
+                self.shop_goods = {}
+                if self.owner.components.purchase then
+                    local shop_goods = data
+                    for k, v in pairs(shop_goods) do
+                        if PrefabExists(v.prefab) then
+                            table.insert(self.shop_goods, {index=k, item=v})
+                        end
+                    end
+                end
+                if self.shop_scroll_list ~= nil then
+                    self.shop_scroll_list:SetItemsData(self.shop_goods)
+                end
             end
+        else
+            print("-- GetGoods failed! ERROR:"..result.."--")
         end
-    end
-    if self.shop_scroll_list ~= nil then
-        self.shop_scroll_list:SetItemsData(self.shop_goods)
-    end
+    end)
+
 end
 
 function ShopDetail:DelShopGoods(index, multi)
@@ -309,7 +325,17 @@ function ShopDetail:AddItemToCart(item, multi)
     if #self.cart_goods < self.cart_max_num then
         local cart_item = deepcopy(item)
         cart_item.num = multi and cart_item.num or 1
-        table.insert(self.cart_goods, cart_item)
+
+        for k, v in pairs(self.cart_goods) do
+            if v._id == cart_item._id then
+                v.num = v.num + cart_item.num
+                cart_item = nil
+                break
+            end
+        end
+        if cart_item ~= nil then
+            table.insert(self.cart_goods, cart_item)
+        end
         self:RefreshCart()
         return true
     end
