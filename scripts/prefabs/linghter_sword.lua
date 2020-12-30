@@ -118,6 +118,7 @@ local function createlight(inst, target, pos)
     end
     
     local equipped = inst.replica.equippable:IsEquipped()
+    local level = inst.components.weaponlevel and inst.components.weaponlevel.level or 0
     if owner ~= nil and equipped then
         TheWorld:PushEvent("ms_sendlightningstrike", pos)
         for k=1, 5 do
@@ -125,9 +126,11 @@ local function createlight(inst, target, pos)
                     local lt = SpawnPrefab("linghter_fx")
                     lt.Transform:SetPosition(owner:GetPosition():Get())
                     local angle = lt:GetAngleToPoint(pos:Get())
+                    lt.components.weapon:SetDamage(TUNING.BATBAT_DAMAGE*.5 + level)
                     lt:thrown(owner, angle)
             end)
         end
+        owner:ForceFacePoint(pos:Get())
         inst.components.fueled:DoDelta(-50)
     end
 end

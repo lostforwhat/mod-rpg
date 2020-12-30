@@ -4,6 +4,13 @@ local assets =
     Asset("ATLAS", "images/inventoryimages/skillbookpage.xml"),
 }
 
+local binding_data = {
+    [5] = {"skillbook_1"},
+    [20] = {"skillbook_2", "skillbook"},
+    [30] = {"skillbook_3", "skillbook"},
+    [40] = {"skillbook_4", "skillbook"},
+}
+
 local function fn()
     local inst = CreateEntity()
 
@@ -40,6 +47,9 @@ local function fn()
     inst.components.fuel.fuelvalue = TUNING.SMALL_FUEL
 
     inst:AddComponent("tradable")
+
+    inst:AddComponent("bindingable")
+    inst.components.bindingable:SetData(binding_data)
 
     MakeSmallBurnable(inst, TUNING.SMALL_BURNTIME)
     MakeSmallPropagator(inst)

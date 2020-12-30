@@ -45,7 +45,7 @@ local function fn()
     inst.components.edible.healthvalue = 0  -- Amount to heal
     inst.components.edible.hungervalue =  0 -- Amount to fill belly
     inst.components.edible.sanityvalue = 0  -- Amount to help Sanity
-    inst.components.edible.xpvalue = 20
+    inst.components.edible.xpvalue = 60
     inst.components.edible.foodtype = "GOODIES"
     inst.components.edible:SetOnEatenFn(Oneat) 
 

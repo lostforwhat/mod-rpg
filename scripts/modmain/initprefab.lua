@@ -802,6 +802,16 @@ AddPrefabPostInitAny(function(inst)
 	end
 end)
 
+local function onnear(inst)
+	if inst.components.npctask ~= nil then
+		inst.components.npctask:PushTask()
+	end
+end
+
+local function onfar(inst)
+	
+end
+
 AddPrefabPostInit("pigking", function(inst)
 	inst:AddComponent("talker")
     inst.components.talker.fontsize = 35
@@ -812,6 +822,11 @@ AddPrefabPostInit("pigking", function(inst)
 	inst:AddTag("npctask")
 	if _G.TheWorld.ismastersim then
 		inst:AddComponent("npctask")
+
+		inst:AddComponent("playerprox")
+	    inst.components.playerprox:SetDist(4, 6)
+	    inst.components.playerprox.onnear = onnear
+	    inst.components.playerprox.onfar = onfar
 	end
 end)
 
@@ -827,6 +842,11 @@ AddPrefabPostInit("mermking", function(inst)
 	inst:AddTag("npctask")
 	if _G.TheWorld.ismastersim then
 		inst:AddComponent("npctask")
+
+		inst:AddComponent("playerprox")
+	    inst.components.playerprox:SetDist(4, 6)
+	    inst.components.playerprox.onnear = onnear
+	    inst.components.playerprox.onfar = onfar
 	end
 end)
 

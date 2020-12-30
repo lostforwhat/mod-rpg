@@ -287,7 +287,7 @@ AddPrefabPostInitAny(function(inst)
             inst.components.stealer.chance = inst.prefab == "krampus" and 0.3 or 0.1
         end
     end
-    if inst.prefab == "merm" then
+    if inst.prefab == "merm" or inst:HasTag("fly") then
         inst:AddComponent("dodge")
         if IsServer then
             inst.components.dodge:SetChance(.2)

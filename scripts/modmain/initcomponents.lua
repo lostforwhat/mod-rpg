@@ -90,8 +90,8 @@ AddComponentPostInit("combat", function(self)
 
 	local function ApplyCrit(attacker, target, rate)
 		local crit = _G.SpawnPrefab("display_effect")
-		local rad = attacker:GetPhysicsRadius(0)
-		local x, y, z = attacker.Transform:GetWorldPosition()
+		local rad = target:GetPhysicsRadius(0)
+		local x, y, z = target.Transform:GetWorldPosition()
 		crit.Transform:SetPosition(x, y + .5 * rad , z)
 		local str = "暴击"
 		if rate > 2 then
@@ -130,6 +130,10 @@ AddComponentPostInit("combat", function(self)
 		--注入改写伤害
 		local extra_damage = 0
 		local target = self.inst
+
+		if not target:IsValid() or target.components.health:IsDead() then
+			return false
+		end
 
 		if attacker ~= nil then
 			--避免boss互掐
@@ -508,7 +512,7 @@ AddComponentPostInit("lootdropper", function(self)
 		local newloots = {}
 	    local loots = OldGenerateLoot(self)
 	    for _, v in pairs(loots) do
-	    	if math.random() < (1 / difficulty_level) then
+	    	if math.random() < (1 / (difficulty_level * 2 - 1)) then
 	    		table.insert(newloots, v)
 	    	end
 	    end
@@ -561,7 +565,7 @@ AddComponentPostInit("projectile", function(self)
 				local newprojectile = _G.SpawnPrefab(self.inst.prefab)
 				newprojectile.Transform:SetPosition(target.Transform:GetWorldPosition())
 
-				weapon = target.components.combat:GetWeapon() or weapon
+				--[[weapon = target.components.combat:GetWeapon() or weapon]]
 				newprojectile.components.projectile:Throw(weapon, attacker, target)
 				newprojectile.components.projectile.attacker = target
 				self.inst:Remove()

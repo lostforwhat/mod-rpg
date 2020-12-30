@@ -19,6 +19,8 @@ local LineProjectile = Class(function(self, inst)
     self.stimuli = nil
     self.maxdist = 25
 
+    self.attacked = {}
+
 	--self.has_damage_set = nil -- set to true if the projectile has its own damage set, instead of needed to get it from the launching weapon
 
     --self.delaytask = nil
@@ -97,6 +99,7 @@ end
 
 
 function LineProjectile:Throw(owner, angle, attacker)
+    self.attacked = {}
     self.angle = angle
     self.owner = owner
     self.start = owner:GetPosition()
@@ -106,6 +109,7 @@ function LineProjectile:Throw(owner, angle, attacker)
         local x, y, z = self.inst.Transform:GetWorldPosition()
         local facing_angle = attacker.Transform:GetRotation() * DEGREES
         self.inst.Transform:SetPosition(x + self.launchoffset.x * math.cos(facing_angle), y + self.launchoffset.y, z - self.launchoffset.x * math.sin(facing_angle))
+        self.attacker = attacker
     end
 
     self:RotateTo(angle)
@@ -136,7 +140,14 @@ function LineProjectile:Hit(target)
 	
     if attacker.components.combat == nil and attacker.components.weapon ~= nil and attacker.components.inventoryitem ~= nil then
         weapon = (self.has_damage_set and weapon.components.weapon ~= nil) and weapon or attacker
-        attacker = attacker.components.inventoryitem.owner
+        attacker = self.attacker or attacker.components.inventoryitem.owner
+    end
+
+    if target:HasTag("reflectproject") then
+        --table.insert(self.attacked, target)
+        local angle = math.random() * 360
+        self:Throw(target, angle, target)
+        return
     end
 
     if self.onprehit ~= nil then
@@ -150,6 +161,7 @@ function LineProjectile:Hit(target)
 			attacker.components.combat:DoAttack(target, weapon, self.inst, self.stimuli)
 			attacker.components.combat.ignorehitrange = false
 		end
+        table.insert(self.attacked, target)
     end
     if self.onhit ~= nil then
         self.onhit(self.inst, attacker, target)
@@ -187,11 +199,14 @@ local function AttackTarget(self, pos)
     for _, guy in pairs(ents) do
         if guy.entity:IsVisible()
         and CheckTarget(guy)
+        and not table.contains(self.attacked, guy)
         and not guy.components.health:IsDead()
         and (guy.components.combat.target == inst or
             guy.components.combat.target == self.owner or
             guy:HasTag("character") or
             guy:HasTag("monster") or
+            guy:HasTag("fly") or
+            guy:HasTag("epic") or 
             guy:HasTag("animal"))
         and (guy.components.follower == nil or 
             guy.components.follower:GetLeader() == nil or

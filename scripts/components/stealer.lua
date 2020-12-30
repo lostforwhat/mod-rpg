@@ -27,6 +27,14 @@ local function OnHitohter(inst, data)
     end
 end
 
+local function ApplyDisplay(inst)
+    local dis = _G.SpawnPrefab("display_effect")
+    local rad = inst:GetPhysicsRadius(0)
+    local x, y, z = inst.Transform:GetWorldPosition()
+    dis.Transform:SetPosition(x, y + .5 * rad , z)
+    dis:Display("偷窃", 32, {.1, .9, .2})
+end
+
 --偷窃
 local Stealer = Class(function(self, inst) 
     self.inst = inst
@@ -65,6 +73,7 @@ function Stealer:Effect(target)
         if not target:HasTag("epic") then
             target:AddTag("stealed") --防止薅羊毛
         end
+        ApplyDisplay(self.inst)
     elseif item == nil then
     	return
     end

@@ -12,7 +12,7 @@ local Help = Class(Widget, function(self, owner)
     self.button:SetOnClick(function() self:ToggleHelpDetail() end)
 
 
-    self.inst:ListenForEvent("daycomplete", function()
+    self.inst:ListenForEvent("clocktick", function()
         if self.shown and self.owner.Network:GetPlayerAge() > 10 then
             self:Hide()
         end

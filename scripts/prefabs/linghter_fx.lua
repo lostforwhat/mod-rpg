@@ -40,8 +40,8 @@ local function fn()
     inst.Light:SetColour(12 / 255, 25 / 255, 250 / 255)
     inst.Light:Enable(true)
 
-    MakeInventoryPhysics(inst)
-    inst.Physics:ClearCollisionMask()
+    MakeProjectilePhysics(inst)
+    --inst.Physics:ClearCollisionMask()
 
     inst:AddTag("NOCLICK")
 
@@ -59,7 +59,7 @@ local function fn()
     end
 
     inst:AddComponent("weapon")
-    inst.components.weapon:SetDamage(8)
+    inst.components.weapon:SetDamage(20)
 
     inst:DoTaskInTime(2, inst.Remove)
 

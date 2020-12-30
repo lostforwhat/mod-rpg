@@ -161,7 +161,7 @@ local collect_task = {
 	{prefab = "greengem", num = 15, level = 6},
 	{prefab = "thulecite", num = 40, level = 6},
 	{prefab = "armorskeleton", num = 1, level = 6},
-	{prefab = "package_staff", num = 1, level = 6},
+	--{prefab = "package_staff", num = 1, level = 6},
 	{prefab = "pray_symbol", num = 1, level = 6},
 
 	{prefab = "skillbookpage", num = 20, level = 7, novar = true},
@@ -227,6 +227,8 @@ local collect_task_reward = {
 		{prefab = "skillbook_2", num = 1},
 		{prefab = "skillbook_3", num = 1},
 		--{prefab = "package_staff", num =1},
+		{prefab = "linghterhat", num = 1},
+		{prefab = "heisenberghat", num = 1},
 	},
 	[7] = {
 		{prefab = "skillbook_2", num = 1},

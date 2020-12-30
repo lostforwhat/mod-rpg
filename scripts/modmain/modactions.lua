@@ -79,6 +79,20 @@ end)
 AddStategraphActionHandler("wilson", ActionHandler(ACTIONS.GETTASK, "give"))
 AddStategraphActionHandler("wilson_client", ActionHandler(ACTIONS.GETTASK, "give"))
 
+--binding 装订
+AddAction("BINDING", _G.STRINGS.TUM.BINDING, function(act)
+    if act.doer ~= nil and act.invobject ~= nil and act.invobject.components.bindingable ~= nil then
+        return act.invobject.components.bindingable:Binding(act.doer)
+    end
+end)
+AddComponentAction("INVENTORY", "bindingable", function(inst, doer, actions, right)
+    if doer:HasTag("player") then
+        table.insert(actions, ACTIONS.BINDING)
+    end
+end)
+AddStategraphActionHandler("wilson", ActionHandler(ACTIONS.BINDING, "dolongaction"))
+AddStategraphActionHandler("wilson_client", ActionHandler(ACTIONS.BINDING, "dolongaction"))
+
 --野蛮冲撞
 --[[AddAction("COLLIDE",_G.STRINGS.TUM.COLLIDE, function(act)
     local act_pos = act:GetActionPoint()

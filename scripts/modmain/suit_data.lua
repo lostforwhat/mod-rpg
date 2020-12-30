@@ -16,6 +16,37 @@ local function OnKilled(inst, data)
     end
 end
 
+local function FindEnts(prefab)
+	local ents = {}
+	for k,v in pairs(Ents) do
+        if v.prefab == prefab and v:IsValid() 
+        	and v.components.combat ~= nil 
+        	and v.components.health ~= nil 
+        	and not v.components.health:IsInvincible()
+        	and not v.components.health:IsDead() then
+            table.insert(ents, v)
+        end
+    end
+    return ents
+end
+
+--量子套特效
+local function OnKilledPrefab(inst, data)
+	local victim = data.victim
+	if victim ~= nil and inst.components.health ~= nil and not inst:HasTag("playerghost")
+        and not (victim:HasTag("wall") or victim:HasTag("balloon")) 
+        and victim.components.health ~= nil
+        and victim.components.combat ~= nil
+        and math.random() < 0.1 then
+        local ents = FindEnts(victim.prefab)
+        if #ents > 0 then
+        	local target = ents[math.random(#ents)]
+        	target.components.health.currenthealth = 0.01
+        	target.components.combat:GetAttacked(inst, 1)
+        end
+    end
+end
+
 --预计装备列表
 --[[
 	功能型武器：
@@ -135,9 +166,11 @@ suit_data = {
 		num = 3,
 		onmatch = function(owner)
 			owner:AddTag("suit_quantum")
+			owner:ListenForEvent("killed", OnKilledPrefab)
 		end,
 		onmismatch = function(owner)
 			owner:RemoveTag("suit_quantum")
+			owner:RemoveEventCallback("killed", OnKilledPrefab)
 		end,
 		name = "量子理论",
 		desc = "【不确定性】每次攻击伤害波动±50%\n【量子纠缠】每次击杀目标都有10%概率使其同类直接死亡",

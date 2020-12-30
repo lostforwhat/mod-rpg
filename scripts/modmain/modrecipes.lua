@@ -59,43 +59,31 @@ AddRecipe("book_season",
     "images/book_season.xml"
 )
 
+--解构可用
 AddRecipe("skillbook_1", 
-    {Ingredient("skillbookpage", 5, 'images/inventoryimages/skillbookpage.xml'), Ingredient("greengem", 1)}, 
+    {Ingredient("skillbookpage", 3, 'images/inventoryimages/skillbookpage.xml')}, 
     _G.CUSTOM_RECIPETABS.BOOKS, 
-    TECH.NONE, 
-    nil, 
-    nil, 
-    nil, 
-    nil, 
-    "newbookbuilder", 
-    "images/inventoryimages/skillbook_1.xml"
+    TECH.LOST
 )
 
 AddRecipe("skillbook_2", 
-    {Ingredient("skillbookpage", 20, 'images/inventoryimages/skillbookpage.xml'), Ingredient("greengem", 2)}, 
+    {Ingredient("skillbookpage", 10, 'images/inventoryimages/skillbookpage.xml')}, 
     _G.CUSTOM_RECIPETABS.BOOKS, 
-    TECH.NONE, 
-    nil, 
-    nil, 
-    nil, 
-    nil, 
-    "newbookbuilder", 
-    "images/inventoryimages/skillbook_2.xml"
+    TECH.LOST
 )
 
---解构可用
 AddRecipe("skillbook_3", 
-    {Ingredient("skillbookpage", 30, 'images/inventoryimages/skillbookpage.xml'), Ingredient("greengem", 3)}, 
+    {Ingredient("skillbookpage", 15, 'images/inventoryimages/skillbookpage.xml')}, 
     nil, 
     TECH.LOST
 )
 AddRecipe("skillbook_4", 
-    {Ingredient("skillbookpage", 40, 'images/inventoryimages/skillbookpage.xml'), Ingredient("greengem", 4)}, 
+    {Ingredient("skillbookpage", 20, 'images/inventoryimages/skillbookpage.xml')}, 
     nil, 
     TECH.LOST
 )
 AddRecipe("skillbook", 
-    {Ingredient("skillbookpage", 20, 'images/inventoryimages/skillbookpage.xml'), Ingredient("greengem", 2)}, 
+    {Ingredient("skillbookpage", 12, 'images/inventoryimages/skillbookpage.xml')}, 
     nil, 
     TECH.LOST
 )
@@ -179,6 +167,17 @@ AddRecipe("linghterhat", {Ingredient("yellowgem", 20), Ingredient("moonrocknugge
     "images/inventoryimages/linghterhat.xml"
 )
 
+AddRecipe("armorlinghter", {Ingredient("yellowgem", 20), Ingredient("moonrocknugget",10), Ingredient("moonglass", 10)},
+    RECIPETABS.WAR, 
+    TECH.LOST, 
+    nil, 
+    nil, -- min_spacing
+    nil, -- nounlock
+    nil, -- numtogive
+    nil, -- builder_tag
+    "images/inventoryimages/armorlinghter.xml"
+)
+
 AddRecipe("space_sword", {Ingredient("orangegem", 20), Ingredient("orangestaff",1)},
     RECIPETABS.WAR, 
     TECH.LOST, 
@@ -190,6 +189,28 @@ AddRecipe("space_sword", {Ingredient("orangegem", 20), Ingredient("orangestaff",
     "images/inventoryimages/space_sword.xml"
 )
 
+AddRecipe("timerhat", {Ingredient("orangegem", 20), Ingredient("ash",30), Ingredient("moonglass", 10)},
+    RECIPETABS.WAR, 
+    TECH.SCIENCE_TWO, 
+    nil, 
+    nil, -- min_spacing
+    nil, -- nounlock
+    nil, -- numtogive
+    nil, -- builder_tag
+    "images/inventoryimages/timerhat.xml"
+)
+
+AddRecipe("armorforget", {Ingredient("orangegem", 20), Ingredient("ash",30), Ingredient("moonglass", 10)},
+    RECIPETABS.WAR, 
+    TECH.LOST, 
+    nil, 
+    nil, -- min_spacing
+    nil, -- nounlock
+    nil, -- numtogive
+    nil, -- builder_tag
+    "images/inventoryimages/armorforget.xml"
+)
+
 AddRecipe("schrodingersword", {Ingredient("opalpreciousgem", 5), Ingredient("thulecite",20)},
     RECIPETABS.WAR, 
     TECH.LOST, 
@@ -199,4 +220,26 @@ AddRecipe("schrodingersword", {Ingredient("opalpreciousgem", 5), Ingredient("thu
     nil, -- numtogive
     nil, -- builder_tag
     "images/inventoryimages/schrodingersword.xml"
+)
+
+AddRecipe("heisenberghat", {Ingredient("opalpreciousgem", 3), Ingredient("nightmarefuel", 40)},
+    RECIPETABS.WAR, 
+    TECH.LOST, 
+    nil, 
+    nil, -- min_spacing
+    nil, -- nounlock
+    nil, -- numtogive
+    nil, -- builder_tag
+    "images/inventoryimages/heisenberghat.xml"
+)
+
+AddRecipe("armordebroglie", {Ingredient("opalpreciousgem", 1), Ingredient("nightmarefuel", 25)},
+    RECIPETABS.WAR, 
+    TECH.SCIENCE_TWO, 
+    nil, 
+    nil, -- min_spacing
+    nil, -- nounlock
+    nil, -- numtogive
+    nil, -- builder_tag
+    "images/inventoryimages/armordebroglie.xml"
 )

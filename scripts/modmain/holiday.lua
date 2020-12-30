@@ -50,7 +50,7 @@ local function delaycloseholiday(time, cb)
 
 		--活动结束删除活动物品
 		_G.c_removeallwithtags("rpg_holiday")
-		TheNet:Announce("世界"..shardId.." 活动结束！")
+		TheNet:Announce("[世界"..shardId.."] 活动结束！")
 		cb()
 	end)
 end
@@ -122,6 +122,7 @@ local function delayspawnboss(delay)
     		local boss = _G.SpawnPrefab(prefab)
 	    	boss:AddTag("rpg_holiday")
 	    	boss.Transform:SetPosition(pos.x, 0, pos.z)
+	    	TheNet:Announce("[世界"..shardId.."] 领主出现在坐标("..pos.x..","..pos.z..")附近！")
     	end)
     end
 end
@@ -315,7 +316,7 @@ local function StartHoliday(index)
 		--_G.TheWorld.holiday = index
 		local name = holidays[index].name
 		_G.TheWorld.net._holiday:set("正在进行 "..name.." 活动")
-		TheNet:Announce("世界"..shardId.." 正在进行 "..name.." 活动")
+		TheNet:Announce("[世界"..shardId.."] 正在进行 "..name.." 活动")
 
 		local delay_time = holidays[index].time or 120
 		delaycloseholiday(delay_time, closefn or function() end)
