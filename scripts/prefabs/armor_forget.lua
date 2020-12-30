@@ -6,7 +6,7 @@ local assets =
 
 local function GetShowItemInfo(inst)
 
-    return "忘却痛苦:吸收伤害的10%用于恢复生命和精神值"
+    return "忘却痛苦:吸收伤害的20%用于恢复生命和精神值"
 end
 
 local function OnBlocked(owner) 
@@ -26,22 +26,6 @@ local function onunequip(inst, owner)
     owner:RemoveTag("reflectproject")
 end
 
-local function checkbroken(inst)
-    if inst.components.fueled:IsEmpty() then
-        inst:AddTag("broken")
-        inst.components.armor:InitIndestructible(0)
-    else
-        inst:RemoveTag("broken")
-        inst.components.armor:InitIndestructible(TUNING.ARMORWOOD_ABSORPTION)
-    end
-end
-
-local function onfuelchange(section, oldsection, inst)
-    local equipped = inst.replica.equippable:IsEquipped()
-    local owner = inst.components.inventoryitem.owner
-    checkbroken(inst)
-end
-
 local function heal(owner, amount)
     if owner.components.health ~= nil and not owner.components.health:IsDead() then
         owner.components.health:DoDelta(amount*.5)
@@ -55,8 +39,31 @@ local function ontakedamage(inst, damage)
     local owner = inst.components.inventoryitem.owner
     if not inst.components.fueled:IsEmpty() then
         inst.components.fueled:DoDelta(-damage*.5)
-        heal(owner, amount*.1)
+        heal(owner, damage*.2)
     end
+end
+
+local function checkbroken(inst)
+    if inst.components.fueled:IsEmpty() then
+        inst:AddTag("broken")
+        if inst.components.armor ~= nil then
+            inst:RemoveComponent("armor")
+        end
+    else
+        inst:RemoveTag("broken")
+        if inst.components.armor == nil then
+            inst:AddComponent("armor")
+            inst.components.armor:AddWeakness("epic", 100)
+            inst.components.armor.ontakedamage = ontakedamage
+        end
+        inst.components.armor:InitIndestructible(TUNING.ARMORWOOD_ABSORPTION)
+    end
+end
+
+local function onfuelchange(section, oldsection, inst)
+    local equipped = inst.replica.equippable:IsEquipped()
+    local owner = inst.components.inventoryitem.owner
+    checkbroken(inst)
 end
 
 local function fn()

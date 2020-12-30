@@ -420,12 +420,12 @@ function ShopDetail:LoadCart()
         self:RefreshCart()
     end, "清空", nil, 0.5))
     self.cart.back:SetPosition(110, 0)
-    self.cart.inst:ListenForEvent("shopdatadirty", function() 
+    self.cart.inst:ListenForEvent("coindirty", function() 
         if #self.cart_goods > 0 then
             self.cart_goods = {}
             self:RefreshCart()
         end
-    end, TheWorld.net)
+    end, self.owner)
 end
 
 function ShopDetail:Layout()

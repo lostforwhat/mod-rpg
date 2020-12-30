@@ -2,6 +2,7 @@ require "utils/utils"
 local _G = GLOBAL
 local TheNet = _G.TheNet
 local ExistInTable = _G.ExistInTable
+local HttpGet = _G.HttpGet
 local ACTIONS = _G.ACTIONS
 local SpawnPrefab = _G.SpawnPrefab
 
@@ -975,10 +976,21 @@ local function OnEntityDropLoot(world, data)
     end
 end
 
+local function GetItemForStart(player)
+    local serversession = _G.TheWorld.net.components.shardstate:GetMasterSessionId()
+    HttpGet("/public/checkFirstGift?serversession="..serversession.."&userid="..self.inst.userid, function(result, isSuccessful, resultCode)
+        if isSuccessful and (resultCode == 200) then
+            print("-- checkFirstGift success--")
+        else
+            print("-- GetGoods failed! ERROR:"..result.."--")
+        end
+    end)
+end
+
 local function OnPlayerSpawn(world, player)
     local OldOnNewSpawn = player.OnNewSpawn or function() return true end
     player.OnNewSpawn = function(...)
-        
+        GetItemForStart(player)
         return OldOnNewSpawn(...)
     end
 end

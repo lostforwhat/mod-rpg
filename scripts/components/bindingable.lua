@@ -53,7 +53,8 @@ function Bindingable:Binding(player)
 
 		local product, need = self:GetProduct(num)
 		if product ~= nil then
-			local item = SpwanPrefab(product)
+			local item = SpawnPrefab(product)
+			player.components.inventory:GiveItem(item)
 
 			if num > need then
 				self.inst.components.stackable:SetStackSize(num - need)

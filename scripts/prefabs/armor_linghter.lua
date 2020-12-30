@@ -28,12 +28,26 @@ local function onunequip(inst, owner)
     owner:RemoveTag("reflectproject")
 end
 
+local function ontakedamage(inst, damage)
+    if not inst.components.fueled:IsEmpty() then
+        inst.components.fueled:DoDelta(-damage*.5)
+    end
+end
+
 local function checkbroken(inst)
     if inst.components.fueled:IsEmpty() then
         inst:AddTag("broken")
-        inst.components.armor:InitIndestructible(0)
+        if inst.components.armor ~= nil then
+            inst:RemoveComponent("armor")
+        end
     else
         inst:RemoveTag("broken")
+        if inst.components.armor == nil then
+            inst:AddComponent("armor")
+            inst.components.armor:AddWeakness("shadowcreature", 20)
+            inst.components.armor:AddWeakness("shadowchesspiece", 50)
+            inst.components.armor.ontakedamage = ontakedamage
+        end
         inst.components.armor:InitIndestructible(ABSORPTION)
     end
 end
@@ -42,12 +56,6 @@ local function onfuelchange(section, oldsection, inst)
     local equipped = inst.replica.equippable:IsEquipped()
     local owner = inst.components.inventoryitem.owner
     checkbroken(inst)
-end
-
-local function ontakedamage(inst, damage)
-    if not inst.components.fueled:IsEmpty() then
-        inst.components.fueled:DoDelta(-damage*.5)
-    end
 end
 
 local function fn()

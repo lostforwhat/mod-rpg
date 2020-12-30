@@ -11,6 +11,9 @@ local function DefaultLevelUp(inst, level)
 		inst.components.extrameta.extra_hunger:SetModifier("levelup", level)
 		inst.components.extrameta.extra_sanity:SetModifier("levelup", level)
 		inst.components.extrameta.extra_health:SetModifier("levelup", level)
+		inst.components.health:ResetMax()
+		inst.components.sanity:ResetMax()
+		inst.components.hunger:ResetMax()
 	end
 end
 
@@ -19,6 +22,9 @@ local function WxLevelUp(inst, level)
 		inst.components.extrameta.extra_hunger:SetModifier("levelup", (level)*2)
 		inst.components.extrameta.extra_sanity:SetModifier("levelup", (level)*2)
 		inst.components.extrameta.extra_health:SetModifier("levelup", (level)*2)
+		inst.components.health:ResetMax()
+		inst.components.sanity:ResetMax()
+		inst.components.hunger:ResetMax()
 	end
 	if inst.components.skilldata then
 		inst.components.skilldata:SetLevel("electricprotection", math.clamp(math.floor(level*0.05) + 1, 1, 5))
@@ -257,12 +263,25 @@ function Level:LevelCheck()
 	end
 end
 
+local function ApplyDisplay(inst)
+    local dis = SpawnPrefab("display_effect")
+    local rad = inst:GetPhysicsRadius(0)
+    local x, y, z = inst.Transform:GetWorldPosition()
+    dis.Transform:SetPosition(x, 3.4 , z)
+    dis:Display("升级", 34, {0, .95, .1})
+end
+
 function Level:LevelUp()
 	--升级,二次判断
 	if self.level < MAX_LEVEL and self.xp >= self:GetLevelUpNeedXp() then
 		self.xp = self.xp - self:GetLevelUpNeedXp()
 		self.level = self.level + 1
 		self.inst.SoundEmitter:PlaySound("dontstarve/HUD/research_available")
+		if self.display_cd == nil then
+			ApplyDisplay(self.inst)
+			self.display_cd = true
+			self.inst:DoTaskInTime(.3, function() self.display_cd = nil end)
+		end
 	end
 	RecalcMeta(self.inst, self.level)
 end

@@ -77,7 +77,7 @@ AddComponentPostInit("combat", function(self)
 		local rad = target:GetPhysicsRadius(0)
 		local x, y, z = target.Transform:GetWorldPosition()
 		miss.Transform:SetPosition(x, y + .5 * rad , z)
-		miss:Display("闪避", 24, {1, .2, .2})
+		miss:Display("闪避", 24, {1, .2, .4})
 	end
 
 	local function ApplyBroken(attacker, target)
@@ -85,7 +85,7 @@ AddComponentPostInit("combat", function(self)
 		local rad = attacker:GetPhysicsRadius(0)
 		local x, y, z = attacker.Transform:GetWorldPosition()
 		broken.Transform:SetPosition(x, y + .5 * rad , z)
-		broken:Display("击破", 30, {.2, .1, 1})
+		broken:Display("击破", 30, {.6, .1, 1})
 	end
 
 	local function ApplyCrit(attacker, target, rate)
@@ -106,7 +106,7 @@ AddComponentPostInit("combat", function(self)
 		local rad = attacker:GetPhysicsRadius(0)
 		local x, y, z = attacker.Transform:GetWorldPosition()
 		king.Transform:SetPosition(x, y + .5 * rad , z)
-		king:Display("蔑视", 32, {.3, .1, .5})
+		king:Display("蔑视", 32, {.1, .9, .5})
 
 		if target.SoundEmitter ~= nil then
             target.SoundEmitter:PlaySound("dontstarve/common/whip_large", nil, 0.3)
@@ -118,7 +118,7 @@ AddComponentPostInit("combat", function(self)
 		local rad = attacker:GetPhysicsRadius(0)
 		local x, y, z = attacker.Transform:GetWorldPosition()
 		death.Transform:SetPosition(x, y + .5 * rad , z)
-		death:Display("致死", 32, {.3, .1, .5})
+		death:Display("致死", 32, {.1, .9, .5})
 
 		if target.SoundEmitter ~= nil then
             target.SoundEmitter:PlaySound("dontstarve/common/whip_large", nil, 0.3)
@@ -164,13 +164,13 @@ AddComponentPostInit("combat", function(self)
 			end
 
 			--先计算闪避
-			if target.components.dodge and target.components.dodge:GetChance() > 0 then
+			--[[if target.components.dodge and target.components.dodge:GetChance() > 0 then
 				if target.components.dodge:Effect() then
 					--damage = 0
 					ApplyMiss(target, attacker)
 					return OldGetAttacked(self, attacker, 0, weapon, stimuli)
 				end
-			end
+			end]]
 
 			if IsValidVictim(target) and not target.components.health:IsInvincible() then
 				--致死优先级最高, 出现致死后后面其他逻辑可忽略
@@ -248,6 +248,26 @@ AddComponentPostInit("combat", function(self)
 		else
 			return OldGetAttacked(self, attacker, damage, weapon, stimuli)
 		end	
+	end
+
+	local OldDoAttack = self.DoAttack
+	function self:DoAttack(targ, weapon, projectile, ...)
+		if targ == nil then
+	        targ = self.target
+	    end
+	    if weapon == nil then
+	        weapon = self:GetWeapon()
+	    end
+	    if weapon ~= nil and projectile == nil then
+	    	return OldDoAttack(self, targ, weapon, projectile, ...)
+	    end
+	    if targ.components.dodge and targ.components.dodge:GetChance() > 0 then
+			if targ.components.dodge:Effect() then
+				ApplyMiss(targ, self.inst)
+				return
+			end
+		end
+		return OldDoAttack(self, targ, weapon, projectile, ...)
 	end
 end)
 

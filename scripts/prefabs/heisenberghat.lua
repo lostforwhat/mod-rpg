@@ -46,7 +46,7 @@ end
 
 local function ontakedamage(inst, damage)
     local owner = inst.components.inventoryitem.owner
-    if not owner:HasTag("player") then return end
+    if not inst:IsValid() or owner == nil or not owner:HasTag("player") then return end
     if owner.heisenberghat_task ~= nil then
         owner.heisenberghat_task:Cancel()
         owner.heisenberghat_task = nil

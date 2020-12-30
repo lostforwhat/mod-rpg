@@ -8,7 +8,7 @@ local binding_data = {
     [5] = {"skillbook_1"},
     [20] = {"skillbook_2", "skillbook"},
     [30] = {"skillbook_3", "skillbook"},
-    [40] = {"skillbook_4", "skillbook"},
+    --[40] = {"skillbook_4", "skillbook"},
 }
 
 local function fn()

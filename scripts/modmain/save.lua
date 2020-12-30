@@ -264,10 +264,10 @@ end
 local function SaveOnePlayer(player)
 	SavePlayerInfo(player)
 
-	if player ~= nil and player.components.allachivevent then
-		SaveAchievement(player)
+	if player ~= nil and player.components.taskdata then
+		SaveTaskData(player)
 	end
-	if player ~= nil and player.components.allachivcoin then
+	if player ~= nil and player.components.skilldata then
 		SaveSkills(player)
 	end
 end

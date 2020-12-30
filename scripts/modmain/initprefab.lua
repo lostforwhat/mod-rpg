@@ -824,7 +824,7 @@ AddPrefabPostInit("pigking", function(inst)
 		inst:AddComponent("npctask")
 
 		inst:AddComponent("playerprox")
-	    inst.components.playerprox:SetDist(4, 6)
+	    inst.components.playerprox:SetDist(7, 8)
 	    inst.components.playerprox.onnear = onnear
 	    inst.components.playerprox.onfar = onfar
 	end
@@ -844,7 +844,7 @@ AddPrefabPostInit("mermking", function(inst)
 		inst:AddComponent("npctask")
 
 		inst:AddComponent("playerprox")
-	    inst.components.playerprox:SetDist(4, 6)
+	    inst.components.playerprox:SetDist(7, 8)
 	    inst.components.playerprox.onnear = onnear
 	    inst.components.playerprox.onfar = onfar
 	end

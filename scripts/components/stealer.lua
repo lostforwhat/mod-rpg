@@ -28,7 +28,7 @@ local function OnHitohter(inst, data)
 end
 
 local function ApplyDisplay(inst)
-    local dis = _G.SpawnPrefab("display_effect")
+    local dis = SpawnPrefab("display_effect")
     local rad = inst:GetPhysicsRadius(0)
     local x, y, z = inst.Transform:GetWorldPosition()
     dis.Transform:SetPosition(x, y + .5 * rad , z)

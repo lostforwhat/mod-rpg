@@ -30,6 +30,14 @@ local function FindEnts(prefab)
     return ents
 end
 
+local function ApplyDisplay(inst)
+	local dis = SpawnPrefab("display_effect")
+	local rad = inst:GetPhysicsRadius(0)
+	local x, y, z = inst.Transform:GetWorldPosition()
+	dis.Transform:SetPosition(x, y + .5 * rad , z)
+	dis:Display("量子纠缠", 30, {.8, .8, .1})
+end
+
 --量子套特效
 local function OnKilledPrefab(inst, data)
 	local victim = data.victim
@@ -43,6 +51,7 @@ local function OnKilledPrefab(inst, data)
         	local target = ents[math.random(#ents)]
         	target.components.health.currenthealth = 0.01
         	target.components.combat:GetAttacked(inst, 1)
+        	ApplyDisplay(inst)
         end
     end
 end

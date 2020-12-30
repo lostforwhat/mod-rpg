@@ -27,7 +27,7 @@ local function DelayDisappear(inst)
 	if inst.time ~= nil and inst.time > 0 then
 		local angle = inst.angle or math.random() * 2 * PI --此代码其实不必
 		local pos = inst:GetPosition()
-		local offset = Vector3(2 * FRAMES * math.cos(angle), 10 * FRAMES, 2 * FRAMES * math.sin(angle)) 
+		local offset = Vector3(2 * FRAMES * math.cos(angle), 5 * FRAMES, 2 * FRAMES * math.sin(angle)) 
 		inst.Transform:SetPosition((pos + offset):Get())
 
 		inst.time = inst.time - FRAMES

@@ -607,6 +607,7 @@ skill_constant = {
 				local step = self.step or 1
 				local level = self:level_fn(owner)
 				owner.components.extrameta.extra_hunger:SetModifier("extra_hunger", step*level)
+				owner.components.hunger:ResetMax()
 			end
 		end
 	},
@@ -630,6 +631,7 @@ skill_constant = {
 				local step = self.step or 1
 				local level = self:level_fn(owner)
 				owner.components.extrameta.extra_sanity:SetModifier("extra_sanity", step*level)
+				owner.components.sanity:ResetMax()
 			end
 		end
 	},
@@ -653,6 +655,7 @@ skill_constant = {
 				local step = self.step or 1
 				local level = self:level_fn(owner)
 				owner.components.extrameta.extra_health:SetModifier("extra_health", step*level)
+				owner.components.health:ResetMax()
 			end
 		end
 	},

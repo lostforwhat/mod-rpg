@@ -272,6 +272,22 @@ end)
 
 --尝试给怪物添加组件
 AddPrefabPostInitAny(function(inst) 
+    if inst:HasTag("epic") then
+        if inst.components.crit == nil then
+            inst:AddComponent("crit")
+        end
+        if IsServer then
+            inst.components.crit:SetChance(.05)
+        end
+    end
+    if inst:HasTag("monster") then
+        if inst.components.crit == nil then
+            inst:AddComponent("crit")
+        end
+        if IsServer then
+            inst.components.crit:SetChance(.15)
+        end
+    end
     if inst.prefab == "bat" or inst.prefab == "mosquito" then
        inst:AddComponent("lifesteal") 
        if IsServer then
@@ -288,7 +304,9 @@ AddPrefabPostInitAny(function(inst)
         end
     end
     if inst.prefab == "merm" or inst:HasTag("fly") then
-        inst:AddComponent("dodge")
+        if inst.components.dodge == nil then
+            inst:AddComponent("dodge")
+        end
         if IsServer then
             inst.components.dodge:SetChance(.2)
         end
@@ -296,9 +314,15 @@ AddPrefabPostInitAny(function(inst)
     if inst.prefab == "tentacle" or 
         inst.prefab == "leif" or 
         inst.prefab == "moonpig" then
-        inst:AddComponent("crit")
+        if inst.components.crit == nil then
+            inst:AddComponent("crit")
+        end
         if IsServer then
             inst.components.crit:SetChance(.25)
         end
+    end
+
+    if inst.prefab == "klaus" or inst.prefab == "stalker_atrium" or inst.prefab == "crabking" then
+        inst:AddTag("reflectproject")
     end
 end)

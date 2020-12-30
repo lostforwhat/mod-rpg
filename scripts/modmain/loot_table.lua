@@ -290,6 +290,12 @@ luck_loot = {
         {chance = 0.0001, item="skillbook_4"},
         {chance = 0.002, item="space_sword"},
         {chance = 0.002, item="schrodingersword"},
+        {chance = 0.0002, item="linghterhat"},
+        {chance = 0.0002, item="armorlinghter"},
+        {chance = 0.0002, item="heisenberghat"},
+        {chance = 0.0002, item="armordebroglie"},
+        {chance = 0.0002, item="timerhat"},
+        {chance = 0.0002, item="armorforget"},
     },
 
 bad_loot = {
@@ -445,4 +451,10 @@ notice_goods = {
         "schrodingersword",
         "space_sword",
         "linghter_sword",
+        "linghterhat",
+        "armorlinghter",
+        "timerhat",
+        "armorforget",
+        "armordebroglie",
+        "heisenberghat",
     }
