@@ -136,10 +136,19 @@ local function OnDeath(inst, data)
 	local cause = data.cause
 	local taskdata = inst.components.taskdata
     
+    --死亡计数
+    if inst.components.level ~= nil then
+        inst.components.level.deathtimes = inst.components.level.deathtimes + 1
+    end
 
-    --死亡惩罚
-    if inst.components.level then
+    --死亡惩罚, 使用自带复活时惩罚
+    --[[if inst.components.level then
         inst.components.level:ReduceXpOnDeath()
+    end]]
+
+    --特殊称号死亡掉落
+    if inst.components.titles ~= nil and inst.components.titles.special then
+        inst.components.titles.special = false
     end
 end
 
@@ -921,6 +930,9 @@ local function OnEntityDropLoot(world, data)
     if inst:HasTag("rpg_holiday") then
         if inst:HasTag("epic") then
             if math.random() < 0.1 then
+                inst.components.lootdropper:SpawnLootPrefab("skillbook_1")
+            end
+            if math.random() < 0.05 then
                 inst.components.lootdropper:SpawnLootPrefab("skillbook_2")
             end
             if math.random() < 0.01 then
@@ -928,6 +940,12 @@ local function OnEntityDropLoot(world, data)
             end
             if math.random() < 0.01 then
                 inst.components.lootdropper:SpawnLootPrefab("linghterhat")
+            end
+            if math.random() < 0.01 then
+                inst.components.lootdropper:SpawnLootPrefab("armorlinghter")
+            end
+            if math.random() < 0.01 then
+                inst.components.lootdropper:SpawnLootPrefab("armordebroglie")
             end
         else
             if math.random() < 0.1 then
@@ -942,7 +960,7 @@ local function OnEntityDropLoot(world, data)
     if inst:HasTag("epic") then --大型boss
         local loot = {}
         if math.random() < 0.01 then
-            table.insert(loot, "prayer_symbol")
+            table.insert(loot, "pray_symbol")
         end
         if math.random() < 0.05 then
             table.insert(loot, "potion_achiv")
@@ -961,9 +979,9 @@ local function OnEntityDropLoot(world, data)
         end
         if inst.prefab == "klaus" then
             if inst.enraged then
-                table.insert(loot, "prayer_symbol")
-                table.insert(loot, "prayer_symbol")
-                table.insert(loot, "prayer_symbol")
+                table.insert(loot, "pray_symbol")
+                table.insert(loot, "pray_symbol")
+                table.insert(loot, "pray_symbol")
                 table.insert(loot, "package_staff")
                 table.insert(loot, "skillbook")
             end
@@ -972,7 +990,9 @@ local function OnEntityDropLoot(world, data)
             inst.components.lootdropper:SpawnLootPrefab(loot[math.random(#loot)])
         end
     else
-
+        if inst.prefab == "little_walrus" and math.random() < 0.15 then
+            inst.components.lootdropper:SpawnLootPrefab("pray_symbol")
+        end
     end
 end
 
@@ -981,6 +1001,9 @@ local function GetItemForStart(player)
     HttpGet("/public/checkFirstGift?serversession="..serversession.."&userid="..self.inst.userid, function(result, isSuccessful, resultCode)
         if isSuccessful and (resultCode == 200) then
             print("-- checkFirstGift success--")
+            if player.components.email ~= nil then
+                player.components.email:GetEmailsFromServer()
+            end
         else
             print("-- GetGoods failed! ERROR:"..result.."--")
         end
@@ -991,7 +1014,18 @@ local function OnPlayerSpawn(world, player)
     local OldOnNewSpawn = player.OnNewSpawn or function() return true end
     player.OnNewSpawn = function(...)
         GetItemForStart(player)
+        --夜晚
+        if _G.TheWorld.state.isnight or (_G.TheWorld.state.isdusk and _G.TheWorld.state.timeinphase > .8) then
+            player.components.inventory:GiveItem(_G.SpawnPrefab("torch"))
+        end
+        
         return OldOnNewSpawn(...)
+    end
+end
+
+local function OnPlayerDespawn(world, player)
+    if player.components.titles ~= nil and player.components.titles.special then
+        player.components.titles.special = false
     end
 end
 
@@ -1001,6 +1035,8 @@ AddPrefabPostInit(
     function(inst)
         -- 新添加物品掉落
         inst:ListenForEvent("entity_droploot", OnEntityDropLoot)
+        -- 新人礼包
         inst:ListenForEvent("ms_playerspawn", OnPlayerSpawn)
+        inst:ListenForEvent("ms_playerdespawn", OnPlayerDespawn)
     end
 )

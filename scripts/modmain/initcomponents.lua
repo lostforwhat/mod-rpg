@@ -383,6 +383,7 @@ AddComponentPostInit("groundpounder", function(self)
 		                            if self.destroyer and
 		                                v2.components.workable ~= nil and
 		                                v2.components.workable:CanBeWorked() and
+		                                v2.components.workable.action ~= _G.ACTIONS.HAMMER and
 		                                v2.components.workable.action ~= _G.ACTIONS.NET then
 		                                v2.components.workable:Destroy(self.inst)
 		                            end

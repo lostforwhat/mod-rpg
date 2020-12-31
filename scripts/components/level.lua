@@ -226,7 +226,7 @@ function Level:AddKillPlayer()
 end
 
 function Level:ReduceXpOnDeath()
-	self.deathtimes = self.deathtimes + 1
+	--self.deathtimes = self.deathtimes + 1
 	self:ReduceXp(self.level * 40 + 50)
 end
 

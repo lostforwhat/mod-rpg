@@ -80,7 +80,16 @@ local function DoStrengthen(player, inst)
     if success then
         inst.components.talker:Say("恭喜熔炼成功！")
     else
-        inst.components.talker:Say("熔炼失败！")
+        if math.random() < 0.005 then
+            inst.components.talker:Say("熔炼失败！装备已损坏！")
+            local goop = _G.SpawnPrefab("charcoal")
+            goop.components.stackable:SetStackSize(4)
+            local slot = inst.components.container:GetItemSlot(weapon)
+            inst.components.container:GiveItem(goop, slot)
+            weapon:Remove()
+        else
+            inst.components.talker:Say("熔炼失败！")
+        end
     end
 end
 

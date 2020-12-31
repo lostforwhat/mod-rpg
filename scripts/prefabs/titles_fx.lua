@@ -1,15 +1,10 @@
 local assets =
 {
 	Asset("ANIM", "anim/titles_fx.zip"),
+    Asset("ATLAS", "images/inventoryimages/titles_fly_item.xml"),
 }
 
-local function updateLight(inst)
-    if TheWorld.state.isnight then
-        inst.Light:Enable(true)
-    else
-        inst.Light:Enable(false)
-    end
-end
+
 
 local function Equipped(inst, owner, offset)
     if type(offset) ~= "number" then 
@@ -24,6 +19,53 @@ local function Equipped(inst, owner, offset)
     owner._titles.Transform:SetPosition(0, 3.5 + offset, 0)
 end
 
+local function GetShowItemInfo(inst)
+    return "获得【天外飞仙】称号"
+end
+
+local function OnPickUp(inst, picker, pos)
+    if picker.components.titles ~= nil then
+        picker.components.titles.special = true
+    else
+        inst:Remove()
+    end
+end
+
+local function fly_fn()
+    local inst = CreateEntity()
+
+    inst.entity:AddTransform()
+    inst.entity:AddAnimState()
+    inst.entity:AddNetwork()
+
+    MakeInventoryPhysics(inst)
+
+    inst.AnimState:SetBank("titles_fx")
+    inst.AnimState:SetBuild("titles_fx")
+    inst.AnimState:PlayAnimation("fly")
+
+    inst:AddTag("titles_fly_item")
+    inst:AddTag("unpackage")
+    
+    inst.entity:SetPristine()
+
+    if not TheWorld.ismastersim then
+        return inst
+    end
+    
+    inst:AddComponent("inspectable")
+
+    inst:AddComponent("inventoryitem")
+    inst.components.inventoryitem.atlasname = "images/inventoryimages/titles_fly_item.xml"
+    inst.components.inventoryitem:SetOnPickupFn(OnPickUp)
+
+    MakeHauntableLaunch(inst)
+
+    inst.GetShowItemInfo = GetShowItemInfo
+
+    return inst
+end
+
 
 local function common_fn(id, postinit)
     return function()
@@ -34,20 +76,14 @@ local function common_fn(id, postinit)
         inst.AnimState:SetBank("titles_fx")
         inst.AnimState:SetBuild("titles_fx")
         inst.AnimState:PlayAnimation(id)
-        
-        inst.entity:AddLight()
-        inst.Light:SetColour(255,222,0)
-        inst.Light:SetFalloff(0.3)
-        inst.Light:SetIntensity(0.8)
-        inst.Light:SetRadius(2)
-        inst.Light:Enable(false)
-
-        inst.entity:SetPristine()
-        inst:AddTag("FX")
 
         if postinit ~= nil then
             postinit(inst)
         end
+
+        inst:AddTag("FX")
+
+        inst.entity:SetPristine()
 
         if not TheWorld.ismastersim then
             return inst
@@ -68,4 +104,5 @@ if titles_data then
     end
 end
 
-return unpack(prefabs)
+return unpack(prefabs),
+    Prefab("titles_fly_item", fly_fn, assets)

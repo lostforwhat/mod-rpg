@@ -29,7 +29,8 @@ nil,
 
 function Resurrect:OnSave()
 	return {
-		cd_time = self.cd_time
+		cd_time = self.cd_time,
+		use = self.use,
 	}
 end
 
@@ -40,6 +41,9 @@ function Resurrect:OnLoad(data)
 			self.inst:StartUpdatingComponent(self)
 		end
 	end 
+	if data ~= nil and data.use then
+		self.use = data.use or 0
+	end
 end
 
 function Resurrect:Effect()
@@ -47,6 +51,10 @@ function Resurrect:Effect()
 		self.inst:DoTaskInTime(0, function()
 			self.inst:PushEvent("respawnfromghost")
 			self.inst.rezsource = "复活"
+
+			if self.inst.components.level ~= nil then
+		        self.inst.components.level:ReduceXpOnDeath()
+		    end
 		end)
 
 		self.use = self.use + 1

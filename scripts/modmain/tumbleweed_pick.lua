@@ -40,6 +40,8 @@ local function removeweapon(picker)--破坏武器
             or v.components.armor or v:HasTag("armor"))]]
             and v.components.finiteuses ~= nil then
             v.components.finiteuses:SetUses(1)
+        else
+            v:Remove()
         end
     end
 end
@@ -47,13 +49,13 @@ end
 local function doperish(picker)--腐烂陷阱
     if picker == nil or picker.components.inventory == nil then return end
     --old: 考虑到有可能有返鲜机制，允许100%腐烂
-    --new: 考虑到武器有等级系统，最多腐烂当前一半
-    --local percent = math.random() * 2
-    --percent = math.clamp(percent, 0.5, 1)
+    --new: 考虑到武器有等级系统，装备栏最多腐烂当前一半
+    local percent = math.random() * 2
+    percent = math.clamp(percent, 0.5, 1)
     for k,v in pairs(picker.components.inventory.itemslots) do
         if v and v.components.perishable then
             local old = v.components.perishable:GetPercent()
-            v.components.perishable:ReducePercent(old * .5)
+            v.components.perishable:ReducePercent(percent)
         end
     end
     for k,v in pairs(picker.components.inventory.equipslots) do
@@ -67,7 +69,7 @@ local function doperish(picker)--腐烂陷阱
             for i,j in pairs(k.components.container.slots) do
                 if j and j.components.perishable then
                     local old = j.components.perishable:GetPercent()
-                    j.components.perishable:ReducePercent(old * .5)
+                    j.components.perishable:ReducePercent(percent)
                 end
             end
         end

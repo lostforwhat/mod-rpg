@@ -265,7 +265,7 @@ AddPrefabPostInitAny(function(inst)
     	--生命回复
     	if inst.components.health and inst.components.health.regen == nil then
     		local max_health = inst.components.health.maxhealth
-    		inst.components.health:StartRegen(max_health * 0.005, 10)
+    		inst.components.health:StartRegen(max_health * 0.005 * difficulty_level, 10)
     	end
     end
 end)
@@ -322,7 +322,9 @@ AddPrefabPostInitAny(function(inst)
         end
     end
 
-    if inst.prefab == "klaus" or inst.prefab == "stalker_atrium" or inst.prefab == "crabking" then
+    if inst.prefab == "klaus" 
+        or inst.prefab == "stalker_atrium" 
+        or inst.prefab == "crabking" then
         inst:AddTag("reflectproject")
     end
 end)

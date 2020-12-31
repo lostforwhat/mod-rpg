@@ -33,6 +33,42 @@ local function CheckTaskCompletedNum(player, tasks)
 	return num
 end
 
+local function updateLight(inst)
+    if TheWorld.state.isnight then
+        inst.Light:Enable(true)
+    else
+        inst.Light:Enable(false)
+    end
+end
+
+local function FindEnts(inst)
+	local ents = {}
+	for k,v in pairs(Ents) do
+        if v:IsValid() 
+        	and v ~= inst
+        	and v.components.combat ~= nil 
+        	and v.components.health ~= nil 
+        	and not v.components.health:IsInvincible()
+        	and not v.components.health:IsDead() then
+            table.insert(ents, v)
+        end
+    end
+    return ents
+end
+
+
+local function ButterflyEffectHit(inst, data)
+	local damage = data.damage or 0
+	local stimuli = data.stimuli
+	if damage > 0 and stimuli ~= "butterfley_effect" then
+		local targets = FindEnts(inst)
+		if targets ~= nil and _G.next(targets) ~= nil then
+			local target = targets[math.random(#targets)]
+			target.components.combat:GetAttacked(inst, damage, nil, "butterfley_effect")
+		end
+	end
+end
+
 --称号数据
 
 titles_data = {
@@ -267,7 +303,7 @@ titles_data = {
 	{
 		id="fly",
 		name="天外飞仙",
-		desc="**",
+		desc="【蝴蝶效应】每次攻击伤害随机扩散到全图任意一个目标上\n【仙气】夜晚获得彩色光晕\n【特殊】死亡后称号掉落",
 		hide=true,
 		conditions={
 			{
@@ -277,9 +313,26 @@ titles_data = {
 				end
 			},
 		},
-		postinit=function(inst) end,
-		effect=function(player, equipped)
-
+		postinit=function(inst) 
+			inst.entity:AddLight()
+	        inst.Light:SetColour(255,222,0)
+	        inst.Light:SetFalloff(0.3)
+	        inst.Light:SetIntensity(0.8)
+	        inst.Light:SetRadius(2)
+	        inst.Light:Enable(true)
+	        if TheWorld.ismastersim then
+	        	inst:AddComponent("colourtweener")
+	        	inst:WatchWorldState("isnight", updateLight)
+	        	updateLight(inst)
+	        end
+		end,
+		effect=function(player, equipped, titles_fx)
+			if equipped then
+				player:AddTag("butterfly_effect")
+				titles_fx:ListenForEvent("onhitother", ButterflyEffectHit, player)
+			else
+				player:RemoveTag("butterfly_effect")
+			end
 		end
 	}
 }
