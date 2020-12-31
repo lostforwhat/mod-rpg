@@ -67,13 +67,13 @@ end
 function HelpDetail:SetContent()
     self.text = self.frame_bg:AddChild(Text(BODYTEXTFONT, 45, "", {0.1, 0.9, 0.55, 1}))
     self.text:SetPosition(0, 10)
-    self.text:SetRegionSize(700, 480)
+    self.text:SetRegionSize(700, 580)
     self.text:SetHAlign(ANCHOR_LEFT)
     self.text:SetVAlign(ANCHOR_MIDDLE)
 
     local str = TheWorld.net._help_text and TheWorld.net._help_text:value() or ""
     str = str ~= "" and str or DEFAULT_TEXT 
-    self.text:SetMultilineTruncatedString(str, 7, 700, 28, "...", false)
+    self.text:SetMultilineTruncatedString(str, 10, 700, 28, "...", false)
 end
 
 function HelpDetail:Close()
