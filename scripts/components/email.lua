@@ -212,7 +212,10 @@ function Email:ReceivedEmail(id)
 						item.components.stackable:SetStackSize(num)
 						GiveItem(inst, item)
 					else
+						GiveItem(inst, item)
+						num = num - 1
 						while(num > 0) do
+							item = SpawnItem(prefab, use_left)
 							GiveItem(inst, item)
 							num = num - 1
 						end

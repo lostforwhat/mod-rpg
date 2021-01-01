@@ -100,20 +100,22 @@ local function fn()
 	inst._colour_r:set_local(255)
 	inst._colour_g:set_local(255)
 	inst._colour_b:set_local(255)
+	inst:AddTag("FX") 
+
+	inst.SetFontSize = SetFontSize
+	inst.SetOffset = SetOffset  
+	inst.Enable = Enable
+	inst.SetColour = SetColour
 
 	if TheWorld.ismastersim then
 		
 	else
 		inst:ListenForEvent("display_effectdirty", OnDisplay)
+		return inst
 	end
-
-	inst.SetFontSize = SetFontSize
-	inst.SetOffset = SetOffset 
-	inst.Display = Display 
-	inst.Enable = Enable
-	inst.SetColour = SetColour
+	inst.Display = Display
 	
-	inst:AddTag("FX") 
+	
 	inst.persists = false 
 
 	--inst:DoPeriodicTask(FRAMES, DelayDisappear)

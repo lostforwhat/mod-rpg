@@ -26,8 +26,9 @@ end
 local function OnPickUp(inst, picker, pos)
     if picker.components.titles ~= nil then
         picker.components.titles.special = true
+        inst:DoTaskInTime(0, inst.Remove)
     else
-        inst:Remove()
+        inst:DoTaskInTime(0, inst.Remove)
     end
 end
 
@@ -103,6 +104,6 @@ if titles_data then
         table.insert(prefabs, Prefab("titles_"..v.id, common_fn(v.id, postinit), assets))
     end
 end
+table.insert(prefabs, Prefab("titles_fly_item", fly_fn, assets))
 
-return unpack(prefabs),
-    Prefab("titles_fly_item", fly_fn, assets)
+return unpack(prefabs)

@@ -276,11 +276,17 @@ titles_data = {
 				player.components.extrameta.extra_health:SetModifier("king", 50)
 				player.components.extrameta.extra_hunger:SetModifier("king", 50)
 				player.components.extrameta.extra_sanity:SetModifier("king", 50)
+				player.components.health:ResetMax()
+				player.components.sanity:ResetMax()
+				player.components.hunger:ResetMax()
 			else
 				player:RemoveTag("titles_king")
 				player.components.extrameta.extra_health:RemoveModifier("king")
 				player.components.extrameta.extra_hunger:RemoveModifier("king")
 				player.components.extrameta.extra_sanity:RemoveModifier("king")
+				player.components.health:ResetMax()
+				player.components.sanity:ResetMax()
+				player.components.hunger:ResetMax()
 			end
 		end
 	},

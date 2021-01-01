@@ -25,7 +25,7 @@ end
 
 function Migrater:StartMigrate(worldid)
 	--worldid = tonumber(worldid)
-	if CheckWorldId(worldid) and 
+	if not self.inst:HasTag("playerghost") and CheckWorldId(worldid) and 
 		(self.checkfn == nil or self.checkfn(self.inst)) then
 		self.inst.sg:GoToState("migrate")
 		print("Activating portal[0] to "..(worldid or "<nil>"))

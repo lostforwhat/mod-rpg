@@ -96,7 +96,10 @@ function MultiWorld:SetWorldList()
     for _id, data in orderedPairs(sharddata) do
         --if _id ~= TheShard:GetShardId() then -- 客户端无法获取shardid
             local str = (data.name or ("世界".._id)).."\n"..(data.players or 0).."/"..(data.maxplayers or 0)
-            self.worldlist[_id] = self.worldpanel:AddChild(TEMPLATES2.StandardButton(function() 
+            self.worldlist[_id] = self.worldpanel:AddChild(TEMPLATES2.StandardButton(function()
+                local num = data.players or 0
+                local max_num = data.maxplayers or 0 
+                if num >= max_num then return end
                 SendModRPCToServer(MOD_RPC.RPG_worldpicker.migrate, _id)
             end, str, {btn_width, btn_height}))
             self.worldlist[_id]:SetPosition(btn_width * 0.5 - panel_width * 0.5 + (btn_width + offset) * (index - 1), 0)

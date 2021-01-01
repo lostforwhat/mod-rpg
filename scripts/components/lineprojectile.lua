@@ -195,7 +195,7 @@ local function AttackTarget(self, pos)
     local NO_PVP_TAGS = {"player"}
 
     local x,y,z = inst.Transform:GetWorldPosition()
-    local ents = TheSim:FindEntities(x, y, z, self.hitdist + 1, RETARGET_MUST_TAGS, (self.owner:HasTag("player") and TheNet:GetPVPEnabled()) and RETARGET_CANT_TAGS or NO_PVP_TAGS)
+    local ents = TheSim:FindEntities(x, y, z, self.hitdist + 1, RETARGET_MUST_TAGS, (self.owner:HasTag("player") and not TheNet:GetPVPEnabled()) and NO_PVP_TAGS or RETARGET_CANT_TAGS)
     for _, guy in pairs(ents) do
         if guy.entity:IsVisible()
         and CheckTarget(guy)
@@ -203,6 +203,7 @@ local function AttackTarget(self, pos)
         and not guy.components.health:IsDead()
         and (guy.components.combat.target == inst or
             guy.components.combat.target == self.owner or
+            guy:HasTag("player") or
             guy:HasTag("character") or
             guy:HasTag("monster") or
             guy:HasTag("fly") or

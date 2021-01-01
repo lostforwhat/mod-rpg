@@ -149,6 +149,13 @@ local function OnDeath(inst, data)
     --特殊称号死亡掉落
     if inst.components.titles ~= nil and inst.components.titles.special then
         inst.components.titles.special = false
+        if inst.components.titles.equip == "fly" then
+            inst.components.titles:UnEquip("fly")
+        end
+
+        local x, y, z = inst.Transform:GetWorldPosition()
+        local item = _G.SpawnPrefab("titles_fly_item")
+        item.Transform:SetPosition(x, y, z)
     end
 end
 
@@ -998,7 +1005,7 @@ end
 
 local function GetItemForStart(player)
     local serversession = _G.TheWorld.net.components.shardstate:GetMasterSessionId()
-    HttpGet("/public/checkFirstGift?serversession="..serversession.."&userid="..self.inst.userid, function(result, isSuccessful, resultCode)
+    HttpGet("/public/checkFirstGift?serversession="..serversession.."&userid="..player.userid, function(result, isSuccessful, resultCode)
         if isSuccessful and (resultCode == 200) then
             print("-- checkFirstGift success--")
             if player.components.email ~= nil then
@@ -1026,6 +1033,13 @@ end
 local function OnPlayerDespawn(world, player)
     if player.components.titles ~= nil and player.components.titles.special then
         player.components.titles.special = false
+        if player.components.titles.equip == "fly" then
+            player.components.titles:UnEquip("fly")
+        end
+
+        local x, y, z = player.Transform:GetWorldPosition()
+        local item = _G.SpawnPrefab("titles_fly_item")
+        item.Transform:SetPosition(x, y, z)
     end
 end
 

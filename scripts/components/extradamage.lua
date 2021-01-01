@@ -5,7 +5,7 @@ local function OnCommon(self, common)
 end
 
 local function OnMemorykilldata(self, memorykilldata)
-    self.net_data.memorykilldata:set(memorykilldata)
+    --self.net_data.memorykilldata:set(memorykilldata)
 end
 
 
@@ -14,7 +14,7 @@ local ExtraDamage = Class(function(self, inst)
 
     self.net_data = {
         common = net_float(inst.GUID, "extradamage.common", "extradamagedirty"),
-        memorykilldata = net_bytearray(inst.GUID, "extradamage.memorykilldata", "memorykilldatadirty")
+        --memorykilldata = net_bytearray(inst.GUID, "extradamage.memorykilldata", "memorykilldatadirty")
     }
 
     self.common = DEFAULT_DAMAGE

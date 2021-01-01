@@ -131,7 +131,10 @@ AddComponentPostInit("combat", function(self)
 		local extra_damage = 0
 		local target = self.inst
 
-		if not target:IsValid() or target.components.health:IsDead() then
+		if target == nil or 
+			not target:IsValid() or 
+			target.components.health == nil or 
+			target.components.health:IsDead() then
 			return false
 		end
 
@@ -261,7 +264,7 @@ AddComponentPostInit("combat", function(self)
 	    if weapon ~= nil and projectile == nil then
 	    	return OldDoAttack(self, targ, weapon, projectile, ...)
 	    end
-	    if targ.components.dodge and targ.components.dodge:GetChance() > 0 then
+	    if targ ~=nil and targ.components.dodge and targ.components.dodge:GetChance() > 0 then
 			if targ.components.dodge:Effect() then
 				ApplyMiss(targ, self.inst)
 				return
@@ -533,7 +536,9 @@ AddComponentPostInit("lootdropper", function(self)
 		local newloots = {}
 	    local loots = OldGenerateLoot(self)
 	    for _, v in pairs(loots) do
-	    	if math.random() < (1 / (difficulty_level * 2 - 1)) then
+	    	if self.inst:HasTag("boulder") or 
+	    		self.inst:HasTag("tree") or 
+	    		math.random() < (1 / (difficulty_level * 2 - 1)) then
 	    		table.insert(newloots, v)
 	    	end
 	    end
@@ -574,9 +579,9 @@ AddComponentPostInit("projectile", function(self)
 	local OldHit = self.Hit
 	function self:Hit(target)
 		if target:HasTag("reflectproject") then
-			if target ~= self.owner then
+			if target ~= self.owner and not self.cancatch then
 				--self:Throw(target, self.owner)
-				local attacker = self.owner
+				local attacker = self.attacker or self.owner
 				local weapon = self.inst
 				if attacker.components.combat == nil and attacker.components.weapon ~= nil and attacker.components.inventoryitem ~= nil then
 			        weapon = (self.has_damage_set and weapon.components.weapon ~= nil) and weapon or attacker
@@ -586,9 +591,13 @@ AddComponentPostInit("projectile", function(self)
 				local newprojectile = _G.SpawnPrefab(self.inst.prefab)
 				newprojectile.Transform:SetPosition(target.Transform:GetWorldPosition())
 
+				--weapon = newprojectile.components.weapon ~= nil and newprojectile or weapon
 				--[[weapon = target.components.combat:GetWeapon() or weapon]]
-				newprojectile.components.projectile:Throw(weapon, attacker, target)
-				newprojectile.components.projectile.attacker = target
+				weapon = weapon ~= self.inst and weapon or (newprojectile.components.weapon ~= nil and newprojectile or target.components.combat:GetWeapon()) 
+				if weapon ~= nil then
+					newprojectile.components.projectile.attacker = target
+					newprojectile.components.projectile:Throw(weapon, attacker, target)
+				end
 				self.inst:Remove()
 			elseif self.cancatch and target.components.catcher ~= nil then
 				self:Catch(target)

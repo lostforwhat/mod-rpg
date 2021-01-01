@@ -41,7 +41,9 @@ local function removeweapon(picker)--破坏武器
             and v.components.finiteuses ~= nil then
             v.components.finiteuses:SetUses(1)
         else
-            v:Remove()
+            if math.random() < 0.3 and v:HasTag("weapon") or v:HasTag("armor") then
+                v:Remove()
+            end
         end
     end
 end

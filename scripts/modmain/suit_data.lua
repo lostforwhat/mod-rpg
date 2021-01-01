@@ -68,9 +68,11 @@ suit_data = {
 		required_prefabs = {"armorgrass", "spear"},
 		onmatch = function(owner) 
 			owner.components.extrameta.extra_health:SetModifier("suit", 40)
+			owner.components.health:ResetMax()
 		end,
 		onmismatch = function(owner) 
 			owner.components.extrameta.extra_health:RemoveModifier("suit")
+			owner.components.health:ResetMax()
 		end,
 		name = "萌新的祝福",
 		desc = "【勇气】增加40生命值",
@@ -134,10 +136,12 @@ suit_data = {
 		num = 3,
 		onmatch = function(owner)
 			owner.components.extrameta.extra_health:SetModifier("suit", 200)
+			owner.components.health:ResetMax()
 			owner.components.combat.externaldamagemultipliers:SetModifier("suit", 1.3)
 		end,
 		onmismatch = function(owner)
 			owner.components.extrameta.extra_health:RemoveModifier("suit")
+			owner.components.health:ResetMax()
 			owner.components.combat.externaldamagemultipliers:RemoveModifier("suit")
 		end,
 		name = "远古的传说",

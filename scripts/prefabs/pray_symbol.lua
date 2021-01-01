@@ -159,6 +159,8 @@ local function OnLoad(inst, data)
             inst:AddComponent("colourtweener")
         end
         inst.components.colourtweener:StartTween({0.7,0,0.6,1}, 0)
+    else
+        inst.is_rare = false
     end
 end
 

@@ -4,6 +4,7 @@ local _G = GLOBAL
 local TheNet = _G.TheNet
 local TUNING = _G.TUNING
 local DEGREES = _G.DEGREES
+local tonumber = _G.tonumber
 
 --发布全服活动
 
@@ -47,6 +48,7 @@ local function delaycloseholiday(time, cb)
 	_G.TheWorld:DoTaskInTime(time, function() 
 		--_G.TheWorld.holiday = nil
 		_G.TheWorld.net._holiday:set("")
+		_G.TheWorld.net._holiday_time:set(0)
 
 		--活动结束删除活动物品
 		_G.c_removeallwithtags("rpg_holiday")
@@ -57,7 +59,7 @@ end
 
 local function GetNextSpawnAngle(pt, radius)
 
-    local base_angle = math.random() * PI
+    local base_angle = math.random() * _G.PI
     local deviation = math.random(-TUNING.TRACK_ANGLE_DEVIATION, TUNING.TRACK_ANGLE_DEVIATION)*DEGREES
     local start_angle = base_angle + deviation
 
@@ -315,7 +317,13 @@ local function StartHoliday(index)
 		holiday_fn()
 		--_G.TheWorld.holiday = index
 		local name = holidays[index].name
+		local time = holidays[index].time or 120
+		_G.TheWorld.net._holiday_time:set(time)
 		_G.TheWorld.net._holiday:set("正在进行 "..name.." 活动")
+		_G.TheWorld.net:DoPeriodicTask(1, function() 
+			time = time - 1
+			_G.TheWorld.net._holiday_time:set(time)
+		end)
 		TheNet:Announce("[世界"..shardId.."] 正在进行 "..name.." 活动")
 
 		local delay_time = holidays[index].time or 120
@@ -359,7 +367,9 @@ if TheNet:GetIsServer() then
 		--print("compare:", shardId, id, shardId == id)
 		if id == nil or shardId == id then
 			num = _G.tonumber(num)
-			StartHoliday(num)
+			_G.TheWorld:DoTaskInTime(0, function() 
+				StartHoliday(num)
+			end)
 		end
 	end)
 
@@ -377,7 +387,7 @@ if TheNet:GetIsServer() then
 			--自动活动，每次转钟触发一次
 			_G.TheWorld.WatchWorldState("cycles", function(inst) 
 				local playerNum = GetPlayerNum()
-				if CurrentHoliday() == nil and math.random() < 0.01 + 0.002*playerNum then
+				if CurrentHoliday() == nil and math.random() < 0.01 + 0.02*playerNum then
 					print("--开始触发活动--")
 					TriggerHoliday()
 				end
@@ -393,7 +403,11 @@ end)]]
 
 local function InitWorld(inst)
 	inst._holiday = _G.net_string(inst.GUID, "world._holiday", "worldholidaydirty")
-	inst._holiday_time = _G.net_shortint(inst.GUID, "world._holiday_time", "worldholidaydirty")
+	inst._holiday_time = _G.net_shortint(inst.GUID, "world._holiday_time")
+	if TheNet:GetIsServer() then
+		inst._holiday:set_local("")
+		inst._holiday_time:set_local(0)
+	end
 end
 AddPrefabPostInit("forest_network", InitWorld)
 AddPrefabPostInit("cave_network", InitWorld)
@@ -430,26 +444,44 @@ AddClassPostConstruct("widgets/controls", function(self)
 	    return str
 	end
 
-	local function GetHolidayText()
+	local function GetHolidayText(time)
 		local title = _G.TheWorld.net._holiday:value() or ""
-		local time = _G.TheWorld.net._holiday_time:value() or 0
+		time = time or _G.TheWorld.net._holiday_time:value() or 0
 		if time > 0 and title ~= "" then
 			return title.." ["..SecondsToTime(time).."]"
 		end
 		return ""
 	end
 
+	self.time = 0
 	self.holiday = self.top_root:AddChild(Widget("holiday"))
 	self.holiday:SetHAnchor(_G.ANCHOR_MIDDLE)
     self.holiday:SetVAnchor(_G.ANCHOR_TOP)
     self.holiday.text = self.holiday:AddChild(Text(_G.NUMBERFONT, 30))
-    self.holiday.text:SetString(_G.TheWorld.net._holiday:value())
+    self.holiday.text:SetString(GetHolidayText())
     self.holiday.text:SetColour({0, 1, 0, 1})
     self.holiday.text:SetPosition(0, -20)
     self.holiday:MoveToFront()
+    --self.holiday:Hide()
 
     self.holiday.inst:ListenForEvent("worldholidaydirty", function() 
     	--print("---------", _G.TheWorld.net._holiday:value())
-    	self.holiday.text:SetString(GetHolidayText())
+    	self.time = _G.TheWorld.net._holiday_time:value() or 0
+    	if self.time > 0 then
+	    	self.holiday.text:SetString(GetHolidayText(self.time))
+	    	--self.holiday:Show()
+	    else
+	    	self.holiday.text:SetString("")
+	    	--self.holiday:Hide()
+	    end
+
 	end, _G.TheWorld.net)
+
+    self.time = _G.TheWorld.net._holiday_time:value() or 0
+	self.holiday.inst:DoPeriodicTask(1, function() 
+		if self.time > 0 then
+			self.time = self.time - 1
+			self.holiday.text:SetString(GetHolidayText(self.time))
+		end
+	end)
 end)
