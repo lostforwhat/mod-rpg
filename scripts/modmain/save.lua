@@ -279,7 +279,7 @@ local function RecoveryPlayer(player, data)
 	end
 	if player.components.taskdata ~= nil then
 		for k,v in pairs(_G.task_data or {}) do
-	        if type(v) == "number" then
+	        if k ~= nil then
 	            player.components.taskdata[k] = data[k] or 0
 	        end
 	    end
@@ -292,7 +292,7 @@ local function RecoveryPlayer(player, data)
 	end
 	if player.components.skilldata ~= nil then
 		for k,v in pairs(_G.skill_constant) do
-			player.components.skilldata[v.id] = data[k] or 0
+			player.components.skilldata[v.id] = data[v.id] or 0
 		end
 		player.components.skilldata.skill_used = data["skill_used"] or 0
 	end

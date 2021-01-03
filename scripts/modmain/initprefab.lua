@@ -440,6 +440,8 @@ AddPrefabPostInit("waxwell", function(inst)
 	end
 end)
 
+TUNING.BERNIE_BIG_RUN_SPEED = 18
+
 --伯尼添加击杀事件
 AddPrefabPostInit("bernie_big", function(inst) 
 	if _G.TheWorld.ismastersim then

@@ -1,0 +1,617 @@
+{
+	"title": "继承奖励-天数榜",
+    "content": "您的生存天数排行第1名，请查收您的奖励!",
+    "prefabs": [
+        {
+            "prefab": "linghterhat",
+            "num": NumberInt("1")
+        },
+        {
+ 			"prefab": "potion_achiv",
+            "num": NumberInt("40")
+        }
+    ],
+    "sender": "system",
+    "time": "2021-01-02 16:00:00",
+    "received": false,
+    "serversession": "0ABD00D06C7AECE5",
+    "userid": "KU_k4LrN0wM",	
+},
+{
+	"title": "继承奖励-天数榜",
+    "content": "您的生存天数排行第2名，请查收您的奖励!",
+    "prefabs": [
+        {
+ 			"prefab": "potion_achiv",
+            "num": NumberInt("40")
+        }
+    ],
+    "sender": "system",
+    "time": "2021-01-02 16:00:00",
+    "received": false,
+    "serversession": "0ABD00D06C7AECE5",
+    "userid": "KU_IE1l04tS",	
+},
+{
+	"title": "继承奖励-天数榜",
+    "content": "您的生存天数排行第3名，请查收您的奖励!",
+    "prefabs": [
+        {
+ 			"prefab": "potion_achiv",
+            "num": NumberInt("35")
+        }
+    ],
+    "sender": "system",
+    "time": "2021-01-02 16:00:00",
+    "received": false,
+    "serversession": "0ABD00D06C7AECE5",
+    "userid": "KU_77voq6_8",	
+},
+{
+	"title": "继承奖励-天数榜",
+    "content": "您的生存天数排行第4名，请查收您的奖励!",
+    "prefabs": [
+        {
+ 			"prefab": "potion_achiv",
+            "num": NumberInt("30")
+        }
+    ],
+    "sender": "system",
+    "time": "2021-01-02 16:00:00",
+    "received": false,
+    "serversession": "0ABD00D06C7AECE5",
+    "userid": "KU_3DiroCKZ",	
+},
+{
+	"title": "继承奖励-天数榜",
+    "content": "您的生存天数排行第5名，请查收您的奖励!",
+    "prefabs": [
+        {
+ 			"prefab": "potion_achiv",
+            "num": NumberInt("25")
+        }
+    ],
+    "sender": "system",
+    "time": "2021-01-02 16:00:00",
+    "received": false,
+    "serversession": "0ABD00D06C7AECE5",
+    "userid": "KU_l26xzU4S",	
+},
+{
+	"title": "继承奖励-天数榜",
+    "content": "您的生存天数排行第6名，请查收您的奖励!",
+    "prefabs": [
+        {
+ 			"prefab": "potion_achiv",
+            "num": NumberInt("20")
+        }
+    ],
+    "sender": "system",
+    "time": "2021-01-02 16:00:00",
+    "received": false,
+    "serversession": "0ABD00D06C7AECE5",
+    "userid": "KU_0vPtVA7E",	
+},
+{
+	"title": "继承奖励-天数榜",
+    "content": "您的生存天数排行第7名，请查收您的奖励!",
+    "prefabs": [
+        {
+ 			"prefab": "potion_achiv",
+            "num": NumberInt("15")
+        }
+    ],
+    "sender": "system",
+    "time": "2021-01-02 16:00:00",
+    "received": false,
+    "serversession": "0ABD00D06C7AECE5",
+    "userid": "KU_fqosPxfj",	
+},
+{
+	"title": "继承奖励-天数榜",
+    "content": "您的生存天数排行第8名，请查收您的奖励!",
+    "prefabs": [
+        {
+ 			"prefab": "potion_achiv",
+            "num": NumberInt("10")
+        }
+    ],
+    "sender": "system",
+    "time": "2021-01-02 16:00:00",
+    "received": false,
+    "serversession": "0ABD00D06C7AECE5",
+    "userid": "KU_CN6QxP9_",	
+},
+{
+	"title": "继承奖励-天数榜",
+    "content": "您的生存天数排行第9名，请查收您的奖励!",
+    "prefabs": [
+        {
+ 			"prefab": "potion_achiv",
+            "num": NumberInt("10")
+        }
+    ],
+    "sender": "system",
+    "time": "2021-01-02 16:00:00",
+    "received": false,
+    "serversession": "0ABD00D06C7AECE5",
+    "userid": "KU_3Dirnx9W",	
+},
+{
+	"title": "继承奖励-天数榜",
+    "content": "您的生存天数排行第10名，请查收您的奖励!",
+    "prefabs": [
+        {
+ 			"prefab": "potion_achiv",
+            "num": NumberInt("10")
+        }
+    ],
+    "sender": "system",
+    "time": "2021-01-02 16:00:00",
+    "received": false,
+    "serversession": "0ABD00D06C7AECE5",
+    "userid": "KU_0OxIF1wb",	
+},
+
+
+//level
+
+{
+	"title": "继承奖励-等级榜",
+    "content": "您的人物等级及经验排行第1名，请查收您的奖励!",
+    "prefabs": [
+        {
+ 			"prefab": "potion_achiv",
+            "num": NumberInt("40")
+        },
+        {
+        	"prefab": "pigking",
+            "num": NumberInt("1")
+        }
+    ],
+    "sender": "system",
+    "time": "2021-01-02 16:00:00",
+    "received": false,
+    "serversession": "0ABD00D06C7AECE5",
+    "userid": "KU_k4LrN0wM",	
+},
+{
+	"title": "继承奖励-等级榜",
+    "content": "您的人物等级及经验排行第2名，请查收您的奖励!",
+    "prefabs": [
+        {
+ 			"prefab": "potion_achiv",
+            "num": NumberInt("35")
+        }
+    ],
+    "sender": "system",
+    "time": "2021-01-02 16:00:00",
+    "received": false,
+    "serversession": "0ABD00D06C7AECE5",
+    "userid": "KU_3Dirnx9W",	
+},
+{
+	"title": "继承奖励-等级榜",
+    "content": "您的人物等级及经验排行第3名，请查收您的奖励!",
+    "prefabs": [
+        {
+ 			"prefab": "potion_achiv",
+            "num": NumberInt("35")
+        }
+    ],
+    "sender": "system",
+    "time": "2021-01-02 16:00:00",
+    "received": false,
+    "serversession": "0ABD00D06C7AECE5",
+    "userid": "KU_0vPtVA7E",	
+},
+{
+	"title": "继承奖励-等级榜",
+    "content": "您的人物等级及经验排行第4名，请查收您的奖励!",
+    "prefabs": [
+        {
+ 			"prefab": "potion_achiv",
+            "num": NumberInt("30")
+        }
+    ],
+    "sender": "system",
+    "time": "2021-01-02 16:00:00",
+    "received": false,
+    "serversession": "0ABD00D06C7AECE5",
+    "userid": "KU_77voq6_8",	
+},
+{
+	"title": "继承奖励-等级榜",
+    "content": "您的人物等级及经验排行第5名，请查收您的奖励!",
+    "prefabs": [
+        {
+ 			"prefab": "potion_achiv",
+            "num": NumberInt("30")
+        }
+    ],
+    "sender": "system",
+    "time": "2021-01-02 16:00:00",
+    "received": false,
+    "serversession": "0ABD00D06C7AECE5",
+    "userid": "KU_fqosPxfj",	
+},
+{
+	"title": "继承奖励-等级榜",
+    "content": "您的人物等级及经验排行第6名，请查收您的奖励!",
+    "prefabs": [
+        {
+ 			"prefab": "potion_achiv",
+            "num": NumberInt("30")
+        }
+    ],
+    "sender": "system",
+    "time": "2021-01-02 16:00:00",
+    "received": false,
+    "serversession": "0ABD00D06C7AECE5",
+    "userid": "KU_3DiroCKZ",	
+},
+{
+	"title": "继承奖励-等级榜",
+    "content": "您的人物等级及经验排行第7名，请查收您的奖励!",
+    "prefabs": [
+        {
+ 			"prefab": "potion_achiv",
+            "num": NumberInt("25")
+        }
+    ],
+    "sender": "system",
+    "time": "2021-01-02 16:00:00",
+    "received": false,
+    "serversession": "0ABD00D06C7AECE5",
+    "userid": "KU_CN6QxP9_",	
+},
+{
+	"title": "继承奖励-等级榜",
+    "content": "您的人物等级及经验排行第8名，请查收您的奖励!",
+    "prefabs": [
+        {
+ 			"prefab": "potion_achiv",
+            "num": NumberInt("25")
+        }
+    ],
+    "sender": "system",
+    "time": "2021-01-02 16:00:00",
+    "received": false,
+    "serversession": "0ABD00D06C7AECE5",
+    "userid": "KU_3Dirnw-n",	
+},
+{
+	"title": "继承奖励-等级榜",
+    "content": "您的人物等级及经验排行第9名，请查收您的奖励!",
+    "prefabs": [
+        {
+ 			"prefab": "potion_achiv",
+            "num": NumberInt("20")
+        }
+    ],
+    "sender": "system",
+    "time": "2021-01-02 16:00:00",
+    "received": false,
+    "serversession": "0ABD00D06C7AECE5",
+    "userid": "KU_gzGFwKXX",	
+},
+{
+	"title": "继承奖励-等级榜",
+    "content": "您的人物等级及经验排行第10名，请查收您的奖励!",
+    "prefabs": [
+        {
+ 			"prefab": "potion_achiv",
+            "num": NumberInt("20")
+        }
+    ],
+    "sender": "system",
+    "time": "2021-01-02 16:00:00",
+    "received": false,
+    "serversession": "0ABD00D06C7AECE5",
+    "userid": "KU_IE1l04tS",	
+},
+
+
+//killboss
+{
+	"title": "继承奖励-boss榜",
+    "content": "您击杀boss数量排行第1名，请查收您的奖励!",
+    "prefabs": [
+        {
+ 			"prefab": "diamond",
+            "num": NumberInt("20")
+        }
+    ],
+    "sender": "system",
+    "time": "2021-01-02 16:00:00",
+    "received": false,
+    "serversession": "0ABD00D06C7AECE5",
+    "userid": "KU_k4LrN0wM",	
+},
+{
+	"title": "继承奖励-boss榜",
+    "content": "您击杀boss数量排行第2名，请查收您的奖励!",
+    "prefabs": [
+        {
+ 			"prefab": "diamond",
+            "num": NumberInt("19")
+        }
+    ],
+    "sender": "system",
+    "time": "2021-01-02 16:00:00",
+    "received": false,
+    "serversession": "0ABD00D06C7AECE5",
+    "userid": "KU_3Dirnx9W",	
+},
+{
+	"title": "继承奖励-boss榜",
+    "content": "您击杀boss数量排行第3名，请查收您的奖励!",
+    "prefabs": [
+        {
+ 			"prefab": "diamond",
+            "num": NumberInt("17")
+        }
+    ],
+    "sender": "system",
+    "time": "2021-01-02 16:00:00",
+    "received": false,
+    "serversession": "0ABD00D06C7AECE5",
+    "userid": "KU_0vPtVA7E",	
+},
+{
+	"title": "继承奖励-boss榜",
+    "content": "您击杀boss数量排行第4名，请查收您的奖励!",
+    "prefabs": [
+        {
+ 			"prefab": "diamond",
+            "num": NumberInt("16")
+        }
+    ],
+    "sender": "system",
+    "time": "2021-01-02 16:00:00",
+    "received": false,
+    "serversession": "0ABD00D06C7AECE5",
+    "userid": "KU_IE1l04tS",	
+},
+{
+	"title": "继承奖励-boss榜",
+    "content": "您击杀boss数量排行第5名，请查收您的奖励!",
+    "prefabs": [
+        {
+ 			"prefab": "diamond",
+            "num": NumberInt("15")
+        }
+    ],
+    "sender": "system",
+    "time": "2021-01-02 16:00:00",
+    "received": false,
+    "serversession": "0ABD00D06C7AECE5",
+    "userid": "KU_77voq6_8",	
+},
+{
+	"title": "继承奖励-boss榜",
+    "content": "您击杀boss数量排行第6名，请查收您的奖励!",
+    "prefabs": [
+        {
+ 			"prefab": "diamond",
+            "num": NumberInt("14")
+        }
+    ],
+    "sender": "system",
+    "time": "2021-01-02 16:00:00",
+    "received": false,
+    "serversession": "0ABD00D06C7AECE5",
+    "userid": "KU_3DiroCKZ",	
+},
+{
+	"title": "继承奖励-boss榜",
+    "content": "您击杀boss数量排行第7名，请查收您的奖励!",
+    "prefabs": [
+        {
+ 			"prefab": "diamond",
+            "num": NumberInt("13")
+        }
+    ],
+    "sender": "system",
+    "time": "2021-01-02 16:00:00",
+    "received": false,
+    "serversession": "0ABD00D06C7AECE5",
+    "userid": "KU_3Dirnw-n",	
+},
+{
+	"title": "继承奖励-boss榜",
+    "content": "您击杀boss数量排行第8名，请查收您的奖励!",
+    "prefabs": [
+        {
+ 			"prefab": "diamond",
+            "num": NumberInt("12")
+        }
+    ],
+    "sender": "system",
+    "time": "2021-01-02 16:00:00",
+    "received": false,
+    "serversession": "0ABD00D06C7AECE5",
+    "userid": "KU_l26xzU4S",	
+},
+{
+	"title": "继承奖励-boss榜",
+    "content": "您击杀boss数量排行第9名，请查收您的奖励!",
+    "prefabs": [
+        {
+ 			"prefab": "diamond",
+            "num": NumberInt("11")
+        }
+    ],
+    "sender": "system",
+    "time": "2021-01-02 16:00:00",
+    "received": false,
+    "serversession": "0ABD00D06C7AECE5",
+    "userid": "KU_fqosPxfj",	
+},
+{
+	"title": "继承奖励-boss榜",
+    "content": "您击杀boss数量排行第10名，请查收您的奖励!",
+    "prefabs": [
+        {
+ 			"prefab": "diamond",
+            "num": NumberInt("10")
+        }
+    ],
+    "sender": "system",
+    "time": "2021-01-02 16:00:00",
+    "received": false,
+    "serversession": "0ABD00D06C7AECE5",
+    "userid": "KU_0OxIF1wb",	
+},
+
+//成就
+{
+	"title": "继承奖励-任务榜",
+    "content": "您完成任务数量排行第1名，请查收您的奖励!",
+    "prefabs": [
+        {
+ 			"prefab": "achiv_clear",
+            "num": NumberInt("5")
+        }
+    ],
+    "sender": "system",
+    "time": "2021-01-02 16:00:00",
+    "received": false,
+    "serversession": "0ABD00D06C7AECE5",
+    "userid": "KU_0vPtVA7E",	
+},
+{
+	"title": "继承奖励-任务榜",
+    "content": "您完成任务数量排行第2名，请查收您的奖励!",
+    "prefabs": [
+        {
+ 			"prefab": "achiv_clear",
+            "num": NumberInt("4")
+        }
+    ],
+    "sender": "system",
+    "time": "2021-01-02 16:00:00",
+    "received": false,
+    "serversession": "0ABD00D06C7AECE5",
+    "userid": "KU_k4LrN0wM",	
+},
+{
+	"title": "继承奖励-任务榜",
+    "content": "您完成任务数量排行第3名，请查收您的奖励!",
+    "prefabs": [
+        {
+ 			"prefab": "achiv_clear",
+            "num": NumberInt("4")
+        }
+    ],
+    "sender": "system",
+    "time": "2021-01-02 16:00:00",
+    "received": false,
+    "serversession": "0ABD00D06C7AECE5",
+    "userid": "KU_fqosPxfj",	
+},
+{
+	"title": "继承奖励-任务榜",
+    "content": "您完成任务数量排行第4名，请查收您的奖励!",
+    "prefabs": [
+        {
+ 			"prefab": "achiv_clear",
+            "num": NumberInt("3")
+        }
+    ],
+    "sender": "system",
+    "time": "2021-01-02 16:00:00",
+    "received": false,
+    "serversession": "0ABD00D06C7AECE5",
+    "userid": "KU_3DiroCKZ",	
+},
+{
+	"title": "继承奖励-任务榜",
+    "content": "您完成任务数量排行第5名，请查收您的奖励!",
+    "prefabs": [
+        {
+ 			"prefab": "achiv_clear",
+            "num": NumberInt("3")
+        }
+    ],
+    "sender": "system",
+    "time": "2021-01-02 16:00:00",
+    "received": false,
+    "serversession": "0ABD00D06C7AECE5",
+    "userid": "KU_l26xzU4S",	
+},
+{
+	"title": "继承奖励-任务榜",
+    "content": "您完成任务数量排行第6名，请查收您的奖励!",
+    "prefabs": [
+        {
+ 			"prefab": "achiv_clear",
+            "num": NumberInt("2")
+        }
+    ],
+    "sender": "system",
+    "time": "2021-01-02 16:00:00",
+    "received": false,
+    "serversession": "0ABD00D06C7AECE5",
+    "userid": "KU_iNDUz-Nk",	
+},
+{
+	"title": "继承奖励-任务榜",
+    "content": "您完成任务数量排行第7名，请查收您的奖励!",
+    "prefabs": [
+        {
+ 			"prefab": "achiv_clear",
+            "num": NumberInt("2")
+        }
+    ],
+    "sender": "system",
+    "time": "2021-01-02 16:00:00",
+    "received": false,
+    "serversession": "0ABD00D06C7AECE5",
+    "userid": "KU_IE1l04tS",	
+},
+{
+	"title": "继承奖励-任务榜",
+    "content": "您完成任务数量排行第8名，请查收您的奖励!",
+    "prefabs": [
+        {
+ 			"prefab": "achiv_clear",
+            "num": NumberInt("1")
+        }
+    ],
+    "sender": "system",
+    "time": "2021-01-02 16:00:00",
+    "received": false,
+    "serversession": "0ABD00D06C7AECE5",
+    "userid": "KU_77voq6_8",	
+},
+{
+	"title": "继承奖励-任务榜",
+    "content": "您完成任务数量排行第9名，请查收您的奖励!",
+    "prefabs": [
+        {
+ 			"prefab": "achiv_clear",
+            "num": NumberInt("1")
+        }
+    ],
+    "sender": "system",
+    "time": "2021-01-02 16:00:00",
+    "received": false,
+    "serversession": "0ABD00D06C7AECE5",
+    "userid": "KU_3Dirnx9W",	
+},
+{
+	"title": "继承奖励-任务榜",
+    "content": "您完成任务数量排行第10名，请查收您的奖励!",
+    "prefabs": [
+        {
+ 			"prefab": "achiv_clear",
+            "num": NumberInt("1")
+        }
+    ],
+    "sender": "system",
+    "time": "2021-01-02 16:00:00",
+    "received": false,
+    "serversession": "0ABD00D06C7AECE5",
+    "userid": "KU_gzGFwKXX",	
+},

@@ -138,7 +138,7 @@ AddComponentPostInit("combat", function(self)
 			return false
 		end
 
-		if attacker ~= nil then
+		if attacker ~= nil and attacker:IsValid() and target:IsValid() then
 			--避免boss互掐
 			if target:HasTag("epic") and attacker:HasTag("epic") then
 				target:DoTaskInTime(0, function()
@@ -537,7 +537,10 @@ AddComponentPostInit("lootdropper", function(self)
 	    local loots = OldGenerateLoot(self)
 	    for _, v in pairs(loots) do
 	    	if self.inst:HasTag("boulder") or 
-	    		self.inst:HasTag("tree") or 
+	    		--self.inst:HasTag("tree") or
+	    		self.inst:HasTag("structure") or 
+	    		self.inst:HasTag("INLIMBO") or
+	    		self.inst:HasTag("plant") or 
 	    		math.random() < (1 / (difficulty_level * 2 - 1)) then
 	    		table.insert(newloots, v)
 	    	end
