@@ -3,7 +3,7 @@
 ##3.0版本改动(新) *初版(test版)*
 1. 修改任务系统
 2. 新增技能书
-3. 新增网络商店（后期开放玩家交易及跨服交易
+3. 新增网络商店（后期开放玩家交易及跨服交易)
 4. 详细人物属性面板及技能属性面板
 5. 修改专属技能及天赋（专属升级跟随人物等级）
 
@@ -124,9 +124,10 @@ b.网络变量使用replica + classify <br/>
 7.触手棒+蜗牛头盔=野人套 <br/>
 <br>
 球状光虫,撒豆成兵
-c_anounce("服务器即将更新mod！")
+c_announce("服务器即将更新mod！")
 
 !!! 差一个继承
 !!! 差一个恢复存档人物
 !!  差 护符增加新属性 （寒冰护符的保鲜等）
+TheWorld:DoPeriodicTask(610, function() if #TheNet:GetClientTable() >= 10 then x_openholiday() end end)
 -->

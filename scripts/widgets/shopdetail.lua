@@ -25,6 +25,32 @@ local function GetDescriptionString(name)
     return str
 end
 
+local function SecondsToTime(ts)
+    local seconds = ts % 60
+    local min = math.floor(ts/60)
+    local hour = math.floor(min/60) 
+    local day = math.floor(hour/24)
+    
+    local str = ""
+        
+    if tonumber(seconds) > 0 and tonumber(seconds) < 60 then
+        str = ""..seconds.."秒" ..str
+    end
+
+    if tonumber(min - hour*60)>0 and tonumber(min - hour*60)<60 then
+        str = ""..(min - hour*60).."分"..str
+    end
+
+    if tonumber(hour - day*24)>0 and tonumber(hour - day*60)<24 then
+        str = (hour - day*24).."时"..str
+    end
+    
+    if tonumber(day) > 0 then
+        str = day.."天"..str
+    end
+    return str
+end
+
 local ShopDetail = Class(Widget, function(self, owner)
     Widget._ctor(self, "ShopDetail")
 
@@ -131,6 +157,19 @@ function ShopDetail:LoadMenus()
     --self.menu.title:SetColour(1, 1, 1, 1)
     self.menu.title:SetString("交易小店")
     self.menu.title:SetRegionSize(150, 60)
+
+    self.menu.time = self.menu:AddChild(Text(NUMBERFONT, 38, "", {0, 1, 1, 1}))
+    self.menu.time:SetPosition(-130, 30)
+    local time = TheWorld.net._resetshoptime:value() or 0
+    self.menu.time:SetString(SecondsToTime(1800-time))
+    self.menu.time.inst:DoPeriodicTask(1, function()
+        if time < 1800 then 
+            time = time + 1
+            self.menu.time:SetString(SecondsToTime(1800-time))
+        else
+            time = TheWorld.net._resetshoptime:value() or 0
+        end
+    end)
 
     self.menu.coin = self.menu:AddChild(ImageButton("images/hud.xml", "tab_refine.tex"))
     self.menu.coin:SetPosition(150, 25)

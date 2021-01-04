@@ -2,6 +2,12 @@ require "utils/utils"
 
 local MAX_RESET_TIME = 1800
 
+local function onreset_time(self, reset_time)
+	if self.inst._resetshoptime ~= nil then
+		self.inst._resetshoptime:set(reset_time)
+	end
+end
+
 --世界商店 world net
 local WorldShop = Class(function(self, inst) 
     self.inst = inst
@@ -17,11 +23,15 @@ local WorldShop = Class(function(self, inst)
     	self.inst:DoTaskInTime(1, function() 
 			self:Refresh()
     	end)
-    	if TheWorld.ismastershard then
+    	--if TheWorld.ismastershard then
 	    	self.inst:StartUpdatingComponent(self)
-	    end
+	    --end
     end
-end)
+end,
+nil,
+{
+	reset_time = onreset_time
+})
 
 function WorldShop:OnSave()
 	return {
@@ -32,13 +42,17 @@ end
 function WorldShop:OnLoad(data)
 	if data ~= nil and data.reset_time > 0 then
 		self.reset_time = data.reset_time
+		local msg = SHARD_KEY.."resetshoptime"..self.reset_time
+    	TheNet:SystemMessage(msg)
 	end
 end
 
 function WorldShop:OnUpdate(dt)
 	self.reset_time = self.reset_time + dt
 	if self.reset_time > MAX_RESET_TIME and not self.resetting then
-		self:ResetShop()
+		if TheWorld.ismastershard then
+			self:ResetShop()
+		end
 	end
 end
 
@@ -122,6 +136,8 @@ function WorldShop:ResetShop()
 			self.reset_time = 0
 			self.resetting = nil
 		end
+		local msg = SHARD_KEY.."resetshoptime"..self.reset_time
+    	TheNet:SystemMessage(msg)
 	end, params)
 end
 

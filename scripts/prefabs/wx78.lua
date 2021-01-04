@@ -43,14 +43,6 @@ prefabs = FlattenTree({ prefabs, start_inv }, true)
     inst.components.sanity.ignore = ignoresanity
 end]]
 
-local function oneat(inst, food)
-    if food and food.components.edible and food.components.edible.foodtype == FOODTYPE.GEARS then
-        if inst.components.level then
-            inst.components.level:AddXp(100)
-        end
-    end
-end
-
 local function OnSkill(inst) 
     if inst.components.skilldata and inst.components.skilldata:GetLevel("electricprotection") then
         local skill = inst.components.skilldata.skills["electricprotection"]
@@ -59,6 +51,16 @@ local function OnSkill(inst)
         end
     end
 end
+
+local function oneat(inst, food)
+    if food and food.components.edible and food.components.edible.foodtype == FOODTYPE.GEARS then
+        if inst.components.level then
+            inst.components.level:AddXp(100)
+        end
+        OnSkill(inst)
+    end
+end
+
 
 local function onupdate(inst, dt)
     inst.charge_time = inst.charge_time - dt

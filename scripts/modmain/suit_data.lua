@@ -103,7 +103,7 @@ suit_data = {
 		desc = "【斗志】额外增加12%暴击几率",
 	},
 	{
-		prefabs = {"nightsword", "armor_sanity"},
+		prefabs = {"nightsword", "armor_sanity", "armorskeleton"},
 		num = 2,
 		onmatch = function(owner) 
 			owner:WatchWorldState("isnight", WatchNight)

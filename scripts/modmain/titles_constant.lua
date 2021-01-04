@@ -80,7 +80,7 @@ titles_data = {
 			{
 				condition="完成所有烹饪任务",
 				fn=function(player)
-					local tasks = {"cook_100", "cook_888"}
+					local tasks = GetTasksLike("cook_")
 					return CheckTaskCompleted(player, tasks)
 				end
 			},
@@ -235,7 +235,7 @@ titles_data = {
 	{
 		id="king",
 		name="王者之巅", 
-		desc="【蔑视】秒杀血量低于自己的单位\n【王者】全属性提升,每天发放一次物资",
+		desc="【蔑视】秒杀血量低于自己的单位\n【王者】提升基于生存天数的生命值,每天发放一次物资",
 		conditions={
 			{
 				condition="完成所有成就任务",
@@ -267,26 +267,32 @@ titles_data = {
 						if item.components.inventory == nil then
 							local pack_item = SpawnPrefab("package_ball")
 							pack_item.components.packer:Pack(item)
-							return pack_item
+							player.components.inventory:GiveItem(pack_item)
+							return
 						end
 						player.components.inventory:GiveItem(item)
 					end
+
+					local health_add = (player.components.age:GetAgeInDays() - 200) * .5
+					player.components.extrameta.extra_health:SetModifier("king", health_add)
+					player.components.health:ResetMax()
 				end)
 				player:AddTag("titles_king")
-				player.components.extrameta.extra_health:SetModifier("king", 50)
-				player.components.extrameta.extra_hunger:SetModifier("king", 50)
-				player.components.extrameta.extra_sanity:SetModifier("king", 50)
+				local health_add = (player.components.age:GetAgeInDays() - 200) * .5
+				player.components.extrameta.extra_health:SetModifier("king", health_add)
+				--player.components.extrameta.extra_hunger:SetModifier("king", 50)
+				--player.components.extrameta.extra_sanity:SetModifier("king", 50)
 				player.components.health:ResetMax()
-				player.components.sanity:ResetMax()
-				player.components.hunger:ResetMax()
+				--player.components.sanity:ResetMax()
+				--player.components.hunger:ResetMax()
 			else
 				player:RemoveTag("titles_king")
 				player.components.extrameta.extra_health:RemoveModifier("king")
-				player.components.extrameta.extra_hunger:RemoveModifier("king")
-				player.components.extrameta.extra_sanity:RemoveModifier("king")
+				--player.components.extrameta.extra_hunger:RemoveModifier("king")
+				--player.components.extrameta.extra_sanity:RemoveModifier("king")
 				player.components.health:ResetMax()
-				player.components.sanity:ResetMax()
-				player.components.hunger:ResetMax()
+				--player.components.sanity:ResetMax()
+				--player.components.hunger:ResetMax()
 			end
 		end
 	},

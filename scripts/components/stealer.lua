@@ -67,6 +67,14 @@ function Stealer:Effect(target)
     	    item = target.components.inventory:DropItem(item)
         end
     end
+    --然后随机获得一个掉落物，如果有的话
+    if target.components.lootdropper ~= nil then
+        local loots = target.components.lootdropper:GenerateLoot()
+        if #loots > 0 then
+            item = SpawnPrefab(loots[math.random(#loots)])
+            item.Transform:SetPosition(target:GetPosition():Get())
+        end
+    end
     --否则随机获得一个物品
     if item == nil and self.inst:HasTag("player") and not target:HasTag("player") then
     	item = self:RandomItem(target)
@@ -81,8 +89,8 @@ function Stealer:Effect(target)
     if item ~= nil and needNotice(item.prefab) then
         TheNet:Announce(self.inst:GetDisplayName().." 使用探云手，从 "..target:GetDisplayName().." 偷取了 "..item:GetDisplayName())
     end
-    --如果攻击者有物品栏，则物品归属攻击者
-    if self.inst.components.inventory ~= nil then
+    --如果攻击者有物品栏，则物品归属攻击者, 非玩家偷窃则有概率物品丢失
+    if self.inst.components.inventory ~= nil and (self.inst:HasTag("player") or math.random() < .6) then
         self.inst.components.inventory:GiveItem(item)
     else
     	--否则销毁物品

@@ -61,7 +61,7 @@ local function fn()
     inst:AddComponent("weapon")
     inst.components.weapon:SetDamage(20)
 
-    inst:DoTaskInTime(2.5, inst.Remove)
+    inst:DoTaskInTime(1.5, inst.Remove)
 
     inst:AddComponent("lineprojectile")
     inst.components.lineprojectile:SetSpeed(20)

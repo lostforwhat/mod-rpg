@@ -597,7 +597,7 @@ AddComponentPostInit("projectile", function(self)
 				--weapon = newprojectile.components.weapon ~= nil and newprojectile or weapon
 				--[[weapon = target.components.combat:GetWeapon() or weapon]]
 				weapon = weapon ~= self.inst and weapon or (newprojectile.components.weapon ~= nil and newprojectile or target.components.combat:GetWeapon()) 
-				if weapon ~= nil then
+				if weapon ~= nil and attacker ~= nil then
 					newprojectile.components.projectile.attacker = target
 					newprojectile.components.projectile:Throw(weapon, attacker, target)
 				end

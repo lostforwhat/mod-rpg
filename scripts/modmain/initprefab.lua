@@ -773,9 +773,25 @@ AddPrefabPostInit("slingshot", function(inst)
 	end
 end)
 
+_G.AddShardRule("^resetshoptime(%d+)$", function(content, worldId, st, ed, num)
+	if worldId == _G.TheShard:GetShardId() then
+		return
+	end
+	local time = _G.tonumber(num or 0)
+	if _G.TheWorld.net ~= nil and _G.TheWorld.net._resetshoptime ~= nil then
+		_G.TheWorld.net._resetshoptime:set(time)
+	end
+	if _G.TheWorld.net ~= nil and _G.TheWorld.net.components.worldshop ~= nil then
+		_G.TheWorld.net.components.worldshop.reset_time = time
+	end
+end)
+
 --world添加网络商店
 local function InitShop(inst)
-	inst:AddComponent("worldshop")
+	inst._resetshoptime = _G.net_shortint(inst.GUID, "_resetshoptime")
+	if _G.TheWorld.ismastersim then
+		inst:AddComponent("worldshop")
+	end
 end
 AddPrefabPostInit("forest_network", InitShop)
 AddPrefabPostInit("cave_network", InitShop)

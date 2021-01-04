@@ -130,7 +130,11 @@ local function oncollide(inst, other)
                     local extra_damge = skill:level_fn(leader) * (skill.step or 0)
                     damage = damage + extra_damge
                 end
-                other.components.combat:GetAttacked(leader, damage)
+                inst.components.combat:SetDefaultDamage(damage)
+                if inst.components.combat:CanTarget(other) then
+                    inst.components.combat:DoAttack(other)
+                end
+                --other.components.combat:GetAttacked(leader, damage)
         end
     end
 end
@@ -181,6 +185,7 @@ local function fn()
     inst:AddTag("lightbattery")
 
     inst:AddTag("NOCLICK")
+    inst:AddTag("notarget")
 
     --MakeInventoryFloatable(inst)
     
@@ -206,6 +211,10 @@ local function fn()
 
     inst:AddComponent("combat")
     inst.components.combat.hiteffectsymbol = "lightbulb"
+    inst.components.combat:SetDefaultDamage(20)
+    inst.components.combat.playerdamagepercent = .5
+    inst.components.combat:SetRange(.5)
+    inst.components.combat:SetAttackPeriod(.3)
 
     inst:AddComponent("follower")
 

@@ -9,6 +9,7 @@ description = [[
 
 自带5格装备栏、99堆叠、死亡不掉落、一键复活
 建议同时开启的mod: showme，简单血条，全球定位等以增强游戏体验
+mod详细查看 http://www.tumbleweedofall.xyz/extend
 ]]
 author = "五年"
 
