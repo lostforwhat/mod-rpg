@@ -540,7 +540,9 @@ AddComponentPostInit("lootdropper", function(self)
 	    		--self.inst:HasTag("tree") or
 	    		self.inst:HasTag("structure") or 
 	    		self.inst:HasTag("INLIMBO") or
-	    		self.inst:HasTag("plant") or 
+	    		self.inst:HasTag("plant") or
+	    		self.inst:HasTag("pickable") or 
+	    		self.inst:HasTag("heavy") or
 	    		math.random() < (1 / (difficulty_level * 2 - 1)) then
 	    		table.insert(newloots, v)
 	    	end

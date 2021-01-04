@@ -140,6 +140,12 @@ AddClassPostConstruct("screens/playerhud", function(self)
 		end
 	end
 
+	self.inst:DoTaskInTime(.1, function() 
+		if self.owner.Network:GetPlayerAge() <= 1 then
+            self:ShowHelpDetail()
+        end
+	end)
+
 	--修改esc按键关闭窗口
 	local OldOnControl = self.OnControl
 	self.OnControl = function(_, control, down) 

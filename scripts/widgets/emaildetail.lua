@@ -84,7 +84,7 @@ function EmailDetail:LoadEmails()
 
         email_item.content = backing:AddChild(Text(NUMBERFONT, 22))
         email_item.content:SetPosition(0, 10)
-        email_item.content:SetRegionSize(item_width * .9, 40)
+        email_item.content:SetRegionSize(item_width * .9, 55)
         email_item.content:SetHAlign(ANCHOR_LEFT)
 
         email_item.prefab = backing:AddChild(Widget("EmailPrefab"))
@@ -107,7 +107,7 @@ function EmailDetail:LoadEmails()
 
             email_item.title:SetString("["..time.." "..sender.."] "..title)
 
-            email_item.content:SetMultilineTruncatedString(content, 3, item_width * .9, 60, "", false)
+            email_item.content:SetMultilineTruncatedString(content, 3, item_width * .9, 30, "", false)
 
             email_item.get = backing:AddChild(TEMPLATES2.StandardButton(function() 
                 SendModRPCToServer(MOD_RPC.RPG_email.received, id)

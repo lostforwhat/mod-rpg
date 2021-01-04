@@ -124,15 +124,18 @@ local function oncollide(inst, other)
                 and (other.components.follower == nil 
                     or other.components.follower:GetLeader() == nil
                     or not other.components.follower:GetLeader():HasTag("player")) or true) then
-                local damage = 5
+                local damage = 8
                 if leader.components.skilldata then
                     local skill = leader.components.skilldata.skills["electricprotection"]
                     local extra_damge = skill:level_fn(leader) * (skill.step or 0)
                     damage = damage + extra_damge
                 end
                 inst.components.combat:SetDefaultDamage(damage)
-                if inst.components.combat:CanTarget(other) then
+                if inst.components.combat:CanAttack(other) then
                     inst.components.combat:DoAttack(other)
+                    if other.components.combat.target ~= leader then
+                        other.components.combat:SetTarget(leader)
+                    end
                 end
                 --other.components.combat:GetAttacked(leader, damage)
         end

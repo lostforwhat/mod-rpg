@@ -1,4 +1,4 @@
-local DEFAULT_CD = 120
+local DEFAULT_CD = 60
 local USE_STEP = 5
 
 local function onlevel(self, level)
@@ -12,6 +12,7 @@ local function oncd_time(self, cd_time)
         self.inst.player_classified:UpdateSkillCd("resurrect", cd_time)
     end
 end
+
 
 --人物复活组件
 local Resurrect = Class(function(self, inst) 
@@ -60,6 +61,59 @@ function Resurrect:Effect()
 		self.use = self.use + 1
 		self.cd_time = DEFAULT_CD + self.use * USE_STEP
 		self.inst:StartUpdatingComponent(self)
+
+		if self.inst.components.email ~= nil then
+			if self.use == 1 then --初次复活给予提示
+				local email = {
+					_id = math.random(999999),
+					title = "复活提示",
+					content = "亲爱的玩家，这是您第一次使用一键复活，每次使用将延长使用CD并扣减经验值，建议必要的时候再使用该方式复活！",
+					prefabs = {
+						{
+							prefab = "amulet",
+							num = 1,
+						}
+					},
+					sender = "system",
+					time = tostring(os.date())
+				}
+				self.inst.components.email:AddEmail(email)
+			end
+			if self.use == 5 and --前期多次复活给予提示
+				self.inst.components.age ~= nil and 
+				self.inst.components.age:GetAgeInDays() <= 5 then
+				local email = {
+					_id = math.random(999999),
+					title = "来自五年的关怀",
+					content = "您短期内频繁使用一键复活，每次使用将延长使用CD并扣减经验值，建议必要的时候再使用该方式复活，考虑您目前的困境，系统给予您特殊的关怀！",
+					prefabs = {
+						{
+							prefab = "amulet",
+							num = 5,
+						},
+						{
+							prefab = "potion_luck",
+							num = 2,
+						},
+						{
+							prefab = "meat_dried",
+							num = 5,
+						},
+						{
+							prefab = "cutgrass",
+							num = 10,
+						},
+						{
+							prefab = "twigs",
+							num = 5,
+						}
+					},
+					sender = "system",
+					time = tostring(os.date())
+				}
+				self.inst.components.email:AddEmail(email)
+			end
+		end
 	end
 end
 

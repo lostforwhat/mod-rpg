@@ -327,4 +327,7 @@ AddPrefabPostInitAny(function(inst)
         or inst.prefab == "crabking" then
         inst:AddTag("reflectproject")
     end
+    if IsServer then
+        
+    end
 end)

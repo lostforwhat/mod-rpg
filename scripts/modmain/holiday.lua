@@ -123,7 +123,6 @@ local function delayspawnboss(delay)
     	_G.TheWorld:DoTaskInTime(delay, function() 
     		local boss = _G.SpawnPrefab(prefab)
 	    	boss:AddTag("rpg_holiday")
-	    	boss.GetShowItemInfo = function(boss) return "*活动领主*" end
 	    	boss.Transform:SetPosition(pos.x, 0, pos.z)
 	    	TheNet:Announce("[世界"..shardId.."] 领主出现在坐标("..pos.x..","..pos.z..")附近！")
     	end)

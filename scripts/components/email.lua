@@ -19,7 +19,7 @@ local function SpawnItem(prefab, use_left)
 end
 
 local function GiveItem(inst, item)
-	if inst.components.inventory ~= nil then
+	if not inst:HasTag("playerghost") and inst.components.inventory ~= nil then
 		inst.components.inventory:GiveItem(item)
 	else
 		item.Transform:SetPosition(inst:GetPosition():Get())

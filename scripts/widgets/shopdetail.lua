@@ -158,8 +158,8 @@ function ShopDetail:LoadMenus()
     self.menu.title:SetString("交易小店")
     self.menu.title:SetRegionSize(150, 60)
 
-    self.menu.time = self.menu:AddChild(Text(NUMBERFONT, 38, "", {0, 1, 1, 1}))
-    self.menu.time:SetPosition(-130, 30)
+    self.menu.time = self.menu:AddChild(Text(NUMBERFONT, 30, "", {1, 1, 0, 1}))
+    self.menu.time:SetPosition(-150, 30)
     local time = TheWorld.net._resetshoptime:value() or 0
     self.menu.time:SetString(SecondsToTime(1800-time))
     self.menu.time.inst:DoPeriodicTask(1, function()
@@ -168,6 +168,7 @@ function ShopDetail:LoadMenus()
             self.menu.time:SetString(SecondsToTime(1800-time))
         else
             time = TheWorld.net._resetshoptime:value() or 0
+            self:LoadShopFromServer()
         end
     end)
 
