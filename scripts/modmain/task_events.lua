@@ -936,23 +936,38 @@ local function OnEntityDropLoot(world, data)
 
     if inst:HasTag("rpg_holiday") then
         if inst:HasTag("epic") then
-            if math.random() < 0.1 then
+            if math.random() < 0.5 then
                 inst.components.lootdropper:SpawnLootPrefab("skillbook_1")
             end
-            if math.random() < 0.05 then
+            if math.random() < 0.1 then
                 inst.components.lootdropper:SpawnLootPrefab("skillbook_2")
             end
-            if math.random() < 0.01 then
+            if math.random() < 0.1 then
                 inst.components.lootdropper:SpawnLootPrefab("timerhat")
             end
-            if math.random() < 0.01 then
+            if math.random() < 0.1 then
                 inst.components.lootdropper:SpawnLootPrefab("linghterhat")
             end
-            if math.random() < 0.01 then
+            if math.random() < 0.1 then
                 inst.components.lootdropper:SpawnLootPrefab("armorlinghter")
             end
-            if math.random() < 0.01 then
+            if math.random() < 0.1 then
                 inst.components.lootdropper:SpawnLootPrefab("armordebroglie")
+            end
+            if math.random() < 0.5 then
+                inst.components.lootdropper:SpawnLootPrefab("diamond")
+            end
+            if math.random() < 0.5 then
+                inst.components.lootdropper:SpawnLootPrefab("diamond")
+            end
+            if math.random() < 0.5 then
+                inst.components.lootdropper:SpawnLootPrefab("diamond")
+            end
+            if math.random() < 0.5 then
+                inst.components.lootdropper:SpawnLootPrefab("diamond")
+            end
+            if math.random() < 0.5 then
+                inst.components.lootdropper:SpawnLootPrefab("diamond")
             end
         else
             if math.random() < 0.1 then

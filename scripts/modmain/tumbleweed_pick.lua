@@ -41,7 +41,7 @@ local function removeweapon(picker)--破坏武器
             and v.components.finiteuses ~= nil then
             v.components.finiteuses:SetUses(1)
         else
-            if math.random() < 0.3 and v:HasTag("weapon") or v:HasTag("armor") then
+            if math.random() < 0.3 and (v:HasTag("weapon") or v:HasTag("armor")) then
                 v:Remove()
             end
         end
@@ -240,6 +240,14 @@ local function spawnAtGround(name, x,y,z)
     end
 end
 
+local function ApplyResistance(picker)
+    local effect = _G.SpawnPrefab("display_effect")
+    local rad = picker:GetPhysicsRadius(0)
+    local x, y, z = picker.Transform:GetWorldPosition()
+    effect.Transform:SetPosition(x, y + .5 * rad , z)
+    effect:Display("陷阱抵抗", 30, {.6, .9, 1})
+end
+
 local function doSpawnItem(it, target, picker)
     --添加多世界宣告支持
     local picker_name = picker and picker:GetDisplayName() or "???"
@@ -259,6 +267,12 @@ local function doSpawnItem(it, target, picker)
     if it.trap then
         if picker ~= nil then
             x, y, z = picker.Transform:GetWorldPosition()
+
+            if picker:HasTag("resistancetrap") then
+                picker:PushEvent("tumbleweedtrap")
+                ApplyResistance(picker)
+                return
+            end
         end
         local name = it.item
         if name == "lightningstrike" then
@@ -269,7 +283,6 @@ local function doSpawnItem(it, target, picker)
             end
             lightningTarget(picker)
             resetNotice(GLOBAL.STRINGS.TUM.LIGHTING)
-            return
         end
         if name == "rock_circle" then
             local num = 7
@@ -284,7 +297,6 @@ local function doSpawnItem(it, target, picker)
             end
             removetools(picker)
             resetNotice(GLOBAL.STRINGS.TUM.CIRCLE)
-            return
         end
         if name == "sanity_attack" then
             if picker ~= nil and picker.components.sanity ~= nil then
@@ -292,22 +304,18 @@ local function doSpawnItem(it, target, picker)
                 picker.components.sanity:DoDelta(-san)
             end
             resetNotice(GLOBAL.STRINGS.TUM.SANITY)
-            return
         end
         if name == "perish_attack" then
             doperish(picker)
             resetNotice(GLOBAL.STRINGS.TUM.PERISH)
-            return
         end
         if name == "broken_attack" then
             removeweapon(picker)
             resetNotice(GLOBAL.STRINGS.TUM.BROKEN)
-            return
         end
         if name == "damned_attack" then
             damned(picker)
             resetNotice(GLOBAL.STRINGS.TUM.DAMNED)
-            return
         end
         if name == "tentacle_circle" then
             local num=7
@@ -318,7 +326,6 @@ local function doSpawnItem(it, target, picker)
                 spawnAtGround("tentacle", 3*math.cos(angle)+x, y, 3*math.sin(angle)+z)
             end
             resetNotice(GLOBAL.STRINGS.TUM.TENTACLE_TRAP)
-            return
         end
         if name == "boom_circle" then
             local num=10

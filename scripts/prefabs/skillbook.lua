@@ -33,7 +33,7 @@ local function OnHaunt(inst, haunter)
     return false
 end
 
-local function fn()
+local function fn(grade)
     local inst = CreateEntity()
 
     inst.entity:AddTransform()
@@ -51,7 +51,12 @@ local function fn()
     inst:AddTag("skillbook")
 
     inst:AddTag("_named")
-    inst:SetPrefabName("skillbook")
+
+    if grade ~= nil then
+        inst:SetPrefabName("skillbook_"..grade)
+    else
+        inst:SetPrefabName("skillbook")
+    end
     MakeInventoryFloatable(inst, "med", nil, 0.75)
 
     inst.entity:SetPristine()
@@ -109,7 +114,7 @@ end
 
 local function MakeSkillbookGrade(grade)
     return function()
-        local inst = fn()
+        local inst = fn(grade)
         if not TheWorld.ismastersim then
             return inst
         end

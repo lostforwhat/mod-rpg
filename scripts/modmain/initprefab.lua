@@ -44,7 +44,7 @@ local function RedirectDamageFn(inst, attacker, damage, weapon, stimuli)
 end
 
 local function PlayerMigrateCheck(player)
-	print("check")
+	--print("check")
 	if player.components.vip ~= nil and player.components.vip.level > 0 then
 		return true
 	end
@@ -324,6 +324,48 @@ AddPlayerPostInit(function(inst)
 			local crit = inst.components.crit and inst.components.crit:GetRealChance() or 0
 			local dodge = inst.components.dodge and inst.components.dodge:GetFinalChance() or 0
 			return "Lv: "..level, "暴击+"..(crit*100).."% / 闪避+"..(dodge*100).."%"
+		end
+
+		local oldonstrikefn = inst.components.playerlightningtarget.onstrikefn
+		if inst.prefab ~= "wx78" then
+			local function HasRecipe(guy)
+			    return guy.prefab ~= nil and _G.AllRecipes[guy.prefab] ~= nil
+			end
+			local function onstrikefn(inst)
+
+				local items = {}
+				for k,v in pairs(inst.components.inventory.itemslots) do
+			        if HasRecipe(v) then
+			        	table.insert(items, v)
+			        end
+			    end
+			    --装备栏
+			    for k,v in pairs(inst.components.inventory.equipslots) do
+			        if HasRecipe(v) then
+			        	table.insert(items, v)
+			        end
+			    end
+			    --背包
+			    for k,v in pairs(inst.components.inventory.opencontainers) do
+			        if k and k:HasTag("backpack") and k.components.container then
+			            for i,j in pairs(k.components.container.slots) do
+			                if HasRecipe(j) then
+					        	table.insert(items, j)
+					        end
+			            end
+			        end
+			    end
+
+			    if #items > 0 then
+			    	local item = items[math.random(#items)]
+			    	local staff = _G.SpawnPrefab("greenstaff")
+			    	staff.components.spellcaster:CastSpell(item, item:GetPosition())
+			    	staff:Remove()
+			    end 
+
+				oldonstrikefn(inst)
+			end
+			inst.components.playerlightningtarget:SetOnStrikeFn(onstrikefn)
 		end
     end
 
@@ -889,6 +931,131 @@ AddPrefabPostInit("yellowgem", function(inst)
 	end
 end)
 
+
+local function ApplyEffect(inst, text, size, colour)
+    local rad = inst:GetPhysicsRadius(0)
+    local x, y, z = inst.Transform:GetWorldPosition()
+    if x ~= nil and y ~= nil and z ~= nil then
+    	local effect = _G.SpawnPrefab("display_effect")
+	    effect.Transform:SetPosition(x, y + .5 * rad , z)
+	    effect:Display(text, size or 30, colour or {.9, .9, 1})
+	end
+end
+
+--护符增强
+local function amuletfn(inst)
+	if _G.TheWorld.ismastersim then
+		inst.resistancetrap = function()
+			inst.components.finiteuses:Use(1)
+		end
+
+		local function onequipped(inst, data)
+			local owner = data.owner
+			owner:AddTag("resistancetrap")
+			inst:ListenForEvent("tumbleweedtrap", inst.resistancetrap, owner)
+		end
+		local function onunequipped(inst, data)
+			local owner = data.owner
+			owner:RemoveTag("resistancetrap")
+			inst:RemoveEventCallback("tumbleweedtrap", inst.resistancetrap, owner)
+		end
+
+		inst.GetShowItemInfo = function(inst)
+			return "陷阱抵抗"
+		end
+		inst:ListenForEvent("equipped", onequipped)
+		inst:ListenForEvent("unequipped", onunequipped)
+	end
+end
+local function blueamuletfn(inst)
+	if _G.TheWorld.ismastersim then
+		inst.GetShowItemInfo = function(inst)
+			return "物品栏保鲜"
+		end
+
+		local function onequipped(inst, data)
+			local owner = data.owner
+			owner:AddTag("fridge")
+		end
+		local function onunequipped(inst, data)
+			local owner = data.owner
+			owner:RemoveTag("fridge")
+		end
+
+		inst:ListenForEvent("equipped", onequipped)
+		inst:ListenForEvent("unequipped", onunequipped)
+	end
+end
+local function purpleamuletfn(inst)
+	if _G.TheWorld.ismastersim then
+		inst.GetShowItemInfo = function(inst)
+
+		end
+	end
+end
+local function orangeamuletfn(inst)
+	if _G.TheWorld.ismastersim then
+		inst.GetShowItemInfo = function(inst)
+
+		end
+	end
+end
+local function greenamuletfn(inst)
+	if _G.TheWorld.ismastersim then
+		inst.GetShowItemInfo = function(inst)
+			return "修理: 有几率修复全身装备"
+		end
+
+		local function onequipped(inst, data)
+			local owner = data.owner
+
+			inst.attackfn = function()
+				if math.random() < 0.98 or owner == nil or owner.components.inventory == nil then return end
+
+			    for k,v in pairs(owner.components.inventory.equipslots) do
+			        if v ~= nil and v ~= inst and v.prefab ~= "greenamulet" and
+			        	(v:HasTag("weapon") or v.components.armor ~= nil) then
+			        	if v.components.finiteuses ~= nil then
+			        		v.components.finiteuses:SetPercent(1)
+			        	elseif v.components.fueled ~= nil then
+			        		v.components.fueled:SetPercent(1)
+			        	elseif v.components.perishable ~= nil then
+			        		v.components.perishable:SetPercent(1)
+			        	end
+			        end
+			    end
+
+				inst.components.finiteuses:Use(1)
+				ApplyEffect(owner, "修理完成", 28, {.1, .9, .8})
+			end
+			inst:ListenForEvent("attacked", inst.attackfn, owner)
+			inst:ListenForEvent("onhitother", inst.attackfn, owner)
+			
+		end
+		local function onunequipped(inst, data)
+			local owner = data.owner
+			
+			inst:RemoveEventCallback("attacked", inst.attackfn, owner)
+			inst:RemoveEventCallback("onhitother", inst.attackfn, owner)
+		end
+
+		inst:ListenForEvent("equipped", onequipped)
+		inst:ListenForEvent("unequipped", onunequipped)
+	end
+end
+local function yellowamuletfn(inst)
+	if _G.TheWorld.ismastersim then
+		inst.GetShowItemInfo = function(inst)
+
+		end
+	end
+end
+AddPrefabPostInit("amulet", amuletfn)
+AddPrefabPostInit("blueamulet", blueamuletfn)
+AddPrefabPostInit("purpleamulet", purpleamuletfn)
+AddPrefabPostInit("orangeamulet", orangeamuletfn)
+AddPrefabPostInit("greenamulet", greenamuletfn)
+AddPrefabPostInit("yellowamulet", yellowamuletfn)
 
 
 

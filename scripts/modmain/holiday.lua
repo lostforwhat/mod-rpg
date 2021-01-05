@@ -160,21 +160,24 @@ local monster_tb = {
     "ghost",
 }
 local function delayspawnprefab(delay, times)
-	times = times or 5
+	times = times or 10
 
-	for i=1, times do
-		_G.TheWorld:DoTaskInTime(delay*i, function() 
+	for i=0, times do
+		_G.TheWorld:DoTaskInTime(15 + delay*i, function() 
 			for k, v in pairs(_G.AllPlayers) do
-				
-				for m=1, math.random(5, 10) do
-					local pos = GetSpawnPoint(v:GetPosition(), math.random(8, 20))
-					if pos ~= nil then
-						local prefab = monster_tb[math.random(#monster_tb)]
-						local monster = _G.SpawnPrefab(prefab) 
-						monster.Transform:SetPosition(pos.x, 0, pos.z) 
-						monster:AddTag("rpg_holiday")
-						if monster.components.combat ~= nil then
-							monster.components.combat:SuggestTarget(v)
+				if not v:HasTag("playerghost") then
+					_G.TheWorld:PushEvent("ms_sendlightningstrike", v:GetPosition())
+
+					for m=1, math.random(5, 10) do
+						local pos = GetSpawnPoint(v:GetPosition(), math.random(8, 20))
+						if pos ~= nil then
+							local prefab = monster_tb[math.random(#monster_tb)]
+							local monster = _G.SpawnPrefab(prefab) 
+							monster.Transform:SetPosition(pos.x, 0, pos.z) 
+							monster:AddTag("rpg_holiday")
+							if monster.components.combat ~= nil then
+								monster.components.combat:SuggestTarget(v)
+							end
 						end
 					end
 				end
@@ -237,9 +240,9 @@ local holidays = {
 	},
 	[6] = {
 		name = "怪物来袭",
-		time = 1200,
+		time = 600,
 		fn = function() 
-			delayspawnprefab(30)
+			delayspawnprefab(45)
 		end,
 		closefn = function()
 			
@@ -286,9 +289,9 @@ local holidays = {
 	},
 	[10] = {
 		name = "消灭领主",
-		time = 1200,
+		time = 600,
 		fn = function(prefab) 
-			delayspawnboss(10)
+			delayspawnboss(30)
 		end,
 		closefn = function()
 			
@@ -338,16 +341,21 @@ _G.TriggerHoliday = function()
 		return
 	end
 	if _G.TheWorld.holiday == nil then
-		local worlds = {shardId}
+		local worlds = {}
 		local shards = _G.Shard_GetConnectedShards()
 		for k, v in pairs(shards) do
 			table.insert(worlds, k)
 		end
 
 		if #worlds > 0 then
+			if #worlds < 2 then
+				table.insert(worlds, shardId)
+			end
+
 			local world = worlds[math.random(#worlds)]
 			local index = math.random(#holidays)
 
+			--TheNet:SystemMessage("##MODRPG#1#holiday5:3")
 			local msg = _G.SHARD_KEY.."holiday"..index..":"..world
     		TheNet:SystemMessage(msg)
     		print(msg)
@@ -385,9 +393,16 @@ if TheNet:GetIsServer() then
 		if _G.TheWorld.ismastershard and GetWorldNum() > 1 then
 			
 			--自动活动，每次转钟触发一次
-			_G.TheWorld.WatchWorldState("cycles", function(inst) 
+			--[[_G.TheWorld.WatchWorldState("cycles", function(inst) 
 				local playerNum = GetPlayerNum()
 				if CurrentHoliday() == nil and math.random() < 0.01 + 0.02*playerNum then
+					print("--开始触发活动--")
+					TriggerHoliday()
+				end
+			end)]]
+			_G.TheWorld:DoPeriodicTask(333, function() 
+				local playerNum = GetPlayerNum()
+				if CurrentHoliday() == nil and playerNum >= 3 and math.random() < 0.01 + 0.02*playerNum then
 					print("--开始触发活动--")
 					TriggerHoliday()
 				end

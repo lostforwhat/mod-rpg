@@ -42,8 +42,10 @@ end
 function WorldShop:OnLoad(data)
 	if data ~= nil and data.reset_time > 0 then
 		self.reset_time = data.reset_time
-		local msg = SHARD_KEY.."resetshoptime"..self.reset_time
-    	TheNet:SystemMessage(msg)
+		if TheWorld.ismastershard then
+			local msg = SHARD_KEY.."resetshoptime"..self.reset_time
+	    	TheNet:SystemMessage(msg)
+	    end
 	end
 end
 

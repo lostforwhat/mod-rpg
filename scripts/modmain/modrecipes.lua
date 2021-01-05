@@ -59,35 +59,6 @@ AddRecipe("book_season",
     "images/book_season.xml"
 )
 
---解构可用
-AddRecipe("skillbook_1", 
-    {Ingredient("skillbookpage", 3, 'images/inventoryimages/skillbookpage.xml')}, 
-    _G.CUSTOM_RECIPETABS.BOOKS, 
-    TECH.LOST
-)
-
-AddRecipe("skillbook_2", 
-    {Ingredient("skillbookpage", 10, 'images/inventoryimages/skillbookpage.xml')}, 
-    _G.CUSTOM_RECIPETABS.BOOKS, 
-    TECH.LOST
-)
-
-AddRecipe("skillbook_3", 
-    {Ingredient("skillbookpage", 15, 'images/inventoryimages/skillbookpage.xml')}, 
-    nil, 
-    TECH.LOST
-)
-AddRecipe("skillbook_4", 
-    {Ingredient("skillbookpage", 20, 'images/inventoryimages/skillbookpage.xml')}, 
-    nil, 
-    TECH.LOST
-)
-AddRecipe("skillbook", 
-    {Ingredient("skillbookpage", 12, 'images/inventoryimages/skillbookpage.xml')}, 
-    nil, 
-    TECH.LOST
-)
-
 --willson
 AddRecipe("potion_luck", {Ingredient("wormlight",2),Ingredient("butter",1),Ingredient("cave_banana",3)},
 	RECIPETABS.MAGIC, 
@@ -242,4 +213,39 @@ AddRecipe("armordebroglie", {Ingredient("opalpreciousgem", 1), Ingredient("night
     nil, -- numtogive
     nil, -- builder_tag
     "images/inventoryimages/armordebroglie.xml"
+)
+
+--解构可用
+AddRecipe("skillbook_1", 
+    {Ingredient("skillbookpage", 3, 'images/inventoryimages/skillbookpage.xml')}, 
+    _G.CUSTOM_RECIPETABS.BOOKS, 
+    TECH.LOST
+)
+
+AddRecipe("skillbook_2", 
+    {Ingredient("skillbookpage", 8, 'images/inventoryimages/skillbookpage.xml')}, 
+    _G.CUSTOM_RECIPETABS.BOOKS, 
+    TECH.LOST
+)
+
+AddRecipe("skillbook_3", 
+    {Ingredient("skillbookpage", 12, 'images/inventoryimages/skillbookpage.xml')}, 
+    nil, 
+    TECH.LOST
+)
+AddRecipe("skillbook_4", 
+    {Ingredient("skillbookpage", 16, 'images/inventoryimages/skillbookpage.xml')}, 
+    nil, 
+    TECH.LOST
+)
+AddRecipe("skillbook", 
+    {Ingredient("skillbookpage", 9, 'images/inventoryimages/skillbookpage.xml')}, 
+    nil, 
+    TECH.LOST
+)
+
+AddRecipe("package_staff", 
+    {Ingredient("opalpreciousgem", 3), Ingredient("greengem", 9), Ingredient("thulecite",5)}, 
+    nil, 
+    TECH.LOST
 )

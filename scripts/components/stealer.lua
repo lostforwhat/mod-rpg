@@ -12,7 +12,7 @@ end
 
 local function IsValidVictim(victim)
     return victim ~= nil
-        and not ((victim:HasTag("stealed") and not victim:HasTag("hostile")) or
+        and not (victim:HasTag("stealed") or
                 victim:HasTag("veggie") or victim:HasTag("structure") or
                 victim:HasTag("wall") or victim:HasTag("balloon") or
                 victim:HasTag("groundspike") or victim:HasTag("smashable") or
@@ -67,17 +67,20 @@ function Stealer:Effect(target)
     	    item = target.components.inventory:DropItem(item)
         end
     end
-    --然后随机获得一个掉落物，如果有的话
-    if target.components.lootdropper ~= nil then
-        local loots = target.components.lootdropper:GenerateLoot()
-        if #loots > 0 then
-            item = SpawnPrefab(loots[math.random(#loots)])
-            item.Transform:SetPosition(target:GetPosition():Get())
-        end
-    end
+    
     --否则随机获得一个物品
     if item == nil and self.inst:HasTag("player") and not target:HasTag("player") then
-    	item = self:RandomItem(target)
+        --然后随机获得一个掉落物，如果有的话
+        if target.components.lootdropper ~= nil then
+            local loots = target.components.lootdropper:GenerateLoot()
+            if #loots > 0 then
+                item = SpawnPrefab(loots[math.random(#loots)])
+                item.Transform:SetPosition(target:GetPosition():Get())
+            end
+        end
+        if item == nil then
+        	item = self:RandomItem(target)
+        end
         if not target:HasTag("epic") then
             target:AddTag("stealed") --防止薅羊毛
         end
@@ -90,7 +93,7 @@ function Stealer:Effect(target)
         TheNet:Announce(self.inst:GetDisplayName().." 使用探云手，从 "..target:GetDisplayName().." 偷取了 "..item:GetDisplayName())
     end
     --如果攻击者有物品栏，则物品归属攻击者, 非玩家偷窃则有概率物品丢失
-    if self.inst.components.inventory ~= nil and (self.inst:HasTag("player") or math.random() < .6) then
+    if self.inst.components.inventory ~= nil and (self.inst:HasTag("player") or math.random() < .5) then
         self.inst.components.inventory:GiveItem(item)
     else
     	--否则销毁物品
@@ -102,7 +105,12 @@ end
 
 function Stealer:RandomItem(target)
 	if loot_table == nil then return end
-	local types = {"new_loot", "bad_loot", "new_loot", "new_loot", "good_loot", "luck_loot"}
+	local types = {"new_loot", "bad_loot", "new_loot", "new_loot", "good_loot"}
+    if target:HasTag("epic") then
+        table.insert(types, "luck_loot")
+    else
+        table.insert(types, "good_loot")
+    end
 	local items = deepcopy(loot_table[types[math.random(self.level + 1)]])
     local loot = items[math.random(#items)]
 

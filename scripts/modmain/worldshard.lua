@@ -65,10 +65,12 @@ _G.CHAT_RULES = {
 			end
 		end
 	},
-	["^move%s?(%d+),(%d+)$"] = {
+	["^move%s?(-?%d+),(-?%d+)$"] = {
 		function(player, st, ed, x, z)
 			if player:HasTag("titles_king") or player:HasTag("suit_space") or player.Network:IsServerAdmin() then
 				if (player._move_cd == nil or _G.GetTime() - player._move_cd >= 30) then
+					x = _G.tonumber(x) or 0
+					z = _G.tonumber(z) or 0
 					if _G.TheWorld.Map:IsPassableAtPoint(x, 0, z) then
 						player.Transform:SetPosition(x, 0, z)
 						player._move_cd = _G.GetTime()
