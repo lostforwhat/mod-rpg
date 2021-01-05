@@ -12,7 +12,7 @@ end
 
 local function IsValidVictim(victim)
     return victim ~= nil
-        and not (victim:HasTag("stealed") or
+        and not (victim:HasTag("stealed") or 
                 victim:HasTag("veggie") or victim:HasTag("structure") or
                 victim:HasTag("wall") or victim:HasTag("balloon") or
                 victim:HasTag("groundspike") or victim:HasTag("smashable") or
@@ -93,7 +93,7 @@ function Stealer:Effect(target)
         TheNet:Announce(self.inst:GetDisplayName().." 使用探云手，从 "..target:GetDisplayName().." 偷取了 "..item:GetDisplayName())
     end
     --如果攻击者有物品栏，则物品归属攻击者, 非玩家偷窃则有概率物品丢失
-    if self.inst.components.inventory ~= nil and (self.inst:HasTag("player") or math.random() < .5) then
+    if self.inst.components.inventory ~= nil and (self.inst:HasTag("player") or math.random() < .8) then
         self.inst.components.inventory:GiveItem(item)
     else
     	--否则销毁物品

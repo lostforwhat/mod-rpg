@@ -20,12 +20,20 @@ local function onequip(inst, owner)
     
     inst:ListenForEvent("blocked", OnBlocked, owner)
     owner:AddTag("reflectproject")
+
+    inst.onreceivelightning = function()
+        inst.components.fueled:DoDelta(180)
+    end
+
+    inst:ListenForEvent("receivelightning", inst.onreceivelightning, owner)
 end
 
 local function onunequip(inst, owner) 
     owner.AnimState:ClearOverrideSymbol("swap_body")
     inst:RemoveEventCallback("blocked", OnBlocked, owner)
     owner:RemoveTag("reflectproject")
+
+    inst:RemoveEventCallback("receivelightning", inst.onreceivelightning, owner)
 end
 
 local function ontakedamage(inst, damage)

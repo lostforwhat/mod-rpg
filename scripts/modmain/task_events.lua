@@ -939,19 +939,19 @@ local function OnEntityDropLoot(world, data)
             if math.random() < 0.5 then
                 inst.components.lootdropper:SpawnLootPrefab("skillbook_1")
             end
-            if math.random() < 0.1 then
+            if math.random() < 0.04 then
                 inst.components.lootdropper:SpawnLootPrefab("skillbook_2")
             end
-            if math.random() < 0.1 then
+            if math.random() < 0.05 then
                 inst.components.lootdropper:SpawnLootPrefab("timerhat")
             end
-            if math.random() < 0.1 then
+            if math.random() < 0.05 then
                 inst.components.lootdropper:SpawnLootPrefab("linghterhat")
             end
-            if math.random() < 0.1 then
+            if math.random() < 0.05 then
                 inst.components.lootdropper:SpawnLootPrefab("armorlinghter")
             end
-            if math.random() < 0.1 then
+            if math.random() < 0.05 then
                 inst.components.lootdropper:SpawnLootPrefab("armordebroglie")
             end
             if math.random() < 0.5 then

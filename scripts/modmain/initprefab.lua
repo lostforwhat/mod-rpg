@@ -332,38 +332,42 @@ AddPlayerPostInit(function(inst)
 			    return guy.prefab ~= nil and _G.AllRecipes[guy.prefab] ~= nil
 			end
 			local function onstrikefn(inst)
+				if inst.components.health ~= nil and 
+					not (inst.components.health:IsDead() or inst.components.health:IsInvincible()) and 
+					not inst.components.inventory:IsInsulated() and math.random() < 0.33 then
 
-				local items = {}
-				for k,v in pairs(inst.components.inventory.itemslots) do
-			        if HasRecipe(v) then
-			        	table.insert(items, v)
-			        end
-			    end
-			    --装备栏
-			    for k,v in pairs(inst.components.inventory.equipslots) do
-			        if HasRecipe(v) then
-			        	table.insert(items, v)
-			        end
-			    end
-			    --背包
-			    for k,v in pairs(inst.components.inventory.opencontainers) do
-			        if k and k:HasTag("backpack") and k.components.container then
-			            for i,j in pairs(k.components.container.slots) do
-			                if HasRecipe(j) then
-					        	table.insert(items, j)
-					        end
-			            end
-			        end
-			    end
+					local items = {}
+					for k,v in pairs(inst.components.inventory.itemslots) do
+				        if HasRecipe(v) then
+				        	table.insert(items, v)
+				        end
+				    end
+				    --装备栏
+				    for k,v in pairs(inst.components.inventory.equipslots) do
+				        if HasRecipe(v) then
+				        	table.insert(items, v)
+				        end
+				    end
+				    --背包
+				    for k,v in pairs(inst.components.inventory.opencontainers) do
+				        if k and k:HasTag("backpack") and k.components.container then
+				            for i,j in pairs(k.components.container.slots) do
+				                if HasRecipe(j) then
+						        	table.insert(items, j)
+						        end
+				            end
+				        end
+				    end
 
-			    if #items > 0 then
-			    	local item = items[math.random(#items)]
-			    	local staff = _G.SpawnPrefab("greenstaff")
-			    	staff.components.spellcaster:CastSpell(item, item:GetPosition())
-			    	staff:Remove()
-			    end 
-
+				    if #items > 0 then
+				    	local item = items[math.random(#items)]
+				    	local staff = _G.SpawnPrefab("greenstaff")
+				    	staff.components.spellcaster:CastSpell(item, item:GetPosition())
+				    	staff:Remove()
+				    end 
+				end
 				oldonstrikefn(inst)
+				inst:PushEvent("receivelightning")
 			end
 			inst.components.playerlightningtarget:SetOnStrikeFn(onstrikefn)
 		end

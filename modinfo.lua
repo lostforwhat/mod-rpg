@@ -13,7 +13,7 @@ mod详细查看 http://www.tumbleweedofall.xyz/extend
 ]]
 author = "五年"
 
-version = "1.1.3"
+version = "1.1.4"
 
 api_version = 10
 
@@ -66,7 +66,7 @@ configuration_options =
 	{
 		name = "token",
 		label = "服务器令牌",
-		hover = "专用服务器需要，连接网络商店及抽奖必须的令牌，获取方式请查看mod网站\n http://www.tumbleweedofall.com",
+		hover = "专用服务器需要，连接网络商店及抽奖必须的令牌，获取方式请查看mod网站\n http://www.tumbleweedofall.xyz",
 		options = {
 			{description = "无", data = false, hover = "请直接在服务器的mod设置中配置值"},
 		},

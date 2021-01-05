@@ -202,6 +202,8 @@ local function fn()
     inst.components.equippable:SetOnEquip(onequip)
     inst.components.equippable:SetOnUnequip(onunequip)
 
+    --inst.components.equippable.insulated = true
+
     MakeHauntableLaunch(inst)
 
     inst.GetShowItemInfo = GetShowItemInfo

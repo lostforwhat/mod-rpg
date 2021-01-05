@@ -596,7 +596,7 @@ AddPrefabPostInit(
                     --print("name:"..n.item..",chance:"..n.chance)
                 end
 
-                local num_loots = math.floor(math.random()*2)
+                local num_loots = 1
                 if picker:HasTag("cleverhands") and math.random() < 0.1 then
                     num_loots = num_loots + 1
                 end
@@ -604,7 +604,7 @@ AddPrefabPostInit(
                     num_loots = num_loots + 1
                 end
                 if _G.TheWorld:HasTag("pick_tumbleweed_more") then
-                    num_loots = num_loots + 1
+                    num_loots = num_loots + 2
                 end
                 --[[if TUNING.more_blueprint and level >=2 then
                     spawnAtGround("blueprint", x, y, z)

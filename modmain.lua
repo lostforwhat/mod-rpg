@@ -8,6 +8,9 @@ TUNING.token = GetModConfigData("token") and
 			#GetModConfigData("token") > 10 and 
 			GetModConfigData("token") or 
 			nil
+            
+TUNING.GRASSGEKKO_MORPH_CHANCE = 0
+
 _G.GetToken = function()
 	return TUNING.token or "0874689771c44c1e1828df13716801f5"
 end

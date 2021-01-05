@@ -81,6 +81,8 @@ local function simple()
     inst.components.equippable:SetOnUnequip(onunequip)
     inst.components.equippable.walkspeedmult = 1.15
 
+    inst.components.equippable.insulated = true
+
     MakeHauntableLaunch(inst)
 
     return inst
