@@ -40,7 +40,7 @@ local function taunt_attach(inst, target)
     end)
 end
 
-local function waterwalk_attack(inst, target)
+local function waterwalk_attach(inst, target)
     if target.components.drownable and target.components.drownable.enabled ~= false then
         target.components.drownable.enabled = false
         target.Physics:ClearCollisionMask()
@@ -149,4 +149,4 @@ end
 return MakeBuff("super_attack", attack_attach, nil, attack_detach, 10, 1),
     MakeBuff("speedup", speed_attach, nil, speed_detach, TUNING.BUFF_ATTACK_DURATION, 1),
     MakeBuff("taunt", taunt_attach, nil, nil, 15, 1),
-    MakeBuff("waterwalk", waterwalk_attack, nil, waterwalk_detach, TUNING.BUFF_ATTACK_DURATION, 1)
+    MakeBuff("waterwalk", waterwalk_attach, nil, waterwalk_detach, TUNING.BUFF_ATTACK_DURATION, 1)

@@ -10,6 +10,16 @@ local Vector3 = _G.Vector3
 local FRAMES = _G.FRAMES
 local TimeEvent = _G.TimeEvent
 
+local function ApplyEffect(inst, text, size, colour)
+    local rad = inst:GetPhysicsRadius(0)
+    local x, y, z = inst.Transform:GetWorldPosition()
+    if x ~= nil and y ~= nil and z ~= nil then
+    	local effect = _G.SpawnPrefab("display_effect")
+	    effect.Transform:SetPosition(x, y + .5 * rad , z)
+	    effect:Display(text, size or 30, colour or {.9, .9, 1})
+	end
+end
+
 local function RedirectDamageFn(inst, attacker, damage, weapon, stimuli)
 	local redirect_tagert = nil
 	if inst.components.combat ~= nil then
@@ -361,10 +371,26 @@ AddPlayerPostInit(function(inst)
 
 				    if #items > 0 then
 				    	local item = items[math.random(#items)]
-				    	local staff = _G.SpawnPrefab("greenstaff")
-				    	staff.components.spellcaster:CastSpell(item, item:GetPosition())
-				    	staff:Remove()
+				    	if item.components.weaponlevel ~= nil and item.components.weaponlevel.level >= 8 then
+				    		if math.random() < 0.5 then
+				    			item.components.weaponlevel:AddLevel(1)
+				    			ApplyEffect(inst, "祝福", 40, {1, 0, 1})
+				    			if item.components.weaponlevel.level >= 10 then
+				    				local str = "恭喜 "..inst:GetDisplayName().." ".. item:GetDisplayName().." 受到祝福自动熔炼成功!"
+									TheNet:Announce(str, inst.entity)
+				    			end
+				    		else
+				    			item.components.weaponlevel:AddLevel(-1)
+				    			ApplyEffect(inst, "诅咒", 40, {.1, .1, .1})
+				    		end
+				    	else
+					    	local staff = _G.SpawnPrefab("greenstaff")
+					    	staff.components.spellcaster:CastSpell(item, item:GetPosition())
+					    	staff:Remove()
+					    end
 				    end 
+
+				    inst.components.luck:Random()
 				end
 				oldonstrikefn(inst)
 				inst:PushEvent("receivelightning")
@@ -935,16 +961,6 @@ AddPrefabPostInit("yellowgem", function(inst)
 	end
 end)
 
-
-local function ApplyEffect(inst, text, size, colour)
-    local rad = inst:GetPhysicsRadius(0)
-    local x, y, z = inst.Transform:GetWorldPosition()
-    if x ~= nil and y ~= nil and z ~= nil then
-    	local effect = _G.SpawnPrefab("display_effect")
-	    effect.Transform:SetPosition(x, y + .5 * rad , z)
-	    effect:Display(text, size or 30, colour or {.9, .9, 1})
-	end
-end
 
 --护符增强
 local function amuletfn(inst)

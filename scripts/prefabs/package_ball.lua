@@ -6,9 +6,11 @@ local assets =
 }
 
 local function do_unpack(inst, pt, deployer)
-	if inst and inst.components.packer and inst.components.packer:Unpack(pt) then
-		
-		inst:Remove()
+	if inst and inst.components.packer then
+		local success, res = pcall(function() return inst.components.packer:Unpack(pt) end)
+		if success and res then
+			inst:Remove()
+		end
 	end
 end
 

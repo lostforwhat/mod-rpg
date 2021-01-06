@@ -42,7 +42,7 @@ function WeaponLevel:AddLevel(amount)
 	self.inst:PushEvent("weaponlevelup", {oldlevel = oldlevel, newlevel = self.level})
 end
 
-function WeaponLevel:DoStrengthen(doer, rate, protect) --基础几率
+function WeaponLevel:DoStrengthen(doer, rate, protect, noannounce) --基础几率
 	local player_luck = doer.components.luck and doer.components.luck:GetLuck() or 0
 
 	local baselevel = self.level or 0
@@ -54,11 +54,11 @@ function WeaponLevel:DoStrengthen(doer, rate, protect) --基础几率
 	else
 		real_rate = (1 - baselevel*.04) * rate
 	end
-	if math.random() < real_rate * (.75 + player_luck * .005) then
+	if protect or math.random() < real_rate * (.75 + player_luck * .005) then
 		self:AddLevel(1)
 		doer:PushEvent("weaponstrengthen", {weapon = self.inst, level = self.level})
 
-		if self.level >= 10 then 
+		if self.level >= 10 and not noannounce then 
 			local str = "恭喜 "..doer:GetDisplayName().." 熔炼 ".. self.inst:GetDisplayName().." 成功!"
 			TheNet:Announce(str, doer.entity)
 		end
@@ -68,7 +68,7 @@ function WeaponLevel:DoStrengthen(doer, rate, protect) --基础几率
 	elseif baselevel > 10 and not protect and not doer:HasTag("weaponprotect") and not TheWorld:HasTag("weaponprotect") then
 		self:AddLevel(-1)
 	end
-	self:Fixed(rate)
+	--self:Fixed(rate)
 	return false
 end
 

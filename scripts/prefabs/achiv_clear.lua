@@ -11,7 +11,7 @@ local function OnPray(inst, prayer)
         local tasks = {}
         for k, v in pairs(task_data) do
             local need = v.need or 1
-            if k ~= "all" and prayer.components.taskdata[k] <= need then
+            if k ~= "all" and prayer.components.taskdata[k] < need then
                 table.insert(tasks, k)
             end
         end

@@ -71,7 +71,7 @@ function Stealer:Effect(target)
     --否则随机获得一个物品
     if item == nil and self.inst:HasTag("player") and not target:HasTag("player") then
         --然后随机获得一个掉落物，如果有的话
-        if target.components.lootdropper ~= nil then
+        if math.random() < 0.5 and target.components.lootdropper ~= nil then
             local loots = target.components.lootdropper:GenerateLoot()
             if #loots > 0 then
                 item = SpawnPrefab(loots[math.random(#loots)])

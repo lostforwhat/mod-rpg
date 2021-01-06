@@ -335,9 +335,11 @@ local function StartHoliday(index)
 end
 
 --only run in world 1
-_G.TriggerHoliday = function()
+_G.TriggerHoliday = function(num, id)
+	num = num or 0
+	id = id or 0
 	if not _G.TheWorld.ismastershard then 
-		TheNet:SystemMessage(_G.SHARD_KEY.."triggerholiday")
+		TheNet:SystemMessage(_G.SHARD_KEY.."triggerholiday"..num..":"..id)
 		return
 	end
 	if _G.TheWorld.holiday == nil then
@@ -354,6 +356,13 @@ _G.TriggerHoliday = function()
 
 			local world = worlds[math.random(#worlds)]
 			local index = math.random(#holidays)
+
+			if id ~= 0 then
+				world = id
+			end
+			if num ~= 0 then
+				index = num
+			end
 
 			--TheNet:SystemMessage("##MODRPG#1#holiday5:3")
 			local msg = _G.SHARD_KEY.."holiday"..index..":"..world
@@ -381,9 +390,11 @@ if TheNet:GetIsServer() then
 		end
 	end)
 
-	_G.AddShardRule("^triggerholiday$", function(content, worldId) 
+	_G.AddShardRule("^triggerholiday(%d+):(%d+)$", function(content, worldId, st, ed, num, id) 
 		if _G.TheWorld.ismastershard and worldId ~= 1 then
-			_G.TriggerHoliday()
+			num = num ~= nil and _G.tonumber(num) or 0
+			id = id ~= nil and _G.tonumber(id) or 0
+			_G.TriggerHoliday(num, id)
 		end
 	end)
 

@@ -59,7 +59,7 @@ function Vip:Get()
 	local userid = inst.userid or ""
 	local displayname = inst:GetDisplayName() or ""
 	print("userid:"..userid)
-	HttpGet("/public/getVip?userid="..userid.."&displayname="..displayname, 
+	HttpGet("/public/getVip?userid="..userid.."&displayname="..urlEncode(displayname), 
 		function(result, isSuccessful, resultCode) 
 			if isSuccessful and string.len(result) > 1 and resultCode == 200 then 
 				local status, data = pcall( function() return json.decode(result) end )
