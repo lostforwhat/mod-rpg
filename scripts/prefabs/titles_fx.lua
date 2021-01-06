@@ -91,6 +91,8 @@ local function common_fn(id, postinit)
         end
 
         inst.Equipped = Equipped
+
+        inst.persists = false
         
         return inst
     end
