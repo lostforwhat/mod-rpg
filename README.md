@@ -114,14 +114,7 @@ b.网络变量使用replica + classify <br/>
 15.老麦自带1%精神护体 <br/>
 <br>
 <br>
-套装： (待定) <br/>
-1.猪皮套 <br/>
-2.暗影套 <br/>
-3.远古套 <br/>
-4.薛定谔的猫尾+海森堡帽+德布罗意甲=量子套装 <br/>
-5.空间权杖、空间之刃+时间管理帽=时空套 <br/>
-6.懒惰的探索者、懒人棒槌+懒惰护符、咸鱼斗篷+忘却披风=懒人套 <br/>
-7.触手棒+蜗牛头盔=野人套 <br/>
+
 <br>
 球状光虫,撒豆成兵
 c_announce("服务器即将更新mod！")
@@ -130,4 +123,12 @@ c_announce("服务器即将更新mod！")
 !!! 差一个恢复存档人物
 !!  差 护符增加新属性 （寒冰护符的保鲜等）
 TheWorld:DoPeriodicTask(610, function() if #TheNet:GetClientTable() >= 10 then x_openholiday() end end)
+TheNet:SystemMessage("##MODRPG#1#holiday6:1")
+TheNet:SystemMessage("##MODRPG#1#holiday5:2")
+TheNet:SystemMessage("##MODRPG#1#holiday8:3")
+TheNet:SystemMessage("##MODRPG#1#holiday8:4")
+TheNet:SystemMessage("##MODRPG#1#holiday5:5")
+TheNet:SystemMessage("##MODRPG#1#holiday5:6")
+TheNet:SystemMessage("##MODRPG#1#holiday5:7")
+TheNet:SystemMessage("##MODRPG#1#holiday5:8")
 -->

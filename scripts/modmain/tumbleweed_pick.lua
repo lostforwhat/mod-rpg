@@ -4,6 +4,7 @@ require("modmain/loot_table")
 local loot_table = GLOBAL.loot_table
 
 local function removetools(picker)
+    if picker == nil or picker.components.inventory == nil then return end
     for k,v in pairs(picker.components.inventory.itemslots) do
         if v and (v.prefab=="multitool_axe_pickaxe"
             or v.prefab=="goldenpickaxe"
@@ -110,6 +111,31 @@ end
 local function keepPickerStop(picker)
     if picker.components.freezable then
         picker.components.freezable:AddColdness(10, 3)
+    end
+end
+
+local function AddWeapLevel(picker)
+    if picker == nil or picker.components.inventory == nil then return end
+    for k,v in pairs(picker.components.inventory.itemslots) do
+        if v.components.weaponlevel ~= nil then
+            v.components.weaponlevel:AddLevel(1)
+        end
+    end
+    --装备栏
+    for k,v in pairs(picker.components.inventory.equipslots) do
+        if v.components.weaponlevel ~= nil then
+            v.components.weaponlevel:AddLevel(1)
+        end
+    end
+    --背包
+    for k,v in pairs(picker.components.inventory.opencontainers) do
+        if k and k:HasTag("backpack") and k.components.container then
+            for i,j in pairs(k.components.container.slots) do
+                if j.components.weaponlevel ~= nil then
+                    j.components.weaponlevel:AddLevel(1)
+                end
+            end
+        end
     end
 end
 
@@ -496,6 +522,10 @@ local function doSpawnItem(it, target, picker)
         end
         if name == "player_gift" then
             spawnPlayerGift(picker)
+        end
+        if name == "weaponlevel_gift" then
+            AddWeapLevel(picker)
+            resetNotice(GLOBAL.STRINGS.TUM.WEAPONLEVEL)
         end
         return 
     end

@@ -405,6 +405,7 @@ gift_loot = { --彩蛋
         {chance = 0.007, item = "cook_gift", gift = true},--锅冰箱彩蛋
         {chance = 0.03, item = "butterfly_gift", gift = true},--蝴蝶彩蛋
         {chance = 0.01, item = "player_gift", gift = true}, --专属彩蛋
+        {chance = 0.02, item = "weaponlevel_gift", gift = true},--强化彩蛋
     }
 }
 

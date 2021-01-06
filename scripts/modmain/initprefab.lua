@@ -342,6 +342,7 @@ AddPlayerPostInit(function(inst)
 			    return guy.prefab ~= nil and _G.AllRecipes[guy.prefab] ~= nil
 			end
 			local function onstrikefn(inst)
+				if inst:HasTag("lifeforever") then return end
 				if inst.components.health ~= nil and 
 					not (inst.components.health:IsDead() or inst.components.health:IsInvincible()) and 
 					not inst.components.inventory:IsInsulated() and math.random() < 0.33 then
@@ -376,7 +377,7 @@ AddPlayerPostInit(function(inst)
 				    			item.components.weaponlevel:AddLevel(1)
 				    			ApplyEffect(inst, "祝福", 40, {1, 0, 1})
 				    			if item.components.weaponlevel.level >= 10 then
-				    				local str = "恭喜 "..inst:GetDisplayName().." ".. item:GetDisplayName().." 受到祝福自动熔炼成功!"
+				    				local str = "恭喜 "..inst:GetDisplayName().."的 ".. item:GetDisplayName().." 受到了祝福!"
 									TheNet:Announce(str, inst.entity)
 				    			end
 				    		else
@@ -384,9 +385,11 @@ AddPlayerPostInit(function(inst)
 				    			ApplyEffect(inst, "诅咒", 40, {.1, .1, .1})
 				    		end
 				    	else
-					    	local staff = _G.SpawnPrefab("greenstaff")
-					    	staff.components.spellcaster:CastSpell(item, item:GetPosition())
-					    	staff:Remove()
+				    		if math.random() < 0.1 then
+						    	local staff = _G.SpawnPrefab("greenstaff")
+						    	staff.components.spellcaster:CastSpell(item, item:GetPosition())
+						    	staff:Remove()
+						    end
 					    end
 				    end 
 

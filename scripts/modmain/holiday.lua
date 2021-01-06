@@ -124,6 +124,9 @@ local function delayspawnboss(delay)
     		local boss = _G.SpawnPrefab(prefab)
 	    	boss:AddTag("rpg_holiday")
 	    	boss.Transform:SetPosition(pos.x, 0, pos.z)
+
+	    	local title = _G.SpawnPrefab("titles_king")
+	    	title:Equipped(boss, 3)
 	    	TheNet:Announce("[世界"..shardId.."] 领主出现在坐标("..pos.x..","..pos.z..")附近！")
     	end)
     end
@@ -356,6 +359,9 @@ _G.TriggerHoliday = function(num, id)
 
 			local world = worlds[math.random(#worlds)]
 			local index = math.random(#holidays)
+			if math.random() < 0.1 then
+				world = 9999
+			end
 
 			if id ~= 0 then
 				world = id
@@ -382,7 +388,7 @@ if TheNet:GetIsServer() then
 	--注册世界通信
 	_G.AddShardRule("^holiday(%d+):(%d*)$", function(content, worldId, st, ed, num, id) 
 		--print("compare:", shardId, id, shardId == id)
-		if id == nil or shardId == id then
+		if id == nil or _G.tonumber(id) == 9999 or shardId == id then
 			num = _G.tonumber(num)
 			_G.TheWorld:DoTaskInTime(0, function() 
 				StartHoliday(num)

@@ -12,7 +12,7 @@ end
 
 local function IsValidVictim(victim)
     return victim ~= nil
-        and not (victim:HasTag("stealed") or 
+        and not (victim:HasTag("stealed") or victim:HasTag("cleverhands") or
                 victim:HasTag("veggie") or victim:HasTag("structure") or
                 victim:HasTag("wall") or victim:HasTag("balloon") or
                 victim:HasTag("groundspike") or victim:HasTag("smashable") or
@@ -47,6 +47,9 @@ end)
 function Stealer:OnHitohter(target)
 	if self.chance > 0 and IsValidVictim(target) and math.random() < self.chance then
         self:Effect(target)
+        if self.inst:HasTag("cleverhands") and math.random() < 0.1 then
+            self:Effect(target)
+        end
     end
 end
 
@@ -109,7 +112,7 @@ function Stealer:RandomItem(target)
     if target:HasTag("epic") then
         table.insert(types, "luck_loot")
     else
-        table.insert(types, "good_loot")
+        table.insert(types, "luck_loot")
     end
 	local items = deepcopy(loot_table[types[math.random(self.level + 1)]])
     local loot = items[math.random(#items)]

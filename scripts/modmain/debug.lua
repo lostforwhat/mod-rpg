@@ -67,8 +67,8 @@ _G.x_printworlds = function()
 	end
 end
 
-_G.x_openholiday = function()
-	_G.TriggerHoliday()
+_G.x_openholiday = function(num, worldId)
+	_G.TriggerHoliday(num, worldId)
 end
 
 _G.x_updatehelp = function(text)

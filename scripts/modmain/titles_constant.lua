@@ -115,7 +115,7 @@ titles_data = {
 	{
 		id="cleverhands",
 		name="心灵手巧", 
-		desc="【投机】采集风滚草10%多1份物品\n【洞悉】击杀有5%概率多倍掉落",
+		desc="【投机】采集风滚草10%多1份物品\n【洞悉】击杀有5%概率多倍掉落\n【灵动】提升偷窃并防止被偷窃",
 		conditions={
 			{
 				condition="完成所有建造任务",
@@ -181,7 +181,7 @@ titles_data = {
 	{
 		id="lifeforever",
 		name="生生不息",
-		desc="【生机】击杀怪物恢复自身2%目标最大值\n【神佑】受伤害时有15%几率转移到附近单位",
+		desc="【生机】击杀怪物恢复自身2%目标最大值\n【神佑】受伤害时有15%几率转移到附近单位\n【绝缘】免疫雷电",
 		conditions={
 			{
 				condition="完成全部种植任务",
@@ -223,6 +223,12 @@ titles_data = {
 					return player.components.age:GetAgeInDays() >= 50
 				end
 			},
+			{
+				condition="完成20次猪王任务",
+				fn=function(player)
+					return player.components.taskdata.collect >= 20
+				end
+			}
 		},
 		effect=function(player, equipped)
 			if equipped then
@@ -235,7 +241,7 @@ titles_data = {
 	{
 		id="king",
 		name="王者之巅", 
-		desc="【蔑视】秒杀血量低于自己的单位\n【王者】提升基于生存天数的生命值,每天发放一次物资",
+		desc="【蔑视】秒杀血量低于自己的单位\n【王者】提升基于生存天数的生命值\n【福利】每天发放一次物资",
 		conditions={
 			{
 				condition="完成所有成就任务",
