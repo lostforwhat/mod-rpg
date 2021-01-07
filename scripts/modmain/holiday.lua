@@ -326,9 +326,13 @@ local function StartHoliday(index)
 		local time = holidays[index].time or 120
 		_G.TheWorld.net._holiday_time:set(time)
 		_G.TheWorld.net._holiday:set("正在进行 "..name.." 活动")
-		_G.TheWorld.net:DoPeriodicTask(1, function() 
+		local task = _G.TheWorld.net:DoPeriodicTask(1, function() 
 			time = time - 1
 			_G.TheWorld.net._holiday_time:set(time)
+			if time <= 0 and task ~= nil then
+				task:Cancel()
+				task = nil
+			end
 		end)
 		TheNet:Announce("[世界"..shardId.."] 正在进行 "..name.." 活动")
 
