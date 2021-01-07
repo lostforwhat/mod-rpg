@@ -264,7 +264,7 @@ AddComponentPostInit("combat", function(self)
 	    if weapon ~= nil and projectile == nil then
 	    	return OldDoAttack(self, targ, weapon, projectile, ...)
 	    end
-	    if targ ~=nil and targ.components.dodge and targ.components.dodge:GetChance() > 0 then
+	    if targ ~= nil and targ:IsValid() and targ.components.dodge and targ.components.dodge:GetChance() > 0 then
 			if targ.components.dodge:Effect() then
 				ApplyMiss(targ, self.inst)
 				return

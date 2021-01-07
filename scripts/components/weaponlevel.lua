@@ -42,19 +42,31 @@ function WeaponLevel:AddLevel(amount)
 	self.inst:PushEvent("weaponlevelup", {oldlevel = oldlevel, newlevel = self.level})
 end
 
-function WeaponLevel:DoStrengthen(doer, rate, protect, noannounce) --基础几率
+function WeaponLevel:CalcRate(doer, rate, protect)
+	--if protect then return 1 end
+
 	local player_luck = doer.components.luck and doer.components.luck:GetLuck() or 0
+
+	local worldrate = TheWorld:HasTag("weaponprotect") and 1.1 or 1
 
 	local baselevel = self.level or 0
 	local real_rate = 0
 	if baselevel >= 19 then
-		real_rate = math.min(.1, rate * .1) --限制高等级
+		real_rate = math.min(.15, rate * .1) --限制高等级
 	elseif baselevel >= 9 then
 		real_rate = (.77 - baselevel*.03) * rate
 	else
 		real_rate = (1 - baselevel*.04) * rate
 	end
-	if protect or math.random() < real_rate * (.75 + player_luck * .005) then
+
+	real_rate = real_rate * (.75 + player_luck * .005) * worldrate
+
+	return real_rate
+end
+
+function WeaponLevel:DoStrengthen(doer, rate, protect, noannounce) --基础几率
+	
+	if math.random() < self:CalcRate(doer, rate, protect) then
 		self:AddLevel(1)
 		doer:PushEvent("weaponstrengthen", {weapon = self.inst, level = self.level})
 
@@ -65,7 +77,7 @@ function WeaponLevel:DoStrengthen(doer, rate, protect, noannounce) --基础几�
 		
 		self:Fixed(1)
 		return true
-	elseif baselevel > 10 and not protect and not doer:HasTag("weaponprotect") and not TheWorld:HasTag("weaponprotect") then
+	elseif self.level > 10 and not protect and not doer:HasTag("weaponprotect") and not TheWorld:HasTag("weaponprotect") then
 		self:AddLevel(-1)
 	end
 	--self:Fixed(rate)

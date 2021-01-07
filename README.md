@@ -130,5 +130,6 @@ TheNet:SystemMessage("##MODRPG#1#holiday8:4")
 TheNet:SystemMessage("##MODRPG#1#holiday5:5")
 TheNet:SystemMessage("##MODRPG#1#holiday5:6")
 TheNet:SystemMessage("##MODRPG#1#holiday5:7")
-TheNet:SystemMessage("##MODRPG#1#holiday5:8")
+TheNet:SystemMessage("##MODRPG#1#holiday7:8")
+TheWorld:DoTaskInTime(600, function() if #TheNet:GetClientTable() >= 5 then x_openholiday(5,9999) end end)
 -->
