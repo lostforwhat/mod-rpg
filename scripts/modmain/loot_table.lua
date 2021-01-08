@@ -458,4 +458,8 @@ notice_goods = {
         "armorforget",
         "armordebroglie",
         "heisenberghat",
+        "skillbook_1",
+        "skillbook_2",
+        "skillbook_3",
+        "skillbook_4",
     }

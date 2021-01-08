@@ -17,13 +17,13 @@ local function onequip(inst, owner)
 	owner.AnimState:OverrideSymbol("swap_body", "armor_forget", "swap_body")
     
     inst:ListenForEvent("blocked", OnBlocked, owner)
-    owner:AddTag("reflectproject")
+    --owner:AddTag("reflectproject")
 end
 
 local function onunequip(inst, owner) 
     owner.AnimState:ClearOverrideSymbol("swap_body")
     inst:RemoveEventCallback("blocked", OnBlocked, owner)
-    owner:RemoveTag("reflectproject")
+    --owner:RemoveTag("reflectproject")
 end
 
 local function heal(owner, amount)
