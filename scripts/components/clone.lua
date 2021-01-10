@@ -40,7 +40,7 @@ function Clone:AbigailClone(data)
 		local inst = self.inst
     	local x, y, z = inst.Transform:GetWorldPosition()
 		local player = inst._playerlink
-		if player.abigail_clone == nil or GetAbigailNum(player) < self.maxclone then
+		if player ~= nil and (player.abigail_clone == nil or GetAbigailNum(player) < self.maxclone) then
 			local cloned = SpawnPrefab("abigail_clone")
 
 			cloned.Transform:SetPosition(x, y, z)
