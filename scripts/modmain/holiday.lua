@@ -411,7 +411,7 @@ if TheNet:GetIsServer() then
 
 	AddSimPostInit(function() 
 		--仅主服务器接受网络推送的活动消息
-		if _G.TheWorld.ismastershard and GetWorldNum() > 1 then
+		if _G.TheWorld.ismastershard then
 			
 			--自动活动，每次转钟触发一次
 			--[[_G.TheWorld.WatchWorldState("cycles", function(inst) 
@@ -423,7 +423,7 @@ if TheNet:GetIsServer() then
 			end)]]
 			_G.TheWorld:DoPeriodicTask(333, function() 
 				local playerNum = GetPlayerNum()
-				if CurrentHoliday() == nil and playerNum >= 3 and math.random() < 0.01 + 0.02*playerNum then
+				if CurrentHoliday() == nil and GetWorldNum() > 1 and playerNum >= 3 and math.random() < 0.01 + 0.02*playerNum then
 					print("--开始触发活动--")
 					TriggerHoliday()
 				end

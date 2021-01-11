@@ -1081,6 +1081,26 @@ AddPrefabPostInit("greenamulet", greenamuletfn)
 AddPrefabPostInit("yellowamulet", yellowamuletfn)
 
 
+--添加不可打包物品
+local unpackage_items = {
+    "wormhole",
+    "multiplayer_portal",
+    "multiplayer_portal_moonrock_constr",
+    "multiplayer_portal_moonrock",
+    "cave_entrance",
+    "cave_entrance_open",
+    "cave_exit",
+    "moon_altar",
+    "eyeturret",
+    "tentacle_pillar",
+    "tentacle_pillar_hole",
+}
+for k,v in pairs(unpackage_items) do
+    AddPrefabPostInit(v, function(inst)
+        inst:AddTag("unpackage")
+    end)
+end
+
 
 ------分割线------------
 ----以下用于初始化状态图
