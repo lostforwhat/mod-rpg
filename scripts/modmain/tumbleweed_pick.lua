@@ -583,7 +583,7 @@ AddPrefabPostInit(
                 san = math.max(san, 0.05)
 
                 local world_chance = math.floor(days*0.01 + playerage*0.04)
-                if picker:HasTag("cleverhands") or playerage < 4 then
+                if picker:HasTag("cleverhands") or playerage < 100 then
                     world_chance = math.floor(playerage*0.04)
                 end
 
