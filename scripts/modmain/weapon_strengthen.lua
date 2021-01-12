@@ -4,6 +4,63 @@ local require = _G.require
 local Vector3 = _G.Vector3
 local containers = require("containers")
 
+local function CheckRate(inst, doer, protect)
+    local container = inst.components.container
+    local weapon = container:GetItemInSlot(1)
+    if weapon == nil or not weapon:HasTag("weapon") or weapon.components.stackable ~= nil
+      or weapon.components.weapon == nil or weapon.components.weaponlevel == nil then
+        return 
+    end
+
+    local items = {}
+    for i = 2, container:GetNumSlots() do
+        local item = container:GetItemInSlot(i)
+        if item ~= nil then
+            if not item:HasTag("nonpotatable") and not item:HasTag("irreplaceable") then
+                items[i] = item
+                --container:RemoveItemBySlot(i)
+                --item:Remove()
+            else
+                break
+            end
+        end
+    end
+    if _G.next(items) == nil then
+        return
+    end
+    
+    local basedamage = type(weapon.components.weapon.damage) == "number" and weapon.components.weapon.damage or 34
+    local baselevel = weapon.components.weaponlevel.level or 0
+    local rate = 0
+    for k, v in pairs(items) do
+        if v:HasTag("weapon") then
+            local damage = v.components.weapon.damage
+            damage = type(damage) == "number" and damage or 34 --base spear
+
+            if v.components.stackable ~= nil then
+                local num = v.components.stackable:StackSize()
+                rate = rate + 0.05 * num * math.pow(damage / basedamage, 2)
+            else
+                local level = v.components.weaponlevel.level or 0
+                rate = rate + (level + 1) * math.pow(damage / basedamage, 2)
+            end
+        else
+            local num = v.components.stackable and v.components.stackable:StackSize() or 1
+            if string.sub(v.prefab, -3) == "gem" then
+                rate = rate + num * .1
+            elseif v:HasTag("molebait") then
+                rate = rate + num * .01
+            elseif v.components.armor ~= nil then
+                local absorb_percent = v.components.armor.absorb_percent or 0
+                rate = rate + .5 + (absorb_percent - .6) * 4
+            else
+                rate = rate + num * .001
+            end
+        end
+    end
+    return weapon.components.weaponlevel:CalcRate(doer, math.clamp(rate / (1 + baselevel), 0, 1.1), protect)
+end
+
 local function DoStrengthen(player, inst)
     local container = inst.components.container
     local status = 0
@@ -75,18 +132,18 @@ local function DoStrengthen(player, inst)
         local it = container:RemoveItemBySlot(k)
         it:Remove()
     end
-    local success = weapon.components.weaponlevel:DoStrengthen(player, math.clamp(rate / (1 + baselevel), 0, 1))
+    local success = weapon.components.weaponlevel:DoStrengthen(player, math.clamp(rate / (1 + baselevel), 0, 1.1))
     inst.components.container:Close()
     if success then
         inst.components.talker:Say("恭喜熔炼成功！")
     else
-        if math.random() < 0.005 then
+        if math.random() < 0.002 then
             inst.components.talker:Say("熔炼失败！装备已损坏！")
             local goop = _G.SpawnPrefab("charcoal")
             goop.components.stackable:SetStackSize(4)
             local slot = inst.components.container:GetItemSlot(weapon)
-            inst.components.container:GiveItem(goop, slot)
             weapon:Remove()
+            inst.components.container:GiveItem(goop, slot)
         else
             inst.components.talker:Say("熔炼失败！")
         end
@@ -143,6 +200,34 @@ local function WidgetSetup(container)
     container:WidgetSetup("dragonflyfurnace")
 end
 
+local function OnChange(inst)
+    if inst.components.container ~= nil and inst.components.container.opener ~= nil then
+        if inst.components.talker ~= nil then
+            local rate = CheckRate(inst, inst.components.container.opener)
+            if rate ~= nil then
+                inst.components.talker:Say("成功率:"..(math.floor(rate*1000)*.1).."%")
+            end
+        end
+    end
+end
+
+local function OnCook(inst, data)
+    local item = data.item
+    local slot = data.slot
+    if item ~= nil and item.components.cookable ~= nil then
+        local product = item.components.cookable.product
+        local num = item.components.stackable and item.components.stackable:StackSize() or 1
+        if product ~= nil and _G.PrefabExists(product) then
+            local product_item = _G.SpawnPrefab(product)
+            if product_item.components.stackable ~= nil then
+                product_item.components.stackable:SetStackSize(num)
+            end
+            item:Remove()
+            inst.components.container:GiveItem(product_item, slot)
+        end
+    end
+end
+
 local function InitWidget(inst)
     if inst.components.talker == nil then
         inst:AddComponent("talker")
@@ -168,6 +253,10 @@ local function InitWidget(inst)
             inst:AddComponent("container")
             WidgetSetup(inst.components.container)
         end
+
+        inst:ListenForEvent("itemlose", OnChange)
+        inst:ListenForEvent("itemget", OnChange)
+        inst:ListenForEvent("itemget", OnCook)
     end
 end
 

@@ -61,7 +61,7 @@ function WeaponLevel:CalcRate(doer, rate, protect)
 
 	real_rate = real_rate * (.75 + player_luck * .005) * worldrate
 
-	return real_rate
+	return math.clamp(real_rate, 0, 1)
 end
 
 function WeaponLevel:DoStrengthen(doer, rate, protect, noannounce) --基础几率
