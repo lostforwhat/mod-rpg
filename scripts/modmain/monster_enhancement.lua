@@ -1,7 +1,7 @@
 local _G = GLOBAL
 local assert = assert or _G.assert
 local IsServer = _G.TheNet:GetIsServer()
-local difficulty_level = TUNING.level
+local difficulty_level = TUNING.level or 1
 
 --强度，0-4 超过范围报错
 local DEGREE = difficulty_level - 1
@@ -265,7 +265,7 @@ AddPrefabPostInitAny(function(inst)
     	--生命回复
     	if inst.components.health and inst.components.health.regen == nil then
     		local max_health = inst.components.health.maxhealth
-    		inst.components.health:StartRegen(max_health * 0.005 * difficulty_level, 10)
+    		inst.components.health:StartRegen(max_health * .005 * difficulty_level, 10)
     	end
     end
 end)
@@ -277,7 +277,7 @@ AddPrefabPostInitAny(function(inst)
             inst:AddComponent("crit")
         end
         if IsServer then
-            inst.components.crit:SetChance(.05)
+            inst.components.crit:SetChance(.04 * difficulty_level)
         end
     end
     if inst:HasTag("monster") then
@@ -285,7 +285,7 @@ AddPrefabPostInitAny(function(inst)
             inst:AddComponent("crit")
         end
         if IsServer then
-            inst.components.crit:SetChance(.15)
+            inst.components.crit:SetChance(.5 * difficulty_level)
         end
     end
     if inst.prefab == "bat" or inst.prefab == "mosquito" then
@@ -297,22 +297,22 @@ AddPrefabPostInitAny(function(inst)
     if inst.prefab == "krampus" or 
         inst.prefab == "pigman" or 
         inst.prefab == "bearger" or 
+        inst.prefab == "merm" or
         inst.prefab == "monkey" then
         inst:AddComponent("stealer")
         if IsServer then
             inst.components.stealer.chance = inst.prefab == "krampus" and 0.3 or 0.1
         end
     end
-    if inst.prefab == "merm" or inst:HasTag("fly") then
+    if inst.prefab == "merm" or inst:HasTag("flying") then
         if inst.components.dodge == nil then
             inst:AddComponent("dodge")
         end
         if IsServer then
-            inst.components.dodge:SetChance(.2)
+            inst.components.dodge:SetChance(.1 * difficulty_level)
         end
     end
     if inst.prefab == "tentacle" or 
-        inst.prefab == "leif" or 
         inst.prefab == "moonpig" then
         if inst.components.crit == nil then
             inst:AddComponent("crit")
@@ -327,7 +327,16 @@ AddPrefabPostInitAny(function(inst)
         or inst.prefab == "crabking" then
         inst:AddTag("reflectproject")
     end
+
+
+
+    --仅服务器
     if IsServer then
-        
+        if inst.prefab == "minotaur" then
+            if inst.components.rejectdeath == nil then
+                inst:AddComponent("rejectdeath")
+            end
+        end
+
     end
 end)

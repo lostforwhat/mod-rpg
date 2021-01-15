@@ -217,8 +217,8 @@ AddPlayerPostInit(function(inst)
 	    inst.components.groundpounder.platformPushingRings = 2
 	    inst.components.groundpounder.numRings = 3
 	    inst.components.groundpounder.noTags = TheNet:GetPVPEnabled() 
-	    and { "FX", "NOCLICK", "DECOR", "INLIMBO" } 
-	    or {"FX", "NOCLICK", "DECOR", "INLIMBO", "player"}
+	    and { "FX", "NOCLICK", "DECOR", "INLIMBO", "wall" } 
+	    or {"FX", "NOCLICK", "DECOR", "INLIMBO", "player", "wall"}
 	end
 	if prefab == "wx78" then
 
@@ -967,6 +967,7 @@ end)
 
 --护符增强
 local function amuletfn(inst)
+	inst:AddTag("resistancetrap")
 	if _G.TheWorld.ismastersim then
 		inst.resistancetrap = function()
 			inst.components.finiteuses:Use(1)
@@ -974,12 +975,12 @@ local function amuletfn(inst)
 
 		local function onequipped(inst, data)
 			local owner = data.owner
-			owner:AddTag("resistancetrap")
+			--owner:AddTag("resistancetrap")
 			inst:ListenForEvent("tumbleweedtrap", inst.resistancetrap, owner)
 		end
 		local function onunequipped(inst, data)
 			local owner = data.owner
-			owner:RemoveTag("resistancetrap")
+			--owner:RemoveTag("resistancetrap")
 			inst:RemoveEventCallback("tumbleweedtrap", inst.resistancetrap, owner)
 		end
 
@@ -999,10 +1000,15 @@ local function blueamuletfn(inst)
 		local function onequipped(inst, data)
 			local owner = data.owner
 			owner:AddTag("fridge")
+			inst.removefn = function()
+				owner:Remove("fridge")
+			end
+			inst:ListenForEvent("onremove", inst.removefn)
 		end
 		local function onunequipped(inst, data)
 			local owner = data.owner
 			owner:RemoveTag("fridge")
+			inst:RemoveEventCallback("onremove", inst.removefn)
 		end
 
 		inst:ListenForEvent("equipped", onequipped)

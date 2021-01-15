@@ -274,6 +274,16 @@ local function ApplyResistance(picker)
     effect:Display("陷阱抵抗", 30, {.6, .9, 1})
 end
 
+local function CanResistTrap(picker)
+    local inventory = picker.components.inventory
+    if inventory == nil then return false end
+    for k,v in pairs(inventory.equipslots) do
+        if v and v:HasTag("resistancetrap") then
+            return true
+        end
+    end
+end
+
 local function doSpawnItem(it, target, picker)
     --添加多世界宣告支持
     local picker_name = picker and picker:GetDisplayName() or "???"
@@ -294,7 +304,7 @@ local function doSpawnItem(it, target, picker)
         if picker ~= nil then
             x, y, z = picker.Transform:GetWorldPosition()
 
-            if picker:HasTag("resistancetrap") then
+            if CanResistTrap(picker) then
                 picker:PushEvent("tumbleweedtrap")
                 ApplyResistance(picker)
                 return
