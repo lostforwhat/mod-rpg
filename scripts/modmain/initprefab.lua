@@ -503,7 +503,7 @@ AddPrefabPostInit("waxwell", function(inst)
 						inst.components.sanity:DoDelta(amount*0.5)
 					else
 						inst.components.sanity:DoDelta(current)
-						inst.components.Health:DoDelta(current + amount * 0.5, overtime, cause, ignore_invincible, afflicter, ignore_absorb)
+						inst.components.health:DoDelta(current + amount * 0.5, overtime, cause, ignore_invincible, afflicter, ignore_absorb)
 					end
 					return true
 				end
@@ -1001,7 +1001,7 @@ local function blueamuletfn(inst)
 			local owner = data.owner
 			owner:AddTag("fridge")
 			inst.removefn = function()
-				owner:Remove("fridge")
+				owner:RemoveTag("fridge")
 			end
 			inst:ListenForEvent("onremove", inst.removefn)
 		end

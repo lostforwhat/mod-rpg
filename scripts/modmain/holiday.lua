@@ -425,7 +425,7 @@ if TheNet:GetIsServer() then
 				local playerNum = GetPlayerNum()
 				if CurrentHoliday() == nil and GetWorldNum() > 1 and playerNum >= 3 and math.random() < 0.01 + 0.02*playerNum then
 					print("--开始触发活动--")
-					TriggerHoliday()
+					_G.TriggerHoliday()
 				end
 			end)
 		end

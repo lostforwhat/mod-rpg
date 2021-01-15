@@ -272,71 +272,73 @@ end)
 
 --尝试给怪物添加组件
 AddPrefabPostInitAny(function(inst) 
-    if inst:HasTag("epic") then
-        if inst.components.crit == nil then
-            inst:AddComponent("crit")
+    if not inst:HasTag("player") then
+        if inst:HasTag("epic") then
+            if inst.components.crit == nil then
+                inst:AddComponent("crit")
+            end
+            if IsServer then
+                inst.components.crit:SetChance(.04 * difficulty_level)
+            end
         end
-        if IsServer then
-            inst.components.crit:SetChance(.04 * difficulty_level)
+        if inst:HasTag("monster") then
+            if inst.components.crit == nil then
+                inst:AddComponent("crit")
+            end
+            if IsServer then
+                inst.components.crit:SetChance(.5 * difficulty_level)
+            end
         end
-    end
-    if inst:HasTag("monster") then
-        if inst.components.crit == nil then
-            inst:AddComponent("crit")
+        if inst.prefab == "bat" or inst.prefab == "mosquito" then
+           inst:AddComponent("lifesteal") 
+           if IsServer then
+                inst.components.lifesteal:SetPercent(50)
+           end
         end
-        if IsServer then
-            inst.components.crit:SetChance(.5 * difficulty_level)
+        if inst.prefab == "krampus" or 
+            inst.prefab == "pigman" or 
+            inst.prefab == "bearger" or 
+            inst.prefab == "merm" or
+            inst.prefab == "monkey" then
+            inst:AddComponent("stealer")
+            if IsServer then
+                inst.components.stealer.chance = inst.prefab == "krampus" and 0.3 or 0.1
+            end
         end
-    end
-    if inst.prefab == "bat" or inst.prefab == "mosquito" then
-       inst:AddComponent("lifesteal") 
-       if IsServer then
-            inst.components.lifesteal:SetPercent(50)
-       end
-    end
-    if inst.prefab == "krampus" or 
-        inst.prefab == "pigman" or 
-        inst.prefab == "bearger" or 
-        inst.prefab == "merm" or
-        inst.prefab == "monkey" then
-        inst:AddComponent("stealer")
-        if IsServer then
-            inst.components.stealer.chance = inst.prefab == "krampus" and 0.3 or 0.1
+        if inst.prefab == "merm" or inst:HasTag("flying") then
+            if inst.components.dodge == nil then
+                inst:AddComponent("dodge")
+            end
+            if IsServer then
+                inst.components.dodge:SetChance(.1 * difficulty_level)
+            end
         end
-    end
-    if inst.prefab == "merm" or inst:HasTag("flying") then
-        if inst.components.dodge == nil then
-            inst:AddComponent("dodge")
-        end
-        if IsServer then
-            inst.components.dodge:SetChance(.1 * difficulty_level)
-        end
-    end
-    if inst.prefab == "tentacle" or 
-        inst.prefab == "moonpig" then
-        if inst.components.crit == nil then
-            inst:AddComponent("crit")
-        end
-        if IsServer then
-            inst.components.crit:SetChance(.25)
-        end
-    end
-
-    if inst.prefab == "klaus" 
-        or inst.prefab == "stalker_atrium" 
-        or inst.prefab == "crabking" then
-        inst:AddTag("reflectproject")
-    end
-
-
-
-    --仅服务器
-    if IsServer then
-        if inst.prefab == "minotaur" then
-            if inst.components.rejectdeath == nil then
-                inst:AddComponent("rejectdeath")
+        if inst.prefab == "tentacle" or 
+            inst.prefab == "moonpig" then
+            if inst.components.crit == nil then
+                inst:AddComponent("crit")
+            end
+            if IsServer then
+                inst.components.crit:SetChance(.25)
             end
         end
 
+        if inst.prefab == "klaus" 
+            or inst.prefab == "stalker_atrium" 
+            or inst.prefab == "crabking" then
+            inst:AddTag("reflectproject")
+        end
+
+
+
+        --仅服务器
+        if IsServer then
+            if inst.prefab == "minotaur" then
+                if inst.components.rejectdeath == nil then
+                    inst:AddComponent("rejectdeath")
+                end
+            end
+
+        end
     end
 end)

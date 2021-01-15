@@ -214,16 +214,20 @@ end
 local function OnCook(inst, data)
     local item = data.item
     local slot = data.slot
-    if item ~= nil and item.components.cookable ~= nil then
+    if item ~= nil and item.components.cookable ~= nil and inst.components.container.opener ~= nil then
         local product = item.components.cookable.product
         local num = item.components.stackable and item.components.stackable:StackSize() or 1
         if product ~= nil and _G.PrefabExists(product) then
-            local product_item = _G.SpawnPrefab(product)
-            if product_item.components.stackable ~= nil then
-                product_item.components.stackable:SetStackSize(num)
+            --local product_item = _G.SpawnPrefab(product)
+            local opener = inst.components.container.opener
+            local product_item = inst.components.cooker:CookItem(item, opener)
+            if product_item ~= nil then
+                if product_item.components.stackable ~= nil then
+                    product_item.components.stackable:SetStackSize(num)
+                end
+                item:Remove()
+                inst.components.container:GiveItem(product_item, slot)
             end
-            item:Remove()
-            inst.components.container:GiveItem(product_item, slot)
         end
     end
 end

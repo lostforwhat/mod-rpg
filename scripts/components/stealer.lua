@@ -74,7 +74,7 @@ function Stealer:Effect(target)
     --否则随机获得一个物品
     if item == nil and self.inst:HasTag("player") and not target:HasTag("player") then
         --然后随机获得一个掉落物，如果有的话
-        if math.random() < 0.5 and target.components.lootdropper ~= nil then
+        if math.random() < 0.75 and target.components.lootdropper ~= nil then
             local loots = target.components.lootdropper:GenerateLoot()
             if #loots > 0 then
                 item = SpawnPrefab(loots[math.random(#loots)])
@@ -96,7 +96,7 @@ function Stealer:Effect(target)
         TheNet:Announce(self.inst:GetDisplayName().." 使用探云手，从 "..target:GetDisplayName().." 偷取了 "..item:GetDisplayName())
     end
     --如果攻击者有物品栏，则物品归属攻击者, 非玩家偷窃则有概率物品丢失
-    if self.inst.components.inventory ~= nil and (self.inst:HasTag("player") or math.random() < .8) then
+    if self.inst.components.inventory ~= nil and (self.inst:HasTag("player") or math.random() < .6) then
         self.inst.components.inventory:GiveItem(item)
     else
     	--否则销毁物品
@@ -118,7 +118,7 @@ function Stealer:RandomItem(target)
     local loot = items[math.random(#items)]
 
     local viplevel = self.inst.components.vip and self.inst.components.vip.level or 0
-    while(loot.chance < .1 / (viplevel + 1)) do
+    while(math.random() < loot.chance * 100 * (viplevel + 1) --[[loot.chance < .1 / (viplevel + 1)]]) do
         items = deepcopy(loot_table[types[math.random(self.level)]])
         loot = items[math.random(#items)]
     end
