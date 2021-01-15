@@ -1050,6 +1050,8 @@ local function greenamuletfn(inst)
 			        		v.components.fueled:SetPercent(1)
 			        	elseif v.components.perishable ~= nil then
 			        		v.components.perishable:SetPercent(1)
+			        	elseif v.components.armor ~= nil then
+			        		v.components.armor:SetPercent(1)
 			        	end
 			        end
 			    end
