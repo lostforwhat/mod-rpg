@@ -286,7 +286,7 @@ AddPrefabPostInitAny(function(inst)
                 inst:AddComponent("crit")
             end
             if IsServer then
-                inst.components.crit:SetChance(.5 * difficulty_level)
+                inst.components.crit:SetChance(.05 * difficulty_level)
             end
         end
         if inst.prefab == "bat" or inst.prefab == "mosquito" then

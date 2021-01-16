@@ -28,6 +28,9 @@ function Migrater:StartMigrate(worldid)
 	if not self.inst:HasTag("playerghost") and CheckWorldId(worldid) and 
 		(self.checkfn == nil or self.checkfn(self.inst)) then
 		self.inst.sg:GoToState("migrate")
+		if self.inst:HasTag("player") then
+			self.inst.components.health:SetInvincible(true)
+		end
 		print("Activating portal[0] to "..(worldid or "<nil>"))
 		TheWorld:PushEvent("ms_playerdespawnandmigrate", { player = self.inst, portalid = 0, worldid = worldid })
 	end
