@@ -91,6 +91,7 @@ local NpcTask = Class(function(self, inst)
 
     self.current_task = nil
     self.tasking = false
+    self.time = 0
 end)
 
 function NpcTask:Check(player)
@@ -187,8 +188,10 @@ end
 
 function NpcTask:PushTask()
 	local inst = self.inst
-	if self.current_task == nil then
+	local time = GetTime()
+	if self.current_task == nil or (time - self.time > 60 * 40) then
 		self.current_task = self:GetRandomTask()
+		self.time = GetTime()
 	end
 	if inst.components.talker ~= nil then
 		inst.components.talker:Say(self:GetTaskDescription())

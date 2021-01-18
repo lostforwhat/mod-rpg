@@ -59,6 +59,7 @@ local function fn()
 
     inst.components.equippable:SetOnEquip(onequip)
     inst.components.equippable:SetOnUnequip(onunequip)
+    inst.components.equippable.walkspeedmult = 1.15
 
     MakeHauntableLaunch(inst)
 

@@ -108,6 +108,22 @@ local function spawnTumbleweed(level, num)
 	end
 end
 
+local function AddWeapLevel(picker)
+    if picker == nil or picker.components.inventory == nil then return end
+    --装备栏
+    for k,v in pairs(picker.components.inventory.equipslots) do
+        if v.components.weaponlevel ~= nil and v.components.weaponlevel.level < 25 then
+            v.components.weaponlevel:AddLevel(1)
+        end
+    end
+end
+
+local function OnBossKilled(inst, data)
+	for k, v in pairs(_G.AllPlayers) do
+		AddWeapLevel(v)
+	end
+end
+
 local function delayspawnboss(delay)
 	local boss_list = {"moose", "dragonfly", "bearger", "deerclops", "stalker", "klaus", 
                        "minotaur", "beequeen", "toadstool", "toadstool_dark", 
@@ -124,10 +140,18 @@ local function delayspawnboss(delay)
     		local boss = _G.SpawnPrefab(prefab)
 	    	boss:AddTag("rpg_holiday")
 	    	boss.Transform:SetPosition(pos.x, 0, pos.z)
+	    	boss:ListenForEvent("killed", OnBossKilled)
 
 	    	local title = _G.SpawnPrefab("titles_king")
 	    	title:Equipped(boss, 3)
 	    	TheNet:Announce("[世界"..shardId.."] 领主出现在坐标("..pos.x..","..pos.z..")附近！")
+
+	    	boss:DoPeriodicTask(30, function() 
+	    		if boss ~= nil and boss:IsValid() then
+	    			local x,y,z = boss.Transform:GetWorldPosition()
+	    			TheNet:Announce("[世界"..shardId.."] 领主出现在坐标("..x..","..z..")附近！")
+	    		end
+	    	end)
     	end)
     end
 end

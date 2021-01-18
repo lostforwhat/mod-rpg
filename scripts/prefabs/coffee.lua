@@ -151,7 +151,7 @@ local function EatCoffeeFn(inst, eater)
 end
 
 local function GetShowItemInfo(inst)
-    return "速度+80%"
+    return "速度+75%"
 end
 
 local function fn_prepared()

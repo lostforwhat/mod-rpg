@@ -115,7 +115,7 @@ titles_data = {
 	{
 		id="cleverhands",
 		name="心灵手巧", 
-		desc="【投机】采集风滚草10%多1份物品\n【洞悉】击杀有5%概率多倍掉落\n【灵动】提升偷窃并防止被偷窃",
+		desc="【投机】采集风滚草10%多1份物品\n【洞悉】击杀有5%概率多倍掉落\n【灵动】提升偷窃并防止被偷窃\n【巧工】制作武器附加随机等级",
 		conditions={
 			{
 				condition="完成所有建造任务",
@@ -139,9 +139,16 @@ titles_data = {
 				end
 			},
 		},
-		effect=function(player, equipped)
+		effect=function(player, equipped, titles_fx)
 			if equipped then
 				player:AddTag("cleverhands")
+				titles_fx:ListenForEvent("builditem", function(player, data) 
+					local item = data.item
+					if item ~= nil and item.components.weaponlevel ~= nil then
+						local max = math.random(20)
+						item.components.weaponlevel:AddLevel(math.random(max))
+					end
+				end, player)
 			else
 				player:RemoveTag("cleverhands")
 			end
@@ -305,7 +312,7 @@ titles_data = {
 	{
 		id="vip",
 		name="次元之客", 
-		desc="【特权】即使不佩戴(*)也生效\n【精通】*经验获取提升20%+\n【魔手】*采集风滚草多获得物品\n【附魔】*部分新物品提升使用范围\n【更多】...",
+		desc="【特权】即使不佩戴(*)也生效\n【精通】*经验获取提升20%+\n【魔手】*采集风滚草多获得物品\n【附魔】*部分新物品提升使用范围\n【巧工】制作武器附加随机等级\n【更多】...",
 		conditions={
 			{
 				condition="获得尊贵的客人凭证",
@@ -314,8 +321,16 @@ titles_data = {
 				end
 			},
 		},
-		effect=function(player, equipped)
-
+		effect=function(player, equipped, titles_fx)
+			if equipped then
+				titles_fx:ListenForEvent("builditem", function(player, data) 
+					local item = data.item
+					if item ~= nil and item.components.weaponlevel ~= nil then
+						local max = math.random(15)
+						item.components.weaponlevel:AddLevel(math.random(max))
+					end
+				end, player)
+			end
 		end
 	},
 	{

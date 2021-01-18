@@ -1016,7 +1016,7 @@ local function OnEntityDropLoot(world, data)
             inst.components.lootdropper:SpawnLootPrefab("pray_symbol")
         end
         if inst.prefab == "krampus" and math.random() < 0.003 then
-            inst.components.lootdropper:SpawnPrefab("stealer_skillbook")
+            inst.components.lootdropper:SpawnLootPrefab("stealer_skillbook")
         end
     end
 end

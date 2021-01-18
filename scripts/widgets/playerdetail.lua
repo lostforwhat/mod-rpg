@@ -521,9 +521,9 @@ function PlayerDetail:LoadTitles()
         titles_item.backing.move_on_click = true
         local item_backing = titles_item.backing
 
-        titles_item.conditions = item_backing:AddChild(Text(BODYTEXTFONT, 24, "", {1, 0.9, 0.55, 1}))
-        titles_item.conditions:SetPosition(-20, 0)
-        titles_item.conditions:SetRegionSize(240, 150)
+        titles_item.conditions = item_backing:AddChild(Text(BODYTEXTFONT, 23, "", {1, 0.9, 0.55, 1}))
+        titles_item.conditions:SetPosition(-10, 0)
+        titles_item.conditions:SetRegionSize(270, 150)
         titles_item.conditions:SetHAlign(ANCHOR_LEFT)
         titles_item.conditions:SetVAlign(ANCHOR_MIDDLE)
         titles_item.SetInfo = function(_, data)
@@ -553,7 +553,7 @@ function PlayerDetail:LoadTitles()
                 get = player_conditions[k] ~= nil and player_conditions[k] > 0 and get or false
             end
             condition_str = condition_str..item.desc
-            titles_item.conditions:SetMultilineTruncatedString(condition_str, 7, 240, 18, "", false)
+            titles_item.conditions:SetMultilineTruncatedString(condition_str, 7, 270, 20, "", false)
             titles_item.conditions:SetColour(get and {0, 1, 0, 1} or {1,0.9,0.55,1})
 
             local atlas_name = "images/titles/"..name..".xml"

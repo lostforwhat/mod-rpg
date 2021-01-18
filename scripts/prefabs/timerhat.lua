@@ -79,7 +79,7 @@ local function simple()
     inst.components.equippable.equipslot = EQUIPSLOTS.HEAD
     inst.components.equippable:SetOnEquip(onequip)
     inst.components.equippable:SetOnUnequip(onunequip)
-    inst.components.equippable.walkspeedmult = 1.15
+    inst.components.equippable.walkspeedmult = 1.1
 
     inst.components.equippable.insulated = true
 
