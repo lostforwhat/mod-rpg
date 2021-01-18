@@ -140,7 +140,7 @@ local function delayspawnboss(delay)
     		local boss = _G.SpawnPrefab(prefab)
 	    	boss:AddTag("rpg_holiday")
 	    	boss.Transform:SetPosition(pos.x, 0, pos.z)
-	    	boss:ListenForEvent("killed", OnBossKilled)
+	    	boss:ListenForEvent("death", OnBossKilled)
 
 	    	local title = _G.SpawnPrefab("titles_king")
 	    	title:Equipped(boss, 3)
