@@ -27,7 +27,7 @@ function Migrater:StartMigrate(worldid)
 	--worldid = tonumber(worldid)
 	if not self.inst:HasTag("playerghost") and CheckWorldId(worldid) and 
 		(self.checkfn == nil or self.checkfn(self.inst)) then
-		self.inst.sg:GoToState("migrate")
+		--self.inst.sg:GoToState("migrate")
 		if self.inst:HasTag("player") then
 			self.inst.components.health:SetInvincible(true)
 		end
