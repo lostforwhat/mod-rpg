@@ -47,6 +47,11 @@ local Vip = Class(function(self, inst)
 	if TheWorld.ismastersim and self.inst:HasTag("player") then
 		self.inst:DoTaskInTime(.4, function() self:Get() end)
 		--self:Get()
+		--[[self.inst:DoPeriodicTask(60, function() 
+			if self.level < 1 then
+				self:Get()
+			end
+		end, .4)]]
 	end
 end,
 nil,

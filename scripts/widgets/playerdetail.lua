@@ -581,7 +581,7 @@ function PlayerDetail:LoadTitles()
             end
             if name == "vip" then
                 titles_item.vip = item_backing:AddChild(TEMPLATES2.StandardButton(function() 
-                    SendModRPCToServer(MOD_RPC.RPG_vip.refresh)
+                    --SendModRPCToServer(MOD_RPC.RPG_vip.refresh)
                     VisitURL("http://vip.tumbleweedofall.xyz:8008?userid="..self.owner.userid)
                 end, "获取", {60, 40}))
                 titles_item.vip:SetPosition(110, -55)
@@ -680,6 +680,7 @@ function PlayerDetail:LoadTitles()
         --self.titles_scroll_list:SetFocusChangeDir(MOVE_DOWN, self.close_button)
         --self.close_button:SetFocusChangeDir(MOVE_UP, self.titles_scroll_list)
     end
+    SendModRPCToServer(MOD_RPC.RPG_vip.refresh)
 end
 
 function PlayerDetail:SetTitlesData()

@@ -276,7 +276,7 @@ local function fn()
 
     -------
     inst:AddComponent("weapon")
-    inst.components.weapon:SetDamage(TUNING.AXE_DAMAGE * .5)
+    inst.components.weapon:SetDamage(TUNING.AXE_DAMAGE * 1.5)
     inst.components.weapon:SetRange(5, 6)
 
     -------

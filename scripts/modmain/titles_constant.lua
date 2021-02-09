@@ -198,9 +198,9 @@ titles_data = {
 				end
 			},
 			{
-				condition="人物等级大于40",
+				condition="人物等级大于20",
 				fn=function(player)
-					return player.components.level.level >= 40
+					return player.components.level.level >= 20
 				end
 			},
 		},
@@ -248,7 +248,7 @@ titles_data = {
 	{
 		id="king",
 		name="王者之巅", 
-		desc="【蔑视】秒杀血量低于自己的单位\n【王者】提升基于生存天数的生命值\n【福利】每天发放一次物资",
+		desc="【蔑视】秒杀血量低于自己的单位\n【法则】附加基于生命值的%伤害\n【王者】提升基于生存天数的生命值\n【福利】每天发放一次物资",
 		conditions={
 			{
 				condition="完成所有成就任务",
@@ -263,9 +263,9 @@ titles_data = {
 				end
 			},
 			{
-				condition="人物等级大于80",
+				condition="人物等级大于75",
 				fn=function(player)
-					return player.components.level.level >= 80
+					return player.components.level.level >= 75
 				end
 			},
 		},
@@ -277,7 +277,7 @@ titles_data = {
 					local prefab = items[math.random(#items)].item
 					if PrefabExists(prefab) then
 						local item = SpawnPrefab(prefab)
-						if item.components.inventory == nil then
+						if item.components.inventoryitem == nil then
 							local pack_item = SpawnPrefab("package_ball")
 							pack_item.components.packer:Pack(item)
 							player.components.inventory:GiveItem(pack_item)
@@ -330,6 +330,34 @@ titles_data = {
 						item.components.weaponlevel:AddLevel(math.random(max))
 					end
 				end, player)
+
+				titles_fx:WatchWorldState("cycles", function() 
+					local types = {"new_loot", "new_loot", "new_loot"}
+					local level = player.components.vip.level or 1
+					if level > 9 then
+						table.insert(types, "good_loot")
+					end
+					if level > 49 then
+						table.insert(types, "good_loot")
+						table.insert(types, "luck_loot")
+					end
+					if level > 99 then
+						table.insert(types, "luck_loot")
+					end
+					local items = deepcopy(loot_table[types[math.random(#types)]])
+					local prefab = items[math.random(#items)].item
+					if PrefabExists(prefab) then
+						local item = SpawnPrefab(prefab)
+						if item.components.inventoryitem == nil then
+							local pack_item = SpawnPrefab("package_ball")
+							pack_item.components.packer:Pack(item)
+							player.components.inventory:GiveItem(pack_item)
+							return
+						end
+						player.components.inventory:GiveItem(item)
+					end
+
+				end)
 			end
 		end
 	},

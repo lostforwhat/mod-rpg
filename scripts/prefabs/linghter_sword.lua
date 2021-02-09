@@ -103,7 +103,7 @@ local function onfuelchange(section, oldsection, inst)
             inst:ListenForEvent("onremove", onremovefire, inst.fire)
             inst.fire.entity:SetParent(owner.entity)
         end
-        inst.components.weapon:SetDamage(TUNING.BATBAT_DAMAGE)
+        inst.components.weapon:SetDamage(TUNING.BATBAT_DAMAGE*1.2)
     end
     if not equipped then
         onthrown(inst)
@@ -126,7 +126,7 @@ local function createlight(inst, target, pos)
                     local lt = SpawnPrefab("linghter_fx")
                     lt.Transform:SetPosition(owner:GetPosition():Get())
                     local angle = lt:GetAngleToPoint(pos:Get())
-                    lt.components.weapon:SetDamage(TUNING.BATBAT_DAMAGE*.5 + level)
+                    lt.components.weapon:SetDamage(TUNING.BATBAT_DAMAGE*1.2 + level)
                     lt:thrown(owner, angle)
             end)
         end
@@ -171,7 +171,7 @@ local function fn()
     inst:ListenForEvent("on_landed", onthrown)
 
     inst:AddComponent("weapon")
-    inst.components.weapon:SetDamage(TUNING.BATBAT_DAMAGE)
+    inst.components.weapon:SetDamage(TUNING.BATBAT_DAMAGE*1.2)
     inst.components.weapon.onattack = onattack
 
     --[[inst:AddComponent("useableitem")

@@ -226,6 +226,11 @@ AddComponentPostInit("combat", function(self)
 				if attacker.components.extradamage ~= nil then
 					extra_damage = extra_damage + attacker.components.extradamage:GetDamage(target)
 				end
+				if attacker:HasTag("titles_king") then
+					local maxhp = target.components.health.maxhealth or 4000
+					local attacker_hp = attacker.components.health.maxhealth or 0
+					extradamage = extradamage + (maxhp * 0.005 * (attacker_hp/200))
+				end
 			end
 
 			local unblocked = OldGetAttacked(self, attacker, damage + extra_damage, weapon, stimuli)

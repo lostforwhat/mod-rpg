@@ -73,7 +73,7 @@ local function fn()
     end
 
     inst:AddComponent("weapon")
-    inst.components.weapon:SetDamage(TUNING.BATBAT_DAMAGE*.5)
+    inst.components.weapon:SetDamage(TUNING.BATBAT_DAMAGE*.8)
     inst.components.weapon.onattack = onattack
 
     -------

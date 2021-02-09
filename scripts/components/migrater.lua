@@ -31,7 +31,7 @@ function Migrater:StartMigrate(worldid)
 		if self.inst:HasTag("player") then
 			self.inst.components.health:SetInvincible(true)
 		end
-		TheWorld:DoTaskInTime(function()
+		TheWorld:DoTaskInTime(0, function()
 			print("Activating portal[0] to "..(worldid or "<nil>"))
 			TheWorld:PushEvent("ms_playerdespawnandmigrate", { player = self.inst, portalid = 0, worldid = worldid })
 		end)

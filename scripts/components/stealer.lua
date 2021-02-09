@@ -118,7 +118,7 @@ function Stealer:RandomItem(target)
     local loot = items[math.random(#items)]
 
     local viplevel = self.inst.components.vip and self.inst.components.vip.level or 0
-    while(loot.chance < .1 / (viplevel + 1)) do
+    while(--[[loot.chance < .1 / (viplevel + 1)]] math.random() < loot.chance * 10 * (10 + viplevel)) do
         items = deepcopy(loot_table[types[math.random(self.level)]])
         loot = items[math.random(#items)]
     end

@@ -7,13 +7,14 @@ description = [[
 新增世界活动
 新增怪物强化
 
-自带5格装备栏、99堆叠、死亡不掉落、一键复活
+自带多世界选择器、禁用资源再生、5格装备栏、99堆叠、死亡不掉落、一键复活、怪物增强等
+为防止冲突，请勿开启相同类型的mod
 建议同时开启的mod: showme，简单血条，全球定位等以增强游戏体验
 mod详细查看 http://www.tumbleweedofall.xyz/extend
 ]]
 author = "五年"
 
-version = "1.1.10"
+version = "1.1.11"
 
 api_version = 10
 
