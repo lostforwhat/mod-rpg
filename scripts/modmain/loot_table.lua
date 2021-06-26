@@ -98,11 +98,35 @@ loot_table = {
         {chance = 0.05, item = "brush"},--洗刷
         {chance = 0.5, item = "axe"},--斧头
         {chance = 0.25, item = "goldenaxe"},--黄金斧头
+        {chance = 0.05, item = "moonglassaxe"},--月光玻璃斧头
         {chance = 0.5, item = "pickaxe"},--鹤嘴锄
         {chance = 0.25, item = "goldenpickaxe"},--黄金鹤嘴锄
         {chance = 0.4, item = "shovel"},--铲子
         {chance = 0.25, item = "goldenshovel"},--黄金铲子
+        {chance = 0.5, item = "farm_hoe"},--园艺锄
+        {chance = 0.25, item = "golden_farm_hoe"},--黄金园艺锄
         {chance = 0.1, item = "hammer"},--锤子
+        {chance = 0.05, item = "boat_item"},--船套装
+        {chance = 0.3, item = "golden_farm_hoe"},--浆
+        {chance = 0.06, item = "oar"},--锚套装
+        {chance = 0.06, item = "anchor_item"},--方向舵套装
+        {chance = 0.3, item = "steeringwheel_item"},--船补丁
+        {chance = 0.06, item = "boatpatch"},--桅杆套装
+        {chance = 0.05, item = "mast_item"},--海钓竿
+        {chance = 0.05, item = "oceanfishingrod"},--木球浮标
+        {chance = 0.05, item = "oceanfishingbobber_ball"},--木球浮标
+        {chance = 0.05, item = "oceanfishingbobber_oval"},--硬物浮标
+        {chance = 0.2, item = "saltrock"},--盐晶
+        {chance = 0.1, item = "featherpencil"},--羽毛笔
+        {chance = 0.1, item = "pitchfork"},--草叉
+        {chance = 0.03, item = "skeleton"},--骷髅
+        {chance = 0.05, item = "pighead"},--猪头
+        {chance = 0.05, item = "mermhead"},--鱼人头
+        {chance = 0.05, item = "houndbone"},--犬骨
+        {chance = 0.05, item = "dead_sea_bones"},--海骨
+        {chance = 0.01, item = "driftwood_tall"},--浮木桩
+        {chance = 0.01, item = "driftwood_tall1"},--浮木桩1
+        {chance = 0.01, item = "driftwood_tall2"},--浮木桩2
         {chance = 0.1, item = "trap"},--陷阱
         {chance = 0.1, item = "grass_umbrella"},--普通花伞
         {chance = 0.4, item = "bedroll_straw"},--凉席
@@ -161,6 +185,24 @@ loot_table = {
         --{chance = 0.2, item = "bullkelp_beachedroot"},
         {chance = 0.6, item = "driftwood_log"},
         {chance = 0.1, item = "rock_avocado_bush"},
+        {chance = 0.1, item = "spore_medium"},--红色孢子
+        {chance = 0.1, item = "spore_small"},--绿色孢子
+        {chance = 0.1, item = "spore_tall"},--蓝色孢子
+        {chance = 0.1, item = "lightflier"},--球状光虫
+        {chance = 0.04, item = "livingtree"},--完全正常的树
+
+        {chance = 0.02, item = "chessjunk"},--损坏的发条装置
+        {chance = 0.02, item = "chessjunk1"},--损坏的发条装置1
+        {chance = 0.02, item = "chessjunk2"},--损坏的发条装置2
+        {chance = 0.02, item = "chessjunk3"},--损坏的发条装置3
+
+        {chance = 0.01, item = "statuemaxwell"},--麦斯威尔雕像
+        {chance = 0.03, item = "marblepillar"},--大理石柱
+        {chance = 0.03, item = "statueharp"},--竖琴雕像
+        {chance = 0.04, item = "statue_marble_pawn"},--大理石雕像
+        {chance = 0.04, item = "statue_marble"},--大理石雕像
+        {chance = 0.04, item = "statue_marble_muse"},--大理石雕像
+        {chance = 0.04, item = "marbletree"},--大理石树
 },
 
 good_loot = {
@@ -191,6 +233,8 @@ good_loot = {
         {chance = 0.45, item = "trailmix"},--坚果
         {chance = 0.05, item = "guacamole"},--鳄梨沙拉
         {chance = 0.03, item = "jellybean"},--糖豆
+        {chance = 0.3, item = "tillweedsalve"},--犁地草膏
+        {chance = 0.1, item = "eel"},--鳗鱼
         {chance = 0.3, item = "healingsalve"},--治疗药膏
         {chance = 0.2, item = "bandage"},--蜂蜜药膏
         {chance = 0.01, item = "walrus_tusk"},--象牙
@@ -211,6 +255,7 @@ good_loot = {
         {chance = 0.5, item = "blowdart_pipe"},--吹箭
         {chance = 0.2, item = "blowdart_yellow"},--电箭
         {chance = 0.2, item = "boomerang"},--回旋镖
+        {chance = 0.2, item = "waterplant_bomb"},--种壳
         {chance = 0.1, item = "beemine"},--蜜蜂地雷
         {chance = 0.15, item = "trap_teeth"},--犬牙陷阱
         {chance = 0.15, item = "armorslurper"},--饥饿腰带
@@ -245,9 +290,47 @@ good_loot = {
         {chance = 0.1, item="armor_bramble"},--荆棘甲
         {chance = 0.5, item = "blueprint"},--蓝图
         {chance = 0.02, item = "trident"},--三叉戟
+
+        {chance = 0.04, item = "asparagus_oversized"},--巨型芦笋
+        {chance = 0.04, item = "carrot_oversized"},--巨型胡萝卜
+        {chance = 0.04, item = "corn_oversized"},--巨型玉米
+        {chance = 0.04, item = "dragonfruit_oversized"},--巨型火龙果
+        {chance = 0.04, item = "durian_oversized"},--巨型榴莲
+        {chance = 0.04, item = "eggplant_oversized"},--巨型茄子
+        {chance = 0.04, item = "garlic_oversized"},--巨型大蒜
+        {chance = 0.04, item = "onion_oversized"},--巨型洋葱
+        {chance = 0.04, item = "pepper_oversized"},--巨型辣椒
+        {chance = 0.04, item = "pomegranate_oversized"},--巨型石榴
+        {chance = 0.04, item = "potato_oversized"},--巨型土豆
+        {chance = 0.04, item = "pumpkin_oversized"},--巨型南瓜
+        {chance = 0.04, item = "tomato_oversized"},--巨型西红柿
+        {chance = 0.04, item = "watermelon_oversized"},--巨型西瓜
+
+        {chance = 0.004, item = "saltstack"},--盐堆
+        {chance = 0.004, item = "seastack"},--浮堆
+        {chance = 0.02, item = "shell_cluster"},--贝壳堆
+        {chance = 0.02, item = "sunkenchest"},--沉底宝箱
+        {chance = 0.05, item="mandrake_active"},--活曼德拉草
     },
 
 luck_loot = {
+        {chance = 0.05, item = "glowberrymousse"},--发光浆果慕斯
+        {chance = 0.03, item = "barnaclesushi"},--藤壶握寿司
+        {chance = 0.03, item = "barnaclinguine"},--藤壶中细面
+        {chance = 0.03, item = "barnaclepita"},--藤壶皮塔饼
+        {chance = 0.03, item = "shroomcake"},--蘑菇蛋糕
+        {chance = 0.03, item = "californiaroll"},--加州卷
+        {chance = 0.03, item = "sweettea"},--舒缓茶
+        {chance = 0.04, item = "leafymeatsouffle"},--果冻沙拉
+        {chance = 0.06, item = "leafymeatburger"},--素食堡
+        {chance = 0.09, item = "leafloaf"},--叶肉糕
+        {chance = 0.05, item = "surfnturf"},--海鲜牛排
+        {chance = 0.09, item = "seafoodgumbo"},--海鲜浓汤
+        {chance = 0.05, item = "lobsterbisque"},--龙虾汤
+        {chance = 0.09, item = "lobsterdinner"},--龙虾正餐
+        {chance = 0.03, item = "unagi"},--鳗鱼料理
+        {chance = 0.07, item = "vegstinger"},--蔬菜鸡尾酒
+        {chance = 0.03, item = "voltgoatjelly"},--伏特羊肉冻
         {chance = 0.006, item = "klaus_sack"},--克劳斯袋
         {chance = 0.001, item = "krampus_sack"},--坎普斯背包
         {chance = 0.002, item = "minotaurhorn"},--远古守护者角
@@ -375,6 +458,7 @@ big_boss_loot = {
         {chance = 0.01, item = "stalker", aggro = true},--复活的骨架
         {chance = 0.01, item = "minotaur", aggro = true},--远古守护者
         {chance = 0.01, item = "toadstool", aggro = true},--蘑菇蛤
+        {chance = 0.005, item = "alterguardian_phase1", aggro = true},--天体英雄
     },
 
 trap_loot = { --陷阱

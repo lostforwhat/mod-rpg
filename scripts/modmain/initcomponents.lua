@@ -24,13 +24,34 @@ AddComponentPostInit("entitytracker", function(self)
     end
 end)
 
+local function checkWebberFollow(self)
+	if self.inst~=nil and self.inst.prefab == "webber" then 
+		local num = self:CountFollowers("spider")
+		if self.inst.components.combat then
+			self.inst.components.combat.externaldamagemultipliers:SetModifier("toomany", 1 + .05 * num)
+		end
+		if self.inst.components then
+			self.inst.components.locomotor:SetExternalSpeedMultiplier(self.inst, "toomany", 1 + 0.01 * num)
+		end
+	end
+end
+
 AddComponentPostInit("leader", function(self) 
 	local OldAddFollower = self.AddFollower
 	function self:AddFollower(follower)
 		if self.followers[follower] == nil and follower.components.follower ~= nil then
 			self.inst:PushEvent("addfollower", {follower = follower})
 		end
-		OldAddFollower(self, follower)
+		local res = OldAddFollower(self, follower)
+		checkWebberFollow(self)
+		return res
+	end
+
+	local OldRemoveFollower = self.RemoveFollower
+	function self:RemoveFollower(follower, invalid)
+		local res = OldRemoveFollower(self, follower, invalid)
+		checkWebberFollow(self)
+		return res
 	end
 end)
 
@@ -200,6 +221,22 @@ AddComponentPostInit("combat", function(self)
 				if attacker:HasTag("suit_quantum") then
 					damage = damage * (1.5 - math.random())
 				end
+				--目标着火
+				if target.components.burnable and target.components.burnable.burning then
+					--willow 附加伤害
+					if attacker.prefab == "willow" then 
+						damage = damage * 2
+					end
+					--伯尼附加伤害
+					if attacker.prefab == "bernie_big" then 
+						local level = attacker.limbofire_level or 0
+						damage = damage * (1 + level*0.04)
+					end
+				end
+				--webber伙伴提供伤害(不在此处修改，改动直接加攻击)
+				--[[if attacker.prefab == "webber" then 
+
+				end]]
 				--弱点攻击为附加伤害不参与暴击
 				if attacker.components.attackbroken ~= nil then
 					if attacker.components.attackbroken:Effect() then

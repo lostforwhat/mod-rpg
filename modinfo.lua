@@ -14,7 +14,7 @@ mod详细查看 http://www.tumbleweedofall.xyz/extend
 ]]
 author = "五年"
 
-version = "1.1.11"
+version = "1.1.15"
 
 api_version = 10
 

@@ -9,10 +9,12 @@ local function GetShowItemInfo(inst)
 end
 
 local function clearbuff(owner, inst)
-    owner.components.combat.externaldamagemultipliers:RemoveModifier("heisenberghat")
-    owner.components.locomotor:RemoveExternalSpeedMultiplier(inst, "heisenberghat")
-    owner.components.crit:RemoveExtraChance("heisenberghat")
-    owner.components.dodge:RemoveExtraChance("heisenberghat")
+    if owner and owner:HasTag("player") then
+        owner.components.combat.externaldamagemultipliers:RemoveModifier("heisenberghat")
+        owner.components.locomotor:RemoveExternalSpeedMultiplier(inst, "heisenberghat")
+        owner.components.crit:RemoveExtraChance("heisenberghat")
+        owner.components.dodge:RemoveExtraChance("heisenberghat")
+    end
 end
 
 local function onequip(inst, owner, symbol_override)
@@ -39,8 +41,8 @@ local function onunequip(inst, owner)
     if owner:HasTag("player") then
         owner.AnimState:Show("HEAD")
         owner.AnimState:Hide("HEAD_HAT")
+        clearbuff(owner, inst)
     end
-    clearbuff(owner, inst)
 end
 
 

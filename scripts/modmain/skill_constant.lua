@@ -158,7 +158,7 @@ skill_constant = {
 	{
 		id="limbofire",
 		name="地狱之火",
-		max_level=1,
+		max_level=100,
 		exclusive={"willow"},
 		desc_fn=function(self, owner)
 			local desc_str = self.name
@@ -166,7 +166,7 @@ skill_constant = {
 			local max_level = self.max_level or 1
 			local max = level >= max_level and " (Max)" or ""
 			desc_str = desc_str.."\n Lv:"..level..max.."\n"
-			.."(未实现)"
+			.."攻击着火的敌人，附加100%伤害，伯尼附加"..(4*level).."%伤害"
 			return desc_str
 		end,
 		effect_fn=function(self, owner) 
@@ -413,6 +413,21 @@ skill_constant = {
 			desc_str = desc_str.."\n Lv:"..level..max.."\n"
 			.."合格的怪物是不需要理智的\n"
 			.."升级不提升理智值，双倍提升生命值"
+			return desc_str
+		end,
+	},
+	{
+		id="toomany",
+		name="人多势众",
+		max_level=1,
+		exclusive={"webber"},
+		desc_fn=function(self, owner)
+			local desc_str = self.name
+			local level = self:level_fn(owner)
+			local max_level = self.max_level or 1
+			local max = level >= max_level and " (Max)" or ""
+			desc_str = desc_str.."\n Lv:"..level..max.."\n"
+			.."伙伴越多越强大，每个伙伴提升5%伤害和1%速度"
 			return desc_str
 		end,
 	},

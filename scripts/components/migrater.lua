@@ -25,7 +25,7 @@ end
 
 function Migrater:StartMigrate(worldid)
 	--worldid = tonumber(worldid)
-	if not self.inst:HasTag("playerghost") and CheckWorldId(worldid) and 
+	if self.inst:IsValid() and not self.inst:HasTag("playerghost") and CheckWorldId(worldid) and 
 		(self.checkfn == nil or self.checkfn(self.inst)) then
 		--self.inst.sg:GoToState("migrate")
 		if self.inst:HasTag("player") then

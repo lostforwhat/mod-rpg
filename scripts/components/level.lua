@@ -98,6 +98,9 @@ local function WebberLevelUp(inst, level)
 		inst.components.extrameta.extra_hunger:SetModifier("levelup", level)
 		inst.components.extrameta.extra_health:SetModifier("levelup", (level)*2)
 	end
+	if inst.components.skilldata then
+		inst.components.skilldata:SetLevel("toomany", 1)
+	end
 end
 
 local function WesLevelUp(inst, level)
@@ -111,6 +114,7 @@ local function WillowLevelUp(inst, level)
 	DefaultLevelUp(inst, level)
 	if inst.components.skilldata then
 		inst.components.skilldata:SetLevel("angrybernie", level)
+		inst.components.skilldata:SetLevel("limbofire", level)
 	end
 end
 

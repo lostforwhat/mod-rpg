@@ -29,6 +29,9 @@ local function SetLevel(self, leader)
         self.inst.components.health.maxhealth = TUNING.BERNIE_BIG_HEALTH + level*10
         self.inst.components.health:SetPercent(health_percent)
         self.inst.components.combat:SetDefaultDamage(TUNING.BERNIE_BIG_DAMAGE + level + 20)
+
+        local limbofire_level = leader.components.skilldata and leader.components.skilldata:GetLevel("limbofire") or 0
+        self.inst.limbofire_level = limbofire_level
     end
 end
 
