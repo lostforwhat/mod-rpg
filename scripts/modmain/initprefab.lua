@@ -257,7 +257,7 @@ AddPlayerPostInit(function(inst)
 		inst:AddComponent("resurrect")
 		inst.components.resurrect.level = 1
 		inst:AddComponent("stealer")
-		inst:AddComponent("timer")
+		--inst:AddComponent("timer")
 		inst:AddComponent("migrater")
 		inst.components.migrater:SetCheckFn(PlayerMigrateCheck)
 		--inst:DoTaskInTime(0.1, function() 

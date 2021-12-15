@@ -337,13 +337,13 @@ titles_data = {
 					if level > 9 then
 						table.insert(types, "good_loot")
 					end
-					if level > 49 then
+					--[[if level > 49 then
 						table.insert(types, "good_loot")
 						table.insert(types, "luck_loot")
 					end
 					if level > 99 then
 						table.insert(types, "luck_loot")
-					end
+					end--]]
 					local items = deepcopy(loot_table[types[math.random(#types)]])
 					local prefab = items[math.random(#items)].item
 					if PrefabExists(prefab) then
