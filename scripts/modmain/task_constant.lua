@@ -509,6 +509,24 @@ task_data = {
 		need=1,
 		reward=6*rate
 	},
+	--天体英雄
+	kill_alterguardian_phase3 = {
+		category="killboss",
+		name="风暴之眼",
+		desc="击杀天体英雄",
+		need=1,
+		reward=8*rate
+	},
+	--
+	--以眼还眼
+	kill_eyeofterror = {
+		category="killboss",
+		name="以眼还眼",
+		desc="击杀恐怖之眼",
+		need=1,
+		reward=6*rate
+	},
+	--
 	kill_klaus_rage = {
 		category="killboss",
 		name="暴怒的克劳斯",
@@ -1254,6 +1272,8 @@ task_list = {
 	'kill_toadstool_dark',
 	'kill_malbatross',
 	'kill_crabking',
+	--天体英雄
+	'kill_alterguardian_phase3',
 
 	--伤害部分
 	'attack_30000',

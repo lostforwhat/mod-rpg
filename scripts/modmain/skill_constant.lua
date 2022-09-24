@@ -145,9 +145,9 @@ skill_constant = {
 			local max_level = self.max_level or 1
 			local max = level >= max_level and " (Max)" or ""
 			desc_str = desc_str.."\n Lv:"..level..max.."\n"
-			.."伯尼因为愤怒而强化，增加生命值和攻击力\n"
 			.."生命值: +"..(level * 10).."\n"
-			.."攻击力: +"..(level + 20)
+			.."攻击力: +"..(level + 20).."\n"
+			.." Lv上限：100"
 			return desc_str
 		end,
 		effect_fn=function(self, owner) 
@@ -166,7 +166,8 @@ skill_constant = {
 			local max_level = self.max_level or 1
 			local max = level >= max_level and " (Max)" or ""
 			desc_str = desc_str.."\n Lv:"..level..max.."\n"
-			.."攻击着火的敌人，附加100%伤害，伯尼附加"..(4*level).."%伤害"
+			.."攻击着火的敌人，附加100%伤害，伯尼附加"..(4*level).."%伤害\n"
+			.." Lv上限：100"
 			return desc_str
 		end,
 		effect_fn=function(self, owner) 
@@ -186,7 +187,8 @@ skill_constant = {
 			local max_level = self.max_level or 1
 			local max = level >= max_level and " (Max)" or ""
 			desc_str = desc_str.."\n Lv:"..level..max.."\n"
-			.."攻击时对周围3码范围内单位附带"..(45 + level*self.step*100).."%伤害"
+			.."攻击时对周围3码范围内单位附带"..(45 + level*self.step*100).."%伤害\n"
+			.." Lv上限：11"
 			return desc_str
 		end,
 		effect_fn=function(self, owner) 
@@ -225,9 +227,9 @@ skill_constant = {
 			local max_level = self.max_level or 1
 			local max = level >= max_level and " (Max)" or ""
 			desc_str = desc_str.."\n Lv:"..level..max.."\n"
-			.."伤害我们的人，都去死吧\n"
 			.."伤害温蒂和阿比盖尔的单位会受到更多的伤害\n"
-			.."每次提升伤害"..(5 + level).."%"
+			.."每次提升伤害"..(5 + level).."%\n"
+			.." Lv上限：20"
 			return desc_str
 		end,
 		effect_fn=function(self, owner)
@@ -263,9 +265,9 @@ skill_constant = {
 			local max_level = self.max_level or 1
 			local max = level >= max_level and " (Max)" or ""
 			desc_str = desc_str.."\n Lv:"..level..max.."\n"
-			.."过载时召唤电场离子保护自己\n"
 			.."当前数量："..level.."\n"
-			.."伤害: "..(5+level*self.step)
+			.."伤害: "..(5+level*self.step).."\n"
+			.." Lv上限：5"
 			return desc_str
 		end,
 		effect_fn=function(self, owner)
@@ -338,9 +340,9 @@ skill_constant = {
 			local max_level = self.max_level or 1
 			local max = level >= max_level and " (Max)" or ""
 			desc_str = desc_str.."\n Lv:"..level..max.."\n"
-			.."扔出去命中的是斧头还是斧把呢\n"
 			.."投掷范围: "..(5 + level*0.5).."\n"
-			.."伤害: "..(TUNING.AXE_DAMAGE * .5).."~"..(TUNING.AXE_DAMAGE * .5 + level*20)
+			.."伤害: "..(TUNING.AXE_DAMAGE * .5).."~"..(TUNING.AXE_DAMAGE * .5 + level*20).."\n"
+			.." Lv上限：11"
 			return desc_str
 		end,
 	},
@@ -396,7 +398,8 @@ skill_constant = {
 			local max = level >= max_level and " (Max)" or ""
 			desc_str = desc_str.."\n Lv:"..level..max.."\n"
 			.."每点鼓舞值提升"..(0.4 + level*self.step*100).."%伤害\n"
-			.."鼓舞值大于90提升"..(10+level).."%暴击"
+			.."鼓舞值大于90提升"..(10+level).."%暴击\n"
+			.." Lv上限：11"
 			return desc_str
 		end
 	},
@@ -442,7 +445,8 @@ skill_constant = {
 			local max_level = self.max_level or 1
 			local max = level >= max_level and " (Max)" or ""
 			desc_str = desc_str.."\n Lv:"..level..max.."\n"
-			.."可使用石头作为武器，升级提升攻击及距离"
+			.."可使用石头作为武器，升级提升攻击及距离\n"
+			.." Lv上限：11"
 			return desc_str
 		end,
 		effect_fn=function(self, owner) 
@@ -487,7 +491,8 @@ skill_constant = {
 			local max_level = self.max_level or 1
 			local max = level >= max_level and " (Max)" or ""
 			desc_str = desc_str.."\n Lv:"..level..max.."\n"
-			.."提升弹弓射速和射程"
+			.."提升弹弓射速和射程\n"
+			.." Lv上限：11"
 			return desc_str
 		end,
 		effect_fn=function(self, owner) 
@@ -513,7 +518,8 @@ skill_constant = {
 			local max = level >= max_level and " (Max)" or ""
 			desc_str = desc_str.."\n Lv:"..level..max.."\n"
 			.."提升可掌控的灵魂数量\n"
-			.."可掌控灵魂数："..(level + TUNING.WORTOX_MAX_SOULS)
+			.."可掌控灵魂数："..(level + TUNING.WORTOX_MAX_SOULS).."\n"
+			.." Lv上限：30"
 			return desc_str
 		end,
 	},
@@ -531,7 +537,8 @@ skill_constant = {
 			local max = level >= max_level and " (Max)" or ""
 			desc_str = desc_str.."\n Lv:"..level..max.."\n"
 			.."灵魂跳跃时造成一次范围伤害\n"
-			.."当前范围："..(5 + math.floor(level*step)).."  伤害: "..((1 + level*step)*100).."%"
+			.."当前范围："..(5 + math.floor(level*step)).."  伤害: "..((1 + level*step)*100).."%\n"
+			.." Lv上限：11"
 			return desc_str
 		end,
 	},
@@ -547,7 +554,8 @@ skill_constant = {
 			local max = level >= max_level and " (Max)" or ""
 			desc_str = desc_str.."\n Lv:"..level..max.."\n"
 			.."白天可通过阳光获取能量\n"
-			.."每10秒补充饥饿值: "..(level * 0.1 + 1)
+			.."每10秒补充饥饿值: "..(level * 0.1 + 1).."\n"
+			.." Lv上限：20"
 			return desc_str
 		end,
 		effect_fn=function(self, owner)
@@ -572,9 +580,9 @@ skill_constant = {
 			local max_level = self.max_level or 1
 			local max = level >= max_level and " (Max)" or ""
 			desc_str = desc_str.."\n Lv:"..level..max.."\n"
-			.."种子就是我最大的武器，上吧我的伙伴\n"
 			.."投掷伤害: " .. (level * 2 + 5).."\n"
-			.."生成生物: " .. (level + 3)
+			.."生成生物: " .. (level + 3).."\n"
+			.." Lv上限：11"
 			return desc_str
 		end,
 		effect_fn=function(self, owner)
@@ -596,7 +604,8 @@ skill_constant = {
 			local max = level >= max_level and " (Max)" or ""
 			desc_str = desc_str.."\n Lv:"..level..max.."\n"
 			.."光滑的皮肤很容易让对手攻击落空\n"
-			.."潮湿值提升闪避,最大: "..(20 + level).."%"
+			.."潮湿值提升闪避,最大: "..(20 + level).."%\n"
+			.." Lv上限：20"
 			return desc_str
 		end,
 	},
@@ -614,7 +623,8 @@ skill_constant = {
 			local max_level = self.max_level or 1
 			local max = level >= max_level and " (Max)" or ""
 			desc_str = desc_str.."\n Lv:"..level..max.."\n"
-			.."增加最大饥饿值: "..(level)
+			.."增加饥饿值: "..(level).."\n"
+			.." Lv上限：100"
 			return desc_str
 		end,
 		effect_fn=function(self, owner) 
@@ -638,7 +648,8 @@ skill_constant = {
 			local max_level = self.max_level or 1
 			local max = level >= max_level and " (Max)" or ""
 			desc_str = desc_str.."\n Lv:"..level..max.."\n"
-			.."增加最大精神值: "..(level)
+			.."增加精神值: "..(level).."\n"
+			.." Lv上限：100"
 			return desc_str
 		end,
 		effect_fn=function(self, owner) 
@@ -662,7 +673,8 @@ skill_constant = {
 			local max_level = self.max_level or 1
 			local max = level >= max_level and " (Max)" or ""
 			desc_str = desc_str.."\n Lv:"..level..max.."\n"
-			.."增加最大生命值: "..(level)
+			.."增加生命值: "..(level).."\n"
+			.." Lv上限：100"
 			return desc_str
 		end,
 		effect_fn=function(self, owner) 
@@ -686,7 +698,8 @@ skill_constant = {
 			local max_level = self.max_level or 1
 			local max = level >= max_level and " (Max)" or ""
 			desc_str = desc_str.."\n Lv:"..level..max.."\n"
-			.."每次攻击附加伤害: "..(level)
+			.."每次攻击附加伤害: "..(level).."\n"
+			.." Lv上限：100"
 			return desc_str
 		end,
 		effect_fn=function(self, owner) 
@@ -710,7 +723,8 @@ skill_constant = {
 			local max_level = self.max_level or 1
 			local max = level >= max_level and " (Max)" or ""
 			desc_str = desc_str.."\n Lv:"..level..max.."\n"
-			.."增加移动速度: "..(level*self.step*100).."%"
+			.."增加移动速度: "..(level*self.step*100).."%\n"
+			.." Lv上限：10"
 			return desc_str
 		end,
 		effect_fn=function(self, owner) 
@@ -734,7 +748,8 @@ skill_constant = {
 			local max_level = self.max_level or 1
 			local max = level >= max_level and " (Max)" or ""
 			desc_str = desc_str.."\n Lv:"..level..max.."\n"
-			.."增加暴击几率: "..(level*self.step*100).."%"
+			.."增加暴击几率: "..(level*self.step*100).."%\n"
+			.." Lv上限：60"
 			return desc_str
 		end,
 		effect_fn=function(self, owner) 
@@ -758,7 +773,8 @@ skill_constant = {
 			local max_level = self.max_level or 1
 			local max = level >= max_level and " (Max)" or ""
 			desc_str = desc_str.."\n Lv:"..level..max.."\n"
-			.."每次攻击恢复当前伤害"..(level*self.step).."%的生命值"
+			.."每次攻击恢复当前伤害"..(level*self.step).."%的生命值\n"
+			.." Lv上限：20"
 			return desc_str
 		end,
 		effect_fn=function(self, owner) 
@@ -781,7 +797,8 @@ skill_constant = {
 			local max_level = self.max_level or 1
 			local max = level >= max_level and " (Max)" or ""
 			desc_str = desc_str.."\n Lv:"..level..max.."\n"
-			.."基础伤害提升: "..(level).."%"
+			.."基础伤害提升: "..(level).."%\n"
+			.." Lv上限：20"
 			return desc_str
 		end,
 		effect_fn=function(self, owner) 
@@ -805,7 +822,8 @@ skill_constant = {
 			local max_level = self.max_level or 1
 			local max = level >= max_level and " (Max)" or ""
 			desc_str = desc_str.."\n Lv:"..level..max.."\n"
-			.."增加闪避几率: "..(level*self.step*100).."%"
+			.."增加闪避几率: "..(level*self.step*100).."%\n"
+			.." Lv上限：10"
 			return desc_str
 		end,
 		effect_fn=function(self, owner) 
@@ -829,7 +847,8 @@ skill_constant = {
 			local max_level = self.max_level or 1
 			local max = level >= max_level and " (Max)" or ""
 			desc_str = desc_str.."\n Lv:"..level..max.."\n"
-			.."增加荆棘值："..(level*self.step).."%"
+			.."增加荆棘值："..(level*self.step).."%\n"
+			.." Lv上限：100"
 			return desc_str
 		end,
 		effect_fn=function(self, owner) 
@@ -853,9 +872,9 @@ skill_constant = {
 			local max_level = self.max_level or 1
 			local max = level >= max_level and " (Max)" or ""
 			desc_str = desc_str.."\n Lv:"..level..max.."\n"
-			.."攻击有几率附加基于目标最大生命值的伤害\n"
 			.."触发几率: "..(level*self.step*100).."%\n"
-			.."伤害值: "..(level*5).."%"
+			.."附加目标最大生命伤害值: "..(level*5).."%\n"
+			.." Lv上限：5"
 			return desc_str
 		end,
 		effect_fn=function(self, owner) 
@@ -902,7 +921,8 @@ skill_constant = {
 			local max_level = self.max_level or 1
 			local max = level >= max_level and " (Max)" or ""
 			desc_str = desc_str.."\n Lv:"..level..max.."\n"
-			.."攻击时有几率使目标冰冻："..(level*self.step*100).."%"
+			.."攻击时有几率使目标冰冻："..(level*self.step*100).."%\n"
+			.." Lv上限：5"
 			return desc_str
 		end,
 		effect_fn=function(self, owner) 
@@ -955,7 +975,8 @@ skill_constant = {
 			local max = level >= max_level and " (Max)" or ""
 			desc_str = desc_str.."\n Lv:"..level..max.."\n"
 			.."短时间内进行伪装，怪物无法看到自己\n"
-			.."持续时间: "..(5 + level).."s (R)"
+			.."持续时间: "..(5 + level).."s (R)\n"
+			.." Lv上限：5"
 			return desc_str
 		end,
 		effect_fn=function(self, owner) 
@@ -1093,7 +1114,8 @@ skill_constant = {
 			local max = level >= max_level and " (Max)" or ""
 			desc_str = desc_str.."\n Lv:"..level..max.."\n"
 			.."每次攻击有几率偷取物品\n"
-			.."当前几率: "..(level).."%"
+			.."当前几率: "..(level).."%\n"
+			.." Lv上限：5"
 			return desc_str
 		end,
 		effect_fn=function(self, owner) 

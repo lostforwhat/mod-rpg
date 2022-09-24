@@ -10,7 +10,7 @@ local ShopInfo = Class(Widget, function(self, owner)
     self.owner = owner
 
     self.root = self:AddChild(ImageButton("images/hud.xml", "tab_refine.tex"))
-    self.root:SetHoverText("商店",{ size = 9, offset_x = 40, offset_y = -45, colour = {1,1,1,1}})
+    self.root:SetHoverText("商店",{ size = 9, offset_x = 6, offset_y = -35, colour = {1,1,1,1}})
     self.root:SetOnClick(function() self:OpenShop() end)
     self.root:SetScale(0.6)
     self.root:SetPosition(0, -5)

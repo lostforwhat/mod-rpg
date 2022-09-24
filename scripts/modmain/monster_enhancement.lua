@@ -8,12 +8,20 @@ local DEGREE = difficulty_level - 1
 assert(DEGREE >= 0 and DEGREE <= 4, "MOD DEGREE out of range: "..tostring(DEGREE))
 
 --怪物强化都写这里
-local health_degree = DEGREE * 0.5 + 1
-local damage_degree = DEGREE * 0.4 + 1
-local period_degree = 1 - DEGREE * 0.2
-local range_degree = 1 + DEGREE * 0.2
-local speed_degree = 1 + DEGREE * 0.2
-
+local health_degree = DEGREE * 0.5 + 1--生命
+local damage_degree = DEGREE * 0.4 + 1--攻击
+local period_degree = 1 - DEGREE * 0.2--攻速
+local range_degree = 1 + DEGREE * 0.2--范围
+local speed_degree = 1 + DEGREE * 0.2--速度
+--自己写的强化
+--天体英雄
+TUNING.ALTERGUARDIAN_PHASE1_HEALTH = 5000 * 2  * health_degree
+TUNING.ALTERGUARDIAN_PHASE2_HEALTH = 5000 * 2  * health_degree
+TUNING.ALTERGUARDIAN_PHASE3_HEALTH = 5000 * 2  * health_degree
+--恐怖之眼
+TUNING.EYEOFTERROR_HEALTH = 3500 * 2  * health_degree
+TUNING.EYEOFTERROR_DAMAGE = 180  * damage_degree
+TUNING.EYEOFTERROR_DAMAGE = TUNING.EYEOFTERROR_DAMAGE * period_degree
 --春鸭
 TUNING.MOOSE_HEALTH = TUNING.MOOSE_HEALTH * health_degree
 TUNING.MOOSE_DAMAGE = TUNING.MOOSE_DAMAGE * damage_degree

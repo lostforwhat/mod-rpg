@@ -60,47 +60,48 @@ AddRecipe("book_season",
 )
 
 --willson
-AddRecipe("potion_luck", {Ingredient("wormlight",2),Ingredient("butter",1),Ingredient("cave_banana",3)},
-	RECIPETABS.MAGIC, 
-	TECH.NONE, 
+--幸运药水
+AddRecipe("potion_luck", {Ingredient("yellowgem", 1),Ingredient("butter", 1),Ingredient("pumpkin", 3)},
+	GLOBAL.RECIPETABS.REFINE, 
+	GLOBAL.TECH.MAGIC_TWO, 
 	nil, 
 	nil, -- min_spacing
 	nil, -- nounlock
 	nil, -- numtogive
-	"potionbuilder", -- builder_tag
+	nil, -- builder_tag
 	"images/inventoryimages/potion_luck.xml"
 )
-
-AddRecipe("potion_blue", {Ingredient("bluegem",2),Ingredient("stinger",8),Ingredient("petals",3)}, 
-	RECIPETABS.MAGIC, 
-	TECH.NONE, 
+--清凉药水
+AddRecipe("potion_blue", {Ingredient("bluegem", 2),Ingredient("glowberrymousse", 1),Ingredient("pondeel", 2)}, 
+	GLOBAL.RECIPETABS.REFINE, 
+	GLOBAL.TECH.MAGIC_TWO, 
 	nil, 
 	nil, -- min_spacing
 	nil, -- nounlock
 	nil, -- numtogive
-	"potionbuilder", -- builder_tag
+	nil, -- builder_tag
 	"images/inventoryimages/potion_blue.xml"
 )
-
-AddRecipe("potion_green", {Ingredient("green_cap",5),Ingredient("nightmarefuel",5),Ingredient("rottenegg",4)},
-	RECIPETABS.MAGIC, 
-	TECH.NONE, 
+--恶魔药水
+AddRecipe("potion_green", {Ingredient("green_cap", 6),Ingredient("petals_evil", 3),Ingredient("asparagus", 2)},
+	GLOBAL.RECIPETABS.REFINE, 
+	GLOBAL.TECH.MAGIC_TWO, 
 	nil, 
 	nil, -- min_spacing
 	nil, -- nounlock
 	nil, -- numtogive
-	"potionbuilder", -- builder_tag
+	nil, -- builder_tag
 	"images/inventoryimages/potion_green.xml"
 )
-
-AddRecipe("potion_red", {Ingredient("glommerfuel",1),Ingredient("petals_evil",5),Ingredient("mosquitosack",3)},
-	RECIPETABS.MAGIC, 
-	TECH.NONE, 
+--力量
+AddRecipe("potion_red", {Ingredient("redgem", 2),Ingredient("glommerfuel", 1),Ingredient("mosquitosack", 3)},
+	GLOBAL.RECIPETABS.REFINE, 
+	GLOBAL.TECH.MAGIC_TWO, 
 	nil, 
 	nil, -- min_spacing
 	nil, -- nounlock
 	nil, -- numtogive
-	"potionbuilder", -- builder_tag
+	nil, -- builder_tag
 	"images/inventoryimages/potion_red.xml"
 )
 

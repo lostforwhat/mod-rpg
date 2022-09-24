@@ -39,9 +39,9 @@ function WeaponLevel:AddLevel(amount)
 	if self.level < MAX_LEVEL then
 		self.level = self.level + math.floor(amount)
 	end
-	if self.level < 0 then
-		self.level = 0
-	end
+	-- if self.level < 0 then
+	-- 	self.level = 0
+	-- end--新版本注释
 	self.inst:PushEvent("weaponlevelup", {oldlevel = oldlevel, newlevel = self.level})
 end
 
@@ -55,7 +55,8 @@ function WeaponLevel:CalcRate(doer, rate, protect)
 	local baselevel = self.level or 0
 	local real_rate = 0
 	if baselevel >= 16 then
-		real_rate = math.min(.15, rate * 2 / baselevel) --限制高等级
+		real_rate = math.min(.15, rate * .1) --老版本限制高等级
+		--real_rate = math.min(.15, rate * 2 / baselevel) --限制高等级
 	elseif baselevel >= 9 then
 		real_rate = (.77 - baselevel*.03) * rate
 	else
@@ -80,15 +81,8 @@ function WeaponLevel:DoStrengthen(doer, rate, protect, noannounce) --基础几�
 		
 		self:Fixed(1)
 		return true
-	elseif self.level > 10 then
-		local del = math.floor(self.level*.1) or 1
-		if not protect and not doer:HasTag("weaponprotect") and not TheWorld:HasTag("weaponprotect") then
-			del = del - 1
-		end
-		
-		if del > 0 then
-			self:AddLevel(-math.random(1, del))
-		end
+	elseif self.level > 10 and not protect and not doer:HasTag("weaponprotect") and not TheWorld:HasTag("weaponprotect") then
+		self:AddLevel(-1)
 	end
 	--self:Fixed(rate)
 	return false

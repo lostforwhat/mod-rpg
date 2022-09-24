@@ -8,7 +8,7 @@ local TaskInfo = Class(Widget, function(self, owner)
     self.owner = owner
 
     self.button = self:AddChild(ImageButton("images/achiv_clear.xml", "achiv_clear.tex"))
-    self.button:SetHoverText("任务",{ size = 9, offset_x = 40, offset_y = -45, colour = {1,1,1,1}})
+    self.button:SetHoverText("任务",{ size = 9, offset_x = 6, offset_y = -35, colour = {1,1,1,1}})
     self.button:SetOnClick(function() self:ShowInfo() end)
 
     self.text = self:AddChild(Text(TALKINGFONT, 28))

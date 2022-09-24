@@ -225,7 +225,7 @@ end
 local holidays = {
 	[1] = {--多倍掉落活动
 		name = "多倍掉落",
-		time = 1800,
+		time = 2400,
 		fn = function() 
 			_G.TheWorld:AddTag("doubledrop")
 		end,
@@ -235,7 +235,7 @@ local holidays = {
 	},
 	[2] = {
 		name = "多倍经验",
-		time = 1800,
+		time = 2400,
 		fn = function() 
 			_G.TheWorld:AddTag("doublexp")
 		end,
@@ -245,7 +245,7 @@ local holidays = {
 	},
 	[3] = {
 		name = "多开风滚草",
-		time = 1800,
+		time = 2400,
 		fn = function() 
 			_G.TheWorld:AddTag("pick_tumbleweed_aoe")
 		end,
@@ -255,7 +255,7 @@ local holidays = {
 	},
 	[4] = {
 		name = "多倍风滚草",
-		time = 1800,
+		time = 2400,
 		fn = function() 
 			_G.TheWorld:AddTag("pick_tumbleweed_more")
 		end,
@@ -265,7 +265,7 @@ local holidays = {
 	},
 	[5] = {
 		name = "武器祝福",
-		time = 300,
+		time = 1000,
 		fn = function() 
 			_G.TheWorld:AddTag("weaponprotect")
 		end,
@@ -275,7 +275,7 @@ local holidays = {
 	},
 	[6] = {
 		name = "怪物来袭",
-		time = 600,
+		time = 1000,
 		fn = function() 
 			delayspawnprefab(45)
 		end,
@@ -285,7 +285,7 @@ local holidays = {
 	},
 	[7] = {
 		name = "寻找发光风滚草",
-		time = 600,
+		time = 1000,
 		fn = function(num) 
 			if num == nil then
 				num = 50
@@ -298,7 +298,7 @@ local holidays = {
 	},
 	[8] = {
 		name = "寻找橙色风滚草",
-		time = 600,
+		time = 1000,
 		fn = function(num) 
 			if num == nil then
 				num = 50
@@ -311,7 +311,7 @@ local holidays = {
 	},
 	[9] = {
 		name = "寻找紫色风滚草",
-		time = 600,
+		time = 1000,
 		fn = function(num) 
 			if num == nil then
 				num = 50
@@ -324,7 +324,7 @@ local holidays = {
 	},
 	[10] = {
 		name = "消灭领主",
-		time = 600,
+		time = 1000,
 		fn = function(prefab) 
 			delayspawnboss(30)
 		end,
@@ -334,7 +334,7 @@ local holidays = {
 	},
 	[11] = {--暂留空
 		name = "猪王的奖励",
-		time = 1200,
+		time = 1800,
 		fn = function() 
 			_G.TheWorld:AddTag("pigking_task_double")
 		end,

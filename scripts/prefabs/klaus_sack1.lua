@@ -1,0 +1,1 @@
+return  MakePlacer("klaus_sack_placer", "klaus_bag", "klaus_bag", "idle")

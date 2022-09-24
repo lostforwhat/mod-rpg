@@ -88,8 +88,8 @@ local function fn()
 
     inst:AddComponent("finiteuses")
     inst.components.finiteuses:SetOnFinished( onfinished )  
-    inst.components.finiteuses:SetMaxUses(3)
-    inst.components.finiteuses:SetUses(3)
+    inst.components.finiteuses:SetMaxUses(10)
+    inst.components.finiteuses:SetUses(10)
 
 
     inst:AddComponent("inventoryitem")

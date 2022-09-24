@@ -1,7 +1,7 @@
 loot_table = {
     new_loot = {
-        {chance = 15,   item = "cutgrass"},
-        {chance = 10,   item = "twigs"},
+        {chance = 15,   item = "cutgrass"},--草
+        {chance = 10,   item = "twigs"},--树枝
         {chance = 5, item = "log"},--木头
         {chance = 1, item = "charcoal"},--木炭
         {chance = 0.06, item = "pinecone"},--松果
@@ -14,8 +14,9 @@ loot_table = {
         {chance = 2, item = "ice"},--冰
         {chance = 0.15, item = "dug_grass"},--草丛
         {chance = 0.15, item = "dug_sapling"},--树苗
-        {chance = 0.08, item = "dug_berrybush"},--普通浆果丛
-        {chance = 0.08, item = "dug_berrybush2"},--三叶浆果丛
+        {chance = 0.09, item = "dug_berrybush"},--普通浆果丛
+        {chance = 0.09, item = "dug_berrybush2"},--猪村浆果丛
+        {chance = 0.09, item = "dug_berrybushjuicy"},--多汁浆果丛
         {chance = 1, item = "petals_evil"},--恶魔花瓣
         {chance = 0.5, item = "cutreeds"},--芦苇
         {chance = 2, item = "tumbleweed"},--风滚草
@@ -67,6 +68,95 @@ loot_table = {
         {chance = 0.8, item = "pomegranate"},--石榴
         {chance = 0.6, item = "corn"},--玉米
         {chance = 1, item = "durian"},--榴莲
+        --中间插入，防止每日礼物
+        --概率太低，自己添加了
+        {chance = 0.0009, item = "pigking"},--猪王
+        {chance = 0.002, item = "moonbase"}, --月台
+        {chance = 0.001, item = "walrus_camp"}, --海象营地
+        {chance = 0.004, item = "catcoonden"}, --空心树桩
+        {chance = 0.001, item = "ancient_altar"}, --远古科技
+        {chance = 0.001, item = "pond"}, --青蛙池塘
+        {chance = 0.001, item = "pond_mos"}, --蚊子池塘
+        {chance = 0.001, item = "pond_cave"}, --鳗鱼池塘
+        {chance = 0.03, item = "coffeebush"}, --咖啡树
+        {chance = 0.02, item = "rabbitehole"}, --兔子洞
+
+        {chance = 0.008, item = "rabbitehole"}, --雷书
+        {chance = 0.008, item = "book_birds"}, --鸟书
+        {chance = 0.008, item = "book_tentacles"}, --触手书
+        {chance = 0.008, item = "rabbitehole"}, --应用园艺学
+        {chance = 0.005, item = "book_sleep"}, --睡前故事
+        {chance = 0.005, item = "book_silviculture"}, --造林学
+        {chance = 0.005, item = "book_kill"}, --禁忌法阵
+        {chance = 0.005, item = "book_treat"}, --复苏之风
+        
+        -- 联动神话书说与棱镜和能力勋章物品
+        {chance = 0.001, item = "bigpeach"}, --大蟠桃
+        {chance = 0.001, item = "purple_gourd"}, --紫金葫芦
+        {chance = 0.001, item = "pill_bottle_gourd"}, --丹药葫芦
+        {chance = 0.001, item = "bananafan"}, --芭蕉宝扇
+        {chance = 0.001, item = "myth_yjp"}, --玉净瓶
+        {chance = 0.001, item = "heat_resistant_pill"}, --避暑丹
+        {chance = 0.001, item = "cold_resistant_pill"}, --避尘丹
+        {chance = 0.001, item = "dust_resistant_pill"}, --避尘丹
+        {chance = 0.001, item = "rhino3_red"}, --避暑大王
+        {chance = 0.001, item = "rhino3_blue"}, --避寒大王
+        {chance = 0.001, item = "rhino3_yellow"}, --避尘大王
+        {chance = 0.001, item = "blackbear"}, --黑风大王
+
+        {chance = 0.001, item = "siving_derivant_item"}, --未种下子圭一型岩
+        {chance = 0.001, item = "siving_derivant_lvl0"}, --子圭一型岩
+        {chance = 0.001, item = "siving_derivant_lvl1"}, --子圭木型岩
+        {chance = 0.001, item = "siving_derivant_lvl2"}, --子圭林型岩
+        {chance = 0.001, item = "siving_derivant_lvl3"}, --子圭森型岩
+        {chance = 0.001, item = "tourmalinecore"}, --电气石
+        {chance = 0.001, item = "siving_rocks"}, --子圭石
+
+        {chance = 0.009, item = "marbleaxe"}, --大理石斧头
+        {chance = 0.0004, item = "mediumchop_certificate"}, --中级伐木勋章
+        {chance = 0.009, item = "marblepickaxe"}, --大理石镐
+        {chance = 0.0004, item = "mediumminer_certificate"}, --中级矿工勋章
+        {chance = 0.005, item = "medal_farm_plow_item"}, --高效耕地机
+        {chance = 0.008, item = "toil_money"}, --血汗钱
+        {chance = 0.008, item = "medal_moonglass_hammer"}, --月光玻璃锤
+        {chance = 0.008, item = "medal_moonglass_bugnet"}, --月光捕虫网
+        {chance = 0.0006, item = "bottled_moonlight"}, --瓶装月光
+        {chance = 0.0008, item = "medaldug_fruit_tree_stump"}, --砧木桩
+        {chance = 0.0003, item = "medal_fruit_tree_immortal_fruit_scion"}, --不朽果实接穗
+        {chance = 0.0006, item = "immortal_book"}, --不朽之谜
+        {chance = 0.0003, item = "immortal_fruit_seed"}, --不朽种子
+        {chance = 0.0002, item = "immortal_staff"}, --不朽法杖
+        {chance = 0.0004, item = "dm_gifts()"}, --遗失包裹
+        {chance = 0.0003, item = "multivariate_certificate"}, --融合勋章
+        {chance = 0.0008, item = "blank_certificate"}, --空白勋章
+        {chance = 0.003, item = "down_filled_coat"}, --羽绒服
+        {chance = 0.003, item = "hat_blue_crystal"}, --蓝晶帽
+        {chance = 0.0004, item = "monster_book"}, --怪物图鉴
+        {chance = 0.0004, item = "unsolved_book"}, --未解之谜
+        {chance = 0.008, item = "sanityrock_fragment"}, --方尖碑碎片
+        {chance = 0.008, item = "lavaeel"}, --熔岩鳗鱼
+        {chance = 0.01, item = "medal_obsidian"}, --红晶
+        {chance = 0.01, item = "medal_blue_obsidian"}, --蓝晶
+        {chance = 0.008, item = "armor_blue_crystal"}, --蓝晶甲
+        {chance = 0.008, item = "armor_medal_obsidian"}, --红晶甲
+        {chance = 0.0004, item = "bottled_soul"}, --瓶装灵魂
+        {chance = 0.0002, item = "medal_beequeenhivegrown"}, --凋零蜂巢
+        {chance = 0.0002, item = "medal_beequeen"}, --凋零之蜂
+        {chance = 0.0003, item = "mediumfishing_certificate"}, --垂钓勋章
+        {chance = 0.0006, item = "medal_losswetpouch"}, --遗失塑料袋
+        {chance = 0.0006, item = "medalslingshotammo_sanityrock"}, --方尖弹
+        {chance = 0.005, item = "medalslingshotammo_devoursoul"}, --噬魂弹
+        {chance = 0.005, item = "medalslingshotammo_taunt"}, --痰蛋弹
+        {chance = 0.0003, item = "medal_spacetime_snacks_packet"}, --零食包装袋
+        {chance = 0.0003, item = "medal_spacetime_lingshi"}, --时空灵石
+        {chance = 0.0003, item = "medal_spacetime_snacks"}, --时空零食
+        {chance = 0.008, item = "spice_voltjelly"}, --带电果冻粉
+        {chance = 0.008, item = "spice_cactus_flower"}, --仙人掌花粉
+        {chance = 0.008, item = "spice_mandrake_jam"}, --曼德拉果酱
+        {chance = 0.0003, item = "medal_spacetime_potion"}, --改命药水
+        {chance = 0.0003, item = "medal_spacetime_runes"}, --时空符文
+        {chance = 0.0003, item = "medal_time_slider"}, --时空碎片
+        --End
         {chance = 0.8, item = "eggplant"},--茄子
         {chance = 0.3, item = "cave_banana"},--洞穴香蕉
         {chance = 0.3, item = "cactus_meat"},--仙人掌肉
@@ -242,7 +332,7 @@ good_loot = {
         {chance = 0.05, item = "featherfan"},--羽毛扇
         {chance = 0.02, item = "icepack"},--保鲜背包
         {chance = 0.08, item = "multitool_axe_pickaxe"},--多功能工具
-        --{chance = 0.01, item = "klaussackkey"},--克劳斯钥匙
+        --{chance = 0.01, item = "klaussackkey"},--麋鹿绒
         {chance = 0.2, item = "armorwood"},--木甲
         {chance = 0.15, item = "footballhat"},--橄榄球头盔
         {chance = 0.15, item = "hambat"},--火腿棍
@@ -312,7 +402,7 @@ good_loot = {
         {chance = 0.02, item = "sunkenchest"},--沉底宝箱
         {chance = 0.05, item="mandrake_active"},--活曼德拉草
     },
-
+--发光风滚草
 luck_loot = {
         {chance = 0.05, item = "glowberrymousse"},--发光浆果慕斯
         {chance = 0.03, item = "barnaclesushi"},--藤壶握寿司
@@ -363,7 +453,7 @@ luck_loot = {
         {chance = 0.002, item = "armorskeleton"},--远古骨甲
         {chance = 0.001, item = "ruins_statue_mage"}, --远古雕像
         {chance = 0.0002, item = "moonbase"}, --
-        {chance = 0.0003, item = "pigking"}, --
+        {chance = 0.0009, item = "pigking"}, --猪王
         {chance = 0.001, item="package_staff"}, --空间魔杖
         {chance = 0.004, item="pray_symbol"}, --祈祷符
         {chance = 0.008, item="skillbookpage"},
@@ -444,22 +534,23 @@ monstor_loot = {
     },
 
 big_boss_loot = {
-        --{chance = 0.01, item = "minotaur", aggro = true},--远古守护者
         {chance = 0.01, item = "dragonfly", aggro = true},--龙蝇
         {chance = 0.01, item = "beequeen", aggro = true},--蜂后
-        --{chance = 0.01, item = "toadstool", aggro = true},--蘑菇蛤
         {chance = 0.03, item = "deerclops", aggro = true},--巨鹿
         {chance = 0.04, item = "moose", aggro = true},--鹿鸭
         {chance = 0.02, item = "warg", aggro = true},--座狼
         {chance = 0.03, item = "bearger", aggro = true},--熊大
-        --{chance = 0.01, item = "stalker_atrium", aggro = true},--远古影织者
-        --{chance = 0.01, item = "stalker", aggro = true},--复活的骨架
-        --{chance = 0.03, item = "stalker_forest", aggro = true},--森林守护者
+        {chance = 0.03, item = "stalker_forest", aggro = true},--森林守护者
         {chance = 0.01, item = "stalker", aggro = true},--复活的骨架
         {chance = 0.01, item = "minotaur", aggro = true},--远古守护者
         {chance = 0.01, item = "toadstool", aggro = true},--蘑菇蛤
-        {chance = 0.005, item = "alterguardian_phase1", aggro = true},--天体英雄
-    },
+        {chance = 0.01, item = "toadstool_dark", aggro = true},--苦难蘑菇蛤
+        {chance = 0.008, item = "alterguardian_phase1", aggro = true},--天体英雄
+        {chance = 0.008, item = "eyeofterror", aggro = true},--恐怖之眼
+        {chance = 0.0009, item = "medal_beequeen", aggro = true},--凋零之蜂
+        {chance = 0.0009, item = "medal_rage_krampus", aggro = true},--暗夜坎普斯
+        {chance = 0.0005, item = "medal_spacetime_devourer", aggro = true},--时空吞噬者
+        },
 
 trap_loot = { --陷阱
         {chance = 0.01, item = "rock_circle", trap = true},--囚笼陷阱
@@ -531,7 +622,7 @@ notice_goods = {
         "catcoonden", --中空树桩
         "ruins_statue_mage",
         "moonbase",
-        "pigking",
+        "pigking",--猪王
         "skillbook",
         "schrodingersword",
         "space_sword",

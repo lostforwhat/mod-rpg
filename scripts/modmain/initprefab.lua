@@ -381,7 +381,7 @@ AddPlayerPostInit(function(inst)
 									TheNet:Announce(str, inst.entity)
 				    			end
 				    		else
-				    			item.components.weaponlevel:AddLevel(-1)
+				    			item.components.weaponlevel:AddLevel(-2)
 				    			ApplyEffect(inst, "诅咒", 40, {.1, .1, .1})
 				    		end
 				    	else

@@ -292,7 +292,7 @@ local function OnKilled(inst, data)
     end
     --以下为挑战boss
     local boss_list = {"moose", "dragonfly", "bearger", "deerclops",
-    				  "stalker", "stalker_atrium", "klaus", "crabking",
+    				  "stalker", "stalker_atrium", "klaus", "crabking", "alterguardian_phase3", "eyeofterror", 
                       "antlion", "minotaur", "beequeen", "toadstool", 
               		  "toadstool_dark", "malbatross", 
               		  "shadow_rook", "shadow_knight", "shadow_bishop"}
@@ -365,6 +365,14 @@ local function OnKilled(inst, data)
     		for k, v in pairs(ents) do
     			v.components.taskdata:AddOne("kill_crabking")
     		end
+        elseif prefab == "alterguardian_phase3" then
+            for k, v in pairs(ents) do
+                v.components.taskdata:AddOne("kill_alterguardian_phase3")
+            end
+        elseif prefab == "eyeofterror" then
+            for k, v in pairs(ents) do
+                v.components.taskdata:AddOne("kill_eyeofterror")
+            end
     	end
         -- 此处添加重复击杀boss获得奖励,注意排除一段克劳斯
         if not (prefab == "klaus" and not victim:IsUnchained()) then

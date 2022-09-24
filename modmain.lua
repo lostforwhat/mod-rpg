@@ -2,7 +2,15 @@ local _G = GLOBAL
 local TheNet = _G.TheNet
 local TUNING = _G.TUNING
 env.require = GLOBAL.require
-
+-- 
+TUNING.PERISH_FRIDGE_MULT = -10;
+AddPrefabPostInit("krampus_sack", function(inst)
+    inst:AddTag("fridge")
+end)
+AddPrefabPostInit("piggyback", function(inst)
+    inst:AddTag("fridge")
+end)
+--
 TUNING.level = GetModConfigData("level") or 2
 TUNING.token = GetModConfigData("token") and 
 			#GetModConfigData("token") > 10 and 
@@ -16,9 +24,9 @@ _G.GetToken = function()
 end
 
 require 'modmain/loot_table'
-require 'modmain/task_constant'
-require 'modmain/skill_constant'
-require 'modmain/titles_constant'
+require 'modmain/task_constant'--任务数据
+require 'modmain/skill_constant'--技能系统
+require 'modmain/titles_constant'--称号任务
 require 'modmain/modrpc'
 
 Assets = {
@@ -59,6 +67,9 @@ Assets = {
     Asset("IMAGE", "images/skills/resurrect.tex"),
     Asset("ATLAS", "images/skills/suit.xml"),
     Asset("IMAGE", "images/skills/suit.tex"),
+    --引入赃物袋图片
+    Asset("ATLAS", "images/inventoryimages/klaus_sack.xml"),
+    Asset("IMAGE", "images/inventoryimages/klaus_sack.tex"),
 }
 
 PrefabFiles = {}
@@ -105,21 +116,98 @@ table.insert(PrefabFiles, "armor_forget")
 table.insert(PrefabFiles, "armor_debroglie")
 table.insert(PrefabFiles, "linghter_fx")
 
-
+table.insert(PrefabFiles, "klaus_sack1")
+table.insert(PrefabFiles, "gembeans")
+table.insert(PrefabFiles, "gem_crystal_clusters")
 --引入mod文件
 modimport("scripts/modmain/ui.lua")
 modimport("scripts/modmain/worldshard.lua")
 modimport("scripts/modmain/stacksize.lua")
 modimport("scripts/modmain/initcomponents.lua")
-modimport("scripts/modmain/initprefab.lua")
+modimport("scripts/modmain/initprefab.lua")--雷
 modimport("scripts/modmain/strings.lua")
 modimport("scripts/modmain/tumbleweed_pick.lua")
 modimport("scripts/modmain/modactions.lua")
-modimport("scripts/modmain/task_events.lua")
-modimport("scripts/modmain/modrecipes.lua")
-modimport("scripts/modmain/extra_slots.lua")
-modimport("scripts/modmain/monster_enhancement.lua")
+modimport("scripts/modmain/task_events.lua")--经验
+modimport("scripts/modmain/modrecipes.lua")--添加配方
+modimport("scripts/modmain/monster_enhancement.lua")--BOSS强化
 modimport("scripts/modmain/worldregrowth.lua")
+
+modimport("scripts/modmain/add_llb.lua")
+modimport("scripts/modmain/not_drop.lua")
+modimport("scripts/modmain/notice.lua")
+modimport("scripts/modmain/booty_bag.lua")
+modimport("scripts/modmain/generate_tumbleweed.lua")
+modimport("scripts/modmain/super_pack.lua")
+
+--宝石种植
+local map_icons= {
+    "blue", "green","orange","purple","red","yellow","opalprecious",
+}
+
+TUNING.GEMCRYSTAL_COST = GetModConfigData("gemcost")
+TUNING.GEMCRYSTAL_time = GetModConfigData("growtime")*480
+local locale_code = LOC.GetLocaleCode()
+local L = locale_code ~= "zh" and locale_code ~= "zhr"
+
+local zhongwen = L and 
+{
+    blue = "Blue ",green = "Green ",orange = "Orange ",purple = "Purple ",
+    red = "Red ",yellow = "Yellow ",opalprecious = "Opal "
+}
+or 
+{
+    blue = "蓝",green = "绿",orange = "橙",purple = "紫",
+    red = "红",yellow = "黄",opalprecious = "彩"
+}
+for k,v in pairs(map_icons) do
+    table.insert(Assets, Asset( "IMAGE", "images/minimap/gem_crystal_cluster_"..v..".tex" )) 
+    table.insert(Assets, Asset( "ATLAS", "images/minimap/gem_crystal_cluster_"..v..".xml" ))
+    AddMinimapAtlas("images/minimap/gem_crystal_cluster_"..v..'.xml')
+
+    if L  then
+        STRINGS.NAMES[string.upper("gembean_"..v)]= zhongwen[v].."Crystal Seed"
+        STRINGS.RECIPE_DESC[string.upper("gembean_"..v)] = "Precious and Special"
+        STRINGS.CHARACTERS.GENERIC.DESCRIBE[string.upper("gembean_"..v)] = "Precious and Special"
+    else
+        STRINGS.NAMES[string.upper("gembean_"..v)]= zhongwen[v].."色水晶籽"
+        STRINGS.RECIPE_DESC[string.upper("gembean_"..v)] = "是很贵重的东西！"
+        STRINGS.CHARACTERS.GENERIC.DESCRIBE[string.upper("gembean_"..v)] = "是很贵重的东西！"
+    end
+    if L  then
+        STRINGS.NAMES[string.upper("gem_crystal_cluster_"..v)]= zhongwen[v].."Gem Crystal Cluster"
+        STRINGS.CHARACTERS.GENERIC.DESCRIBE[string.upper("gem_crystal_cluster_"..v)] = "So Beautiful!"
+    else
+        STRINGS.NAMES[string.upper("gem_crystal_cluster_"..v)]= zhongwen[v].."色水晶簇"
+        STRINGS.CHARACTERS.GENERIC.DESCRIBE[string.upper("gem_crystal_cluster_"..v)] = "真是美丽呢！"
+    end
+end
+
+--新制作栏
+local new = {
+"gembean_blue", 
+"gembean_green",
+"gembean_orange",
+"gembean_purple",
+"gembean_red",
+"gembean_yellow",
+"gembean_opalprecious",
+}
+
+for k,v in pairs(new) do
+    table.insert(Assets, Asset( "IMAGE", "images/inventoryimages/"..v..".tex" )) 
+    table.insert(Assets, Asset( "ATLAS", "images/inventoryimages/"..v..".xml" ))
+    RegisterInventoryItemAtlas("images/inventoryimages/"..v..".xml", v..".tex")
+    AddRecipeToFilter(v,"REFINE")
+end
+
+for k,v in pairs(map_icons) do
+    AddRecipe2("gembean_"..v,
+    {Ingredient("ice", 40),Ingredient(v.."gem", TUNING.GEMCRYSTAL_COST),Ingredient("moonglass", 20)}, 
+    TECH.SCIENCE_TWO,{})
+end
+--End
+
 --可在设置中关闭
 modimport("scripts/modmain/asyncworld.lua")
 if GetModConfigData("save") then
